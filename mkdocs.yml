@@ -1,11 +1,11 @@
-site_name: Reversa — MarceloClaro Edition
-site_url: https://marceloclaro.github.io/reversa
-site_description: Transforme sistemas legados em especificações executáveis por agentes de IA.
+site_name: ReversaFeynman — MarceloClaro Edition
+site_url: https://marceloclaro.github.io/reversaFeynman
+site_description: Engenharia reversa orientada por evidências, gates Feynman e especificações executáveis por agentes de IA.
 site_author: Marcelo Claro Laranjeira
-repo_url: https://github.com/MarceloClaro/reversa
-repo_name: MarceloClaro/reversa
+repo_url: https://github.com/MarceloClaro/reversaFeynman
+repo_name: MarceloClaro/reversaFeynman
 edit_uri: edit/main/docs/
-copyright: 'Reversa — MarceloClaro independent edition. Derived from the original MIT-licensed Reversa project.'
+copyright: 'ReversaFeynman — MarceloClaro independent edition. Derived from the original MIT-licensed Reversa project.'
 
 theme:
   name: material
@@ -164,14 +164,14 @@ plugins:
             The greenfield agents: Los agentes del greenfield
             Code Forward Agents: Code Forward Agents
             The Forward agents: Los agentes del Forward
-            Migration Agents: Agentes de Migración
+            Migration Agents: Agentes de Migração
             Pricing and Size Agents: Pricing and Size Agents
-            Translators N8N->Specs->Python: Traductores N8N->Specs->Python
+            Translators N8N->Specs->Python: Tradutores N8N->Specs->Python
             Documentation Team: Equipo de Documentación
             The 4 visual agents: Los 4 agentes visuales
             Bug Agents: Agentes de Bugs
             Code Quality Agents: Agentes de Calidad de Código
-            Forward orchestrator: Orquestador Forward
+            Forward orchestrator: Orquestrador Forward
             Requirements: Requirements
             Clarify: Clarify
             Quality: Quality
