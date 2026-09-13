@@ -1,6 +1,6 @@
 # Feynman Gates — protocolo operacional
 
-Este protocolo adapta mecanismos de rigor de `MarceloClaro/feynman` e `MarceloClaro/feynman-skill` ao Reversa. Não é roleplay nem reprodução de personalidade.
+Este protocolo adapta mecanismos de rigor de `MarceloClaro/feynman`, `MarceloClaro/feynman-skill` e `MarceloClaro/feynman-tutor` ao Reversa. Não é roleplay nem reprodução de personalidade.
 
 ## FEG-01 — Nome ≠ entendimento
 
@@ -78,6 +78,51 @@ Para cada dúvida relevante, encontre a intervenção de menor custo que muda a 
 
 O objetivo é reduzir incerteza, não maximizar atividade.
 
+## FEG-07 — Teach-back e fronteira de conhecimento
+
+Quando uma afirmação relevante depende de conhecimento humano não registrado no sistema, confirmação simples não basta. Use teach-back para testar se a fonte humana consegue explicar o mecanismo sem priming e transferi-lo para uma variação.
+
+Sequência mínima:
+
+1. **Explicação livre:** a pessoa explica com suas palavras, sem múltipla escolha.
+2. **Probe de mecanismo:** uma pergunta causal derivada da própria resposta.
+3. **Probe de transferência:** um edge case ou cenário variante material.
+4. **Diagnóstico separado:** qualidade da compreensão humana e estado da evidência técnica.
+
+Classificação humana:
+
+- `TEACHBACK_GREEN`: mecanismo central claro + transferência coerente;
+- `TEACHBACK_YELLOW`: direção plausível, mas elo causal/condição/exceção incompleto;
+- `TEACHBACK_RED`: contradição, erro direcional ou conflito com evidência direta.
+
+Fonte humana:
+
+- `HUMAN-VALIDATED`: explicação coerente e transferível;
+- `HUMAN-PARTIAL`: explicação útil, mas incompleta;
+- `HUMAN-CONFLICT`: explicação contradiz evidência técnica ou outra fonte material.
+
+Regra crucial: `TEACHBACK_GREEN`/`HUMAN-VALIDATED` NÃO equivalem a `OBSERVED`. Se não houver código, contrato, teste, execução, log ou outra evidência direta, a origem deve continuar explicitamente humana.
+
+### Fluency cliff
+
+Registre o primeiro ponto em que a explicação deixa de descrever mecanismo e passa a usar rótulo, circularidade, “sempre foi assim” ou conjectura. Esse é o limite útil de conhecimento para a spec.
+
+Não use velocidade, hesitação, vocabulário ou eloquência como critério.
+
+### Quando aplicar
+
+FEG-07 é aplicável apenas quando:
+
+- a lacuna muda requisito, risco, decisão ou interpretação relevante; e
+- o repositório não contém evidência direta suficiente; e
+- um humano está atuando como fonte de conhecimento de domínio.
+
+Quando aplicável, use `/reversa-teachback` ou o mini-protocolo equivalente dentro de `/reversa-clarify` ou `/reversa-reviewer`.
+
+Quando não aplicável, registre `NOT_APPLICABLE`; não force uma conversa pedagógica em todo fluxo.
+
+FEG-07 é complementar e NÃO entra no score-base Feynman `0..12`, que continua calculado sobre FEG-01..FEG-06. O relatório deve mostrar o status de FEG-07 separadamente.
+
 ## Matriz de severidade
 
 - `CRITICAL`: falsa confirmação pode causar perda de dados, quebra contratual, segurança, auth, compliance ou arquitetura irreversível.
@@ -87,11 +132,12 @@ O objetivo é reduzir incerteza, não maximizar atividade.
 
 ## Anti-overclaim
 
-Não usar `verified`, `confirmed`, `reproduced`, “comprovado” ou equivalentes quando só houve leitura superficial, inferência ou consistência textual.
+Não usar `verified`, `confirmed`, `reproduced`, “comprovado” ou equivalentes quando só houve leitura superficial, inferência, consistência textual ou teach-back humano sem evidência técnica.
 
 Quando faltarem dados, prefira:
 - `UNVERIFIED`;
 - `BLOCKED: <motivo>`;
 - `TODO: executar <teste>`;
+- `HUMAN-VALIDATED` quando a origem for humana;
 - 🟡 INFERIDO;
 - 🔴 LACUNA.
