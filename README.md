@@ -1,109 +1,67 @@
 # ReversaFeynman
 
-**Engenharia reversa, especificações executáveis, validação epistemológica e aprendizagem adaptativa orientada por evidências para agentes de IA.**
+**Engenharia reversa, especificações executáveis, validação epistemológica e aprendizagem adaptativa governada para agentes de IA.**
 
 **Repositório canônico:** `MarceloClaro/reversaFeynman`
 
-ReversaFeynman é uma linha independente mantida por **Marcelo Claro Laranjeira**, derivada historicamente do framework **Reversa** original e licenciada sob MIT. A base de engenharia reversa, SDD, pipelines especializados, rastreabilidade e compatibilidade multi-engine é preservada. Sobre ela, esta edição acrescenta:
+ReversaFeynman é uma linha independente mantida por **Marcelo Claro Laranjeira**, derivada historicamente do framework **Reversa** original e licenciada sob MIT.
 
-- Feynman Evidence & Understanding Layer;
-- FEG-01..FEG-07;
-- Teach-back;
-- governança de invocação e handoff seguro;
-- estados epistemológicos explícitos;
-- integração opcional com **OpenCode Ecosystem Core / MCI**;
-- integração opcional com **ACME** por protocolo de experiência e sidecar;
-- reward baseline auditável;
-- allowlist de ações adaptativas;
-- guard que impede uma política aprendida de fabricar `OBSERVED`.
+A edição preserva a base de engenharia reversa, SDD, rastreabilidade, pipelines especializados e compatibilidade multi-engine, acrescentando três extensões principais:
 
-> A independência desta árvore não apaga a proveniência do projeto original. Referências ao Reversa, ao paper e aos autores originais são mantidas. O que muda é a linha de desenvolvimento, distribuição e as extensões arquiteturais desta edição.
+- **Feynman Evidence & Understanding Layer** — FEG-01..FEG-07, evidência, falsificabilidade e Teach-back;
+- **Invocation Governance** — handoff seguro para skills protegidas;
+- **Adaptive Governance v2** — MCI/ACME bridges, ledger auditável, shadow policy, drift detection e promoção controlada para modo ativo.
 
-> Política completa de independência: [`INDEPENDENCE.md`](INDEPENDENCE.md)
+> A linha independente não apaga a proveniência do Reversa original. Licença, referências e atribuição histórica permanecem preservadas.
+
+> Política de independência: [`INDEPENDENCE.md`](INDEPENDENCE.md)
 
 ---
 
-## Paper e origem científica
+## Origem científica
 
-O framework Reversa original é associado ao trabalho:
+O Reversa original é associado ao trabalho:
 
 > **Reversa: A Reverse Documentation Engineering Framework for Converting Legacy Software into Operational Specifications for AI Agents** — Macedo & da Costa, 2026.
 
 Paper: https://arxiv.org/abs/2605.18684
 
-O ReversaFeynman mantém o objetivo central do framework: transformar conhecimento preso em sistemas legados em contratos operacionais rastreáveis para agentes de IA.
+O objetivo central permanece: transformar conhecimento preso em sistemas legados em especificações operacionais rastreáveis para agentes de IA.
 
-A extensão Feynman adiciona uma segunda pergunta:
+O ReversaFeynman adiciona duas perguntas:
 
-> **Como sabemos que aquilo que a especificação afirma está realmente sustentado por evidência ou compreensão demonstrável?**
+> **Como sabemos que aquilo que a especificação afirma está realmente sustentado por evidência?**
 
-A camada adaptativa adiciona uma terceira:
-
-> **Dado o histórico de resultados, qual agente, rota ou estratégia devemos selecionar sem confundir probabilidade aprendida com verdade observada?**
+> **Como aprender com outcomes sem transformar probabilidade aprendida em verdade observada?**
 
 ---
 
-# Reversa original × ReversaFeynman
+# Evolução arquitetural
 
-## Resumo executivo
-
-| Dimensão | Reversa original / arquitetura-base | ReversaFeynman atual | Impacto principal |
+| Dimensão | Reversa base | ReversaFeynman | Adaptive Governance v2 |
 |---|---|---|---|
-| Objetivo central | Converter legado em especificações operacionais | Mantido | Compatibilidade conceitual preservada |
-| Discovery | Scout → Archaeologist → Detective/Architect → Writer → Reviewer | Mantido | Não quebra o fluxo central |
-| Forward | Requirements → Clarify → Quality → Plan → To-Do → Audit → Coding → Sync | Mantido com handoff seguro | Evita invocação incompatível de skills protegidas |
-| Evidência | CONFIRMED / INFERRED / GAP | `OBSERVED / INFERRED / UNVERIFIED / BLOCKED` | Separação mais forte entre observação e inferência |
-| Auditoria | Reviewer, Quality e Audit | FEG-01..06 + `/reversa-feynman` | Proveniência, falsificabilidade e anti-cargo-cult |
-| Conhecimento humano | Perguntas e validação | FEG-07 + `/reversa-teachback` | Fluência humana não vira evidência técnica automaticamente |
-| Invocação | model-invoked/user-invoked | Policy lockstep + read-and-execute | Mantém proteção sem interromper orquestração |
-| Metacognição | Não era camada do núcleo | MCI envelope opcional | Estado, confiança, trust, abstention e gates exportáveis |
-| Aprendizagem adaptativa | Não era camada do núcleo | ACME experience opcional | Permite aprender seleção/rankeamento de rotas por outcome |
-| Reward | Não aplicável | `heuristic-v1`, auditável e limitado | Baseline falsificável, não autoridade epistemológica |
-| Segurança adaptativa | Não aplicável | allowlist + evidence guard | RL não executa qualquer ação nem cria `OBSERVED` |
-| Distribuição | Linha original | `MarceloClaro/reversaFeynman` | Evolução independente |
-| Upstream | Projeto de origem | Sem sync automático | Incorporação externa somente por decisão explícita |
-
-## O que não mudou
-
-ReversaFeynman não é uma reescrita incompatível. Ele preserva:
-
-- comandos `/reversa-*`;
-- binário `reversa`;
-- `.reversa/`;
-- `_reversa_sdd/`, `_reversa_forward/`, `_reversa_bugs/`, `_reversa_docs/` e `_reversa_refactor/`;
-- Discovery, Greenfield, Forward, Migration, Documentation, Bugs, Refactor, Pricing e Translators;
-- compatibilidade multi-engine;
-- manifest SHA-256;
-- rastreabilidade entre especificação, código, teste e defeito;
-- licença MIT e atribuição histórica.
-
----
-
-# Por que o Reversa existe
-
-Sistemas de produção acumulam anos de regras implícitas, decisões arquiteturais não documentadas, exceções operacionais, integrações, estados e lógica crítica. Esse conhecimento costuma estar distribuído entre código, banco de dados, contratos, telas, testes, logs e memória das pessoas.
-
-Agentes de IA conseguem criar e alterar software rapidamente, mas precisam de especificações precisas para não apagar regras existentes. Em sistemas legados, o comportamento implementado é frequentemente a principal fonte para reconstruir a especificação.
-
-O Reversa transforma essa realidade em um processo estruturado de:
-
-```text
-reconhecimento → escavação → interpretação → especificação → revisão
-```
-
-O ReversaFeynman acrescenta:
-
-```text
-compreensão → evidência → falsificabilidade → calibração → aprendizagem controlada
-```
+| Engenharia reversa | Discovery + specs | preservada | preservada |
+| Forward | requirements → coding → sync | handoff seguro | pode receber ranking adaptativo |
+| Evidência | CONFIRMED / INFERRED / GAP | `OBSERVED / INFERRED / UNVERIFIED / BLOCKED` | mesmos estados; policy não altera autoridade |
+| Auditoria | Reviewer / Quality / Audit | FEG-01..07 | ledger + drift + governance |
+| Fonte humana | perguntas/validação | Teach-back | continua sem equivaler a `OBSERVED` |
+| Metacognição | não é camada do núcleo | parcial via FEG | MCI envelope opcional |
+| Aprendizagem | não | não | ACME experience opcional |
+| Reward | não | não | `heuristic-v1` |
+| Policy | determinística/heurística | determinística/heurística | `contextual-shadow-v1` baseline |
+| Drift | não | não | reward/confidence/epistemic mix |
+| Auditoria de eventos | artefatos | artefatos + Feynman | hash-chain SHA-256 |
+| Execução adaptativa | não | não | shadow por padrão; active somente via gates |
+| Dependência RL | nenhuma | nenhuma | nenhuma no core; sidecar externo opcional |
+| Upstream | projeto original | sem sync automático | sem sync automático |
 
 ---
 
 # Arquitetura original
 
-A arquitetura-base herdada do Reversa é centrada em **orquestradores especializados + agentes de fase + artefatos persistidos em disco**.
+A arquitetura-base herdada do Reversa usa **orquestradores especializados + agentes de fase + artefatos persistidos em disco**.
 
-## Discovery original
+## Discovery
 
 ```mermaid
 flowchart LR
@@ -121,7 +79,7 @@ flowchart LR
     SDD --> DOC["/reversa-docs"]
 ```
 
-Sequência conceitual:
+Fluxo conceitual:
 
 ```text
 Reconnaissance → Excavation → Interpretation → Generation → Review
@@ -129,7 +87,7 @@ Reconnaissance → Excavation → Interpretation → Generation → Review
                                      Architect
 ```
 
-## Evolução original
+## Evolução de feature
 
 ```mermaid
 flowchart LR
@@ -144,22 +102,22 @@ flowchart LR
     SY --> ADD["_reversa_sdd/addenda"]
 ```
 
-Essa arquitetura continua sendo o núcleo operacional.
+O núcleo funcional continua preservado.
 
 ---
 
 # Arquitetura ReversaFeynman
 
-A arquitetura Feynman adiciona duas camadas transversais: **governança de invocação** e **controle epistemológico**.
+ReversaFeynman adiciona dois planos transversais: **governança de invocação** e **controle epistemológico**.
 
 ```mermaid
 flowchart TB
-    U["Usuário"] --> E["Pontos de entrada / orquestradores"]
+    U["Usuário"] --> E["Pontos de entrada"]
 
     subgraph INV["Invocation Governance"]
         E --> POL["Invocation Policy"]
         POL --> META{"Skill protegida?"}
-        META -->|"não"| NATIVE["Invocação nativa permitida"]
+        META -->|"não"| NATIVE["Invocação nativa"]
         META -->|"sim"| READ["Read SKILL.md + execute no contexto atual"]
     end
 
@@ -193,92 +151,125 @@ flowchart TB
     CR --> ART
 ```
 
+Invariante:
+
+```text
+TEACHBACK_GREEN ≠ OBSERVED
+HUMAN-VALIDATED ≠ OBSERVED
+```
+
 ---
 
-# Nova camada adaptativa: MCI + ACME
+# Adaptive Governance v2
 
-A implementação atual adiciona uma camada opcional em `lib/integrations/adaptive/`.
+A camada adaptativa está em:
 
-Ela não substitui os pipelines Reversa e não transforma RL em autoridade sobre evidência.
+```text
+lib/integrations/adaptive/
+```
+
+Ela não substitui os pipelines Reversa e não torna reinforcement learning autoridade sobre evidência.
+
+## Arquitetura v2
 
 ```mermaid
 flowchart TB
     RF["ReversaFeynman"] --> EV["Learning Event v1"]
-    EV --> EG["Epistemic Guard"]
+    EV --> SV["Schema Validator"]
+    SV --> LED["Audit Ledger / SHA-256"]
+    SV --> EG["Epistemic Guard"]
 
     EG --> MB["MCI Bridge"]
     EG --> AB["ACME Bridge"]
 
     MB --> OC["OpenCode Ecosystem Core / MCI"]
-    AB --> AC["ACME sidecar / learner"]
+    AB --> HIST["Experience History"]
+    HIST --> AC["ACME sidecar opcional"]
+    HIST --> DR["Drift Detector"]
+    HIST --> POL["Contextual Shadow Policy"]
 
-    OC --> OUT["Outcome + Trust + Calibration"]
-    AC --> POL["Policy proposal"]
+    DR --> GOV["Adaptive Governance"]
+    POL --> GOV
+    MB --> GOV
 
-    OUT --> RF
-    POL --> SAFE{"Action allowlisted?"}
-    SAFE -->|"sim"| RF
-    SAFE -->|"não"| REJ["Reject"]
+    GOV --> SHADOW["Shadow mode"]
+    GOV --> ACTIVE{"Elegível para active mode?"}
+    ACTIVE -->|"não"| ABSTAIN["Abstain / deterministic routing"]
+    ACTIVE -->|"sim"| APPROVAL{"Ação mutante?"}
+    APPROVAL -->|"sim"| HUMAN["Workflow approval"]
+    APPROVAL -->|"não"| ROUTE["Route action"]
+    HUMAN --> ROUTE
+    ROUTE --> RF
 ```
 
-## Responsabilidade de cada camada
+## Responsabilidades
 
-| Camada | Pergunta principal | Autoridade |
+| Componente | Pergunta | Autoridade |
 |---|---|---|
-| ReversaFeynman | O que sabemos e qual evidência sustenta? | evidência e especificação |
-| MCI / OpenCode | Quem executa, como coordenar e quando abster? | metacognição/orquestração |
-| ACME | Qual política de seleção tende a produzir melhores outcomes? | sugestão adaptativa |
+| ReversaFeynman | O que sabemos? | evidência/especificação |
+| FEG | Por que acreditar? O que refutaria? | auditoria epistemológica |
+| MCI | Quem deve agir? Quando abster? | metacognição/orquestração |
+| ACME | Qual política tende a gerar melhor outcome? | recomendação adaptativa |
+| Drift Detector | O comportamento recente mudou? | contenção operacional |
+| Governance | A proposal pode sair de shadow? | autorização adaptativa |
+| Evidence Guard | Pode virar `OBSERVED`? | autoridade epistemológica final |
 
-Invariante fundamental:
+Regra central:
 
 ```text
 policy confidence 0.99 ≠ OBSERVED
 Trust Engine 0.99       ≠ OBSERVED
+reward = 1.0            ≠ OBSERVED
 HUMAN-VALIDATED         ≠ OBSERVED
 ```
 
-`OBSERVED` continua exigindo evidência direta rastreável.
-
 ---
 
-# Implementação da camada adaptativa
-
-## Módulos
+# Módulos adaptativos
 
 ```text
 lib/integrations/adaptive/
 ├── constants.js
+├── schema.js
 ├── event.js
 ├── evidence-guard.js
 ├── reward.js
+├── ledger.js
+├── drift.js
+├── policy.js
+├── governance.js
 ├── mci-bridge.js
 ├── acme-bridge.js
+├── runtime.js
 └── index.js
 ```
 
-Especificação:
+Especificações:
 
 ```text
 specs/SPEC-ADAPTIVE-MCI-ACME-BRIDGE.md
+specs/SPEC-ADAPTIVE-GOVERNANCE-V2.md
 ```
 
-Teste:
+Teste executável:
 
 ```text
 scripts/test-adaptive-bridges.mjs
 ```
 
-## Contratos versionados
+---
 
-| Contrato | Schema |
-|---|---|
-| Evento interno | `reversa.learning.event/v1` |
-| Envelope MCI | `reversa.mci.envelope/v1` |
-| Experience ACME | `reversa.acme.experience/v1` |
+# Contratos versionados
+
+| Contrato | Schema | Função |
+|---|---|---|
+| Learning Event | `reversa.learning.event/v1` | estado + ação + outcome |
+| MCI Envelope | `reversa.mci.envelope/v1` | metacognição + gates + proveniência |
+| ACME Experience | `reversa.acme.experience/v1` | observation → action → reward |
+
+A v2 endurece a validação sem quebrar deliberadamente esses schemas.
 
 ## Learning Event
-
-Exemplo:
 
 ```js
 import { createLearningEvent } from './lib/integrations/adaptive/index.js';
@@ -296,9 +287,7 @@ const event = createLearningEvent({
     calibrated: 0.63,
     trust: 0.74,
   },
-  action: {
-    id: 'route:clarify',
-  },
+  action: { id: 'route:clarify' },
   outcome: {
     specAccepted: true,
     testsPassing: true,
@@ -307,149 +296,21 @@ const event = createLearningEvent({
 });
 ```
 
-## MCI Bridge
+A v2 exige:
 
-A bridge MCI produz um envelope com:
-
-- estado epistemológico;
-- Feynman score;
-- confiança;
-- trust;
-- `should_abstain`;
-- gates FEG requeridos;
-- ação proposta;
-- outcome;
-- proveniência do evento.
-
-```js
-import { buildMciEnvelope } from './lib/integrations/adaptive/index.js';
-
-const envelope = buildMciEnvelope(event);
-```
-
-O pacote não embute o OpenCode Ecosystem Core. Transporte é injetado explicitamente:
-
-```js
-import { createMciBridge } from './lib/integrations/adaptive/index.js';
-
-const bridge = createMciBridge({
-  transport: async (envelope) => {
-    // encaminhe explicitamente ao MCI configurado no seu ambiente
-    return { accepted: true, id: envelope.task_id };
-  },
-});
-```
-
-Sem `transport`, a bridge apenas constrói o envelope e retorna `sent: false`.
-
-## ACME Bridge
-
-A bridge ACME traduz o evento Reversa para a estrutura:
-
-```text
-observation → action → reward → terminal → extras
-```
-
-A observação inicial possui sete dimensões:
-
-1. estado epistemológico;
-2. Feynman score normalizado;
-3. findings HIGH;
-4. findings CRITICAL;
-5. bloqueios;
-6. confiança calibrada;
-7. trust.
-
-```js
-import { buildAcmeExperience } from './lib/integrations/adaptive/index.js';
-
-const experience = buildAcmeExperience(event);
-```
-
-O pacote `reversa` **não passa a depender de JAX, TensorFlow ou `dm-acme`**. O ACME real deve operar como sidecar/serviço externo opcional.
-
-Essa decisão mantém a instalação principal leve e evita transformar o stack Python/RL em requisito para engenharia reversa.
+- timestamp válido;
+- `feynman_score` em `[0,12]` ou nulo;
+- confidence/trust em `[0,1]` ou nulos;
+- findings/bloqueios não negativos;
+- `event_id` único por UUID quando não fornecido explicitamente.
 
 ---
 
-# Reward baseline
+# Evidence Guard
 
-A primeira política de reward é `heuristic-v1`.
+Somente evidência direta rastreável pode produzir `OBSERVED`.
 
-Ela combina:
-
-- aceitação da especificação;
-- testes;
-- ganho de evidência observada;
-- redução de incerteza;
-- calibração;
-- regressões;
-- findings HIGH/CRITICAL;
-- custo;
-- latência;
-- retries.
-
-O score final é limitado a:
-
-```text
--1 ≤ reward ≤ 1
-```
-
-Esse reward é um **baseline falsificável**, não um reward “ótimo”.
-
-Ele não pode alterar um estado epistemológico.
-
-```js
-import { computeAdaptiveReward } from './lib/integrations/adaptive/index.js';
-
-const reward = computeAdaptiveReward(event.outcome);
-```
-
----
-
-# Guard epistemológico
-
-O guard implementa uma regra rígida:
-
-> nenhuma política aprendida, trust score, MCI score ou resposta humana isolada pode produzir `OBSERVED`.
-
-Exemplo bloqueado:
-
-```js
-import { applyEvidenceProposal } from './lib/integrations/adaptive/index.js';
-
-const result = applyEvidenceProposal(
-  { id: 'claim-1', epistemic_state: 'INFERRED' },
-  {
-    proposed: 'OBSERVED',
-    source: {
-      kind: 'learned-policy',
-      direct: false,
-      ref: 'policy:acme',
-    },
-  },
-);
-
-// result.epistemic_state === 'INFERRED'
-```
-
-Promoção aceita exige evidência direta:
-
-```js
-const observed = applyEvidenceProposal(
-  { id: 'claim-2', epistemic_state: 'INFERRED' },
-  {
-    proposed: 'OBSERVED',
-    source: {
-      kind: 'test',
-      direct: true,
-      ref: 'tests/example.test.js:42',
-    },
-  },
-);
-```
-
-Tipos de evidência direta reconhecidos pelo baseline:
+Tipos reconhecidos pelo baseline:
 
 ```text
 code
@@ -461,13 +322,313 @@ dataset
 artifact
 ```
 
+Bloqueado:
+
+```js
+applyEvidenceProposal(
+  { id: 'claim-1', epistemic_state: 'INFERRED' },
+  {
+    proposed: 'OBSERVED',
+    source: { kind: 'learned-policy', direct: false, ref: 'policy:acme' },
+  },
+);
+```
+
+Aceitável quando sustentado por evidência direta:
+
+```js
+applyEvidenceProposal(
+  { id: 'claim-2', epistemic_state: 'INFERRED' },
+  {
+    proposed: 'OBSERVED',
+    source: { kind: 'test', direct: true, ref: 'tests/example.test.js:42' },
+  },
+);
+```
+
+---
+
+# MCI Bridge
+
+O envelope MCI transporta:
+
+- estado epistemológico;
+- Feynman score;
+- confidence;
+- trust;
+- `should_abstain`;
+- FEGs requeridos;
+- ação proposta;
+- outcome;
+- proveniência do evento.
+
+```js
+import { buildMciEnvelope } from './lib/integrations/adaptive/index.js';
+
+const envelope = buildMciEnvelope(event);
+```
+
+O OpenCode Ecosystem Core continua opcional. Transporte é explicitamente injetado.
+
+---
+
+# ACME Bridge
+
+A experience ACME segue:
+
+```text
+observation → action → reward → terminal → extras
+```
+
+Observation vector baseline, 7 dimensões:
+
+1. estado epistemológico;
+2. Feynman score normalizado;
+3. findings HIGH;
+4. findings CRITICAL;
+5. bloqueios;
+6. confidence;
+7. trust.
+
+O core não passa a depender de JAX, TensorFlow ou `dm-acme`. ACME real opera como sidecar/learner externo opcional.
+
+---
+
+# Reward baseline
+
+A função `heuristic-v1` combina:
+
+- aceitação da spec;
+- testes;
+- ganho de evidência observada;
+- redução de incerteza;
+- calibração;
+- regressões;
+- findings HIGH/CRITICAL;
+- custo;
+- latência;
+- retries.
+
+```text
+-1 ≤ reward ≤ 1
+```
+
+O reward é uma hipótese operacional falsificável, não uma medida de verdade.
+
+---
+
+# Audit Ledger
+
+`createAuditLedger()` cria uma cadeia SHA-256:
+
+```text
+genesis_hash
+    ↓
+entry_1 = H(sequence + previous_hash + payload_hash)
+    ↓
+entry_2 = H(sequence + previous_hash + payload_hash)
+    ↓
+...
+```
+
+Propriedades:
+
+- dedupe por `event_id`;
+- payload canonicalizado;
+- hash encadeado;
+- verificação integral;
+- snapshot somente leitura;
+- exportação JSONL.
+
+O ledger atual é em memória. Persistência durável pode ser feita pelo transport/sidecar, sem ser habilitada automaticamente.
+
+---
+
+# Contextual Shadow Policy
+
+`contextual-shadow-v1` é um baseline simples e auditável.
+
+Ele:
+
+1. recebe observation atual;
+2. filtra candidatos pela allowlist global;
+3. busca experiências da mesma ação;
+4. calcula similaridade entre observation vectors;
+5. estima reward empírico ponderado;
+6. acrescenta bônus de incerteza;
+7. ranqueia ações.
+
+Toda proposal nasce com:
+
+```text
+mode = shadow
+evidence_authority = false
+```
+
+Uma lista externa de candidatos **não consegue redefinir a allowlist global**.
+
+Exemplo:
+
+```js
+const proposal = proposeShadowAction({
+  observation: experience.observation,
+  experiences: history,
+  candidateActions: ['route:reviewer', 'route:clarify'],
+});
+```
+
+Esse baseline não é apresentado como algoritmo ótimo de contextual bandit. Ele serve como política observável para coleta e avaliação antes de maior autonomia.
+
+---
+
+# Drift Detection
+
+`detectAdaptiveDrift()` compara uma janela histórica de referência com uma janela recente.
+
+Métricas baseline:
+
+```text
+reward_delta
+confidence_delta
+observed_share_delta
+```
+
+Status:
+
+```text
+insufficient_data
+stable
+drift
+```
+
+Quando drift é detectado, a policy não deve ser promovida automaticamente para modo ativo.
+
+Thresholds são configuráveis e devem ser tratados como hipóteses falsificáveis, não constantes científicas universais.
+
+---
+
+# Adaptive Governance
+
+Uma proposal só pode ser executável quando os gates operacionais forem satisfeitos.
+
+Possíveis bloqueios:
+
+```text
+action-not-allowlisted
+drift-detected
+insufficient-history
+low-policy-confidence
+approval-required
+shadow-mode
+```
+
+Ações mutantes permanecem sob gate explícito. Baseline atual:
+
+```text
+route:coding → requires_approval=true
+```
+
+Estar na allowlist significa “pode ser proposta”, não “pode ser executada livremente”.
+
+---
+
+# Adaptive Runtime
+
+`createAdaptiveRuntime()` coordena a camada v2:
+
+```text
+event
+  → schema validation
+  → ledger
+  → MCI envelope
+  → ACME experience
+  → bounded history
+  → drift
+  → shadow proposal
+  → governance
+```
+
+Exemplo:
+
+```js
+import {
+  createAdaptiveRuntime,
+  createLearningEvent,
+} from './lib/integrations/adaptive/index.js';
+
+const runtime = createAdaptiveRuntime({
+  candidateActions: ['route:reviewer', 'route:clarify', 'route:feynman'],
+  maxHistory: 500,
+});
+
+const result = await runtime.ingest(event);
+
+console.log(result.proposal.mode);          // shadow
+console.log(result.governance.executable); // false por padrão
+console.log(result.ledger.valid);           // true
+```
+
+Por padrão, o runtime:
+
+- não despacha para MCI/ACME externo;
+- não executa action proposal;
+- permanece em shadow mode;
+- deduplica eventos;
+- mantém histórico limitado;
+- avalia drift;
+- expõe método separado para avaliar ativação.
+
+---
+
+# Estratégia de maturação
+
+A autonomia deve aumentar por etapas:
+
+```text
+1. Shadow
+   ↓
+2. Offline evaluation
+   ↓
+3. Canary de ações não mutantes
+   ↓
+4. Guarded active
+   ↓
+5. Learner externo mais sofisticado
+```
+
+## 1. Shadow
+
+Coletar outcomes e comparar o ranking da policy sem alterar o roteamento real.
+
+## 2. Offline evaluation
+
+Avaliar reward, estabilidade, calibração e drift por stage/action antes de habilitar autonomia.
+
+## 3. Canary
+
+Permitir subset pequeno de ações não mutantes.
+
+## 4. Guarded active
+
+Exigir:
+
+- allowlist;
+- histórico mínimo;
+- confidence mínima;
+- drift estável;
+- approval quando mutante.
+
+## 5. Learner externo
+
+Somente depois conectar ACME real ou outro learner com dados suficientes.
+
+RL profundo de horizonte longo não é requisito inicial.
+
 ---
 
 # Allowlist adaptativa
 
-A política externa não recebe permissão irrestrita para agir.
-
-Allowlist inicial:
+Baseline:
 
 ```text
 route:scout
@@ -484,18 +645,16 @@ control:request-evidence
 control:abstain
 ```
 
-Uma ação fora da allowlist é rejeitada antes do transporte.
-
-O objetivo inicial recomendado para ACME é **seleção adaptativa de agentes/rotas**, preferencialmente contextual bandit/offline evaluation antes de RL profundo de horizonte longo.
+Ações externas fora da allowlist são rejeitadas.
 
 ---
 
-# Abstention e confiança
+# Abstention
 
-A bridge MCI ativa `should_abstain` quando:
+O envelope MCI ativa `should_abstain` quando:
 
-- estado = `BLOCKED`; ou
-- confiança calibrada fica abaixo do limiar configurado.
+- estado epistemológico é `BLOCKED`; ou
+- confidence calibrada fica abaixo do limiar configurado.
 
 Baseline:
 
@@ -503,101 +662,38 @@ Baseline:
 abstainBelow = 0.20
 ```
 
-Abstention é uma decisão operacional de prudência. Não é um novo estado epistemológico.
-
----
-
-# Comparação arquitetural detalhada
-
-| Aspecto | Reversa base | ReversaFeynman atual | Consequência |
-|---|---|---|---|
-| Orquestração | Pipeline especializado | Pipeline + MCI envelope opcional | contexto metacognitivo interoperável |
-| Handoff | Próximo agente | metadata-aware | protege skills user-invoked |
-| Estado | `.reversa/state.json` + artefatos | Mantido | não cria segundo sistema de estado |
-| Evidência | confiança visual | estados epistemológicos | menor falsa certeza |
-| Fonte humana | resolve lacuna | FEG-07 | humano continua fonte distinta |
-| Routing | determinístico/heurístico | pode receber política adaptativa | aprendizado sem remover gates |
-| Trust | não é evidência | transportável ao MCI | trust não promove `OBSERVED` |
-| Reward | inexistente | baseline explícito | outcome mensurável e auditável |
-| RL | inexistente | sidecar opcional | zero dependência RL no core |
-| Ações | definidas pelo pipeline | allowlist adaptativa | reduz espaço de ação perigoso |
-
----
-
-# Impactos das implementações
-
-## Handoff do `/reversa-forward`
-
-Após `CONTINUAR`, o Forward pode localizar a próxima skill, ler seus metadados e executar o conteúdo no contexto atual quando a invocação implícita estiver bloqueada.
-
-Isso preserva `disable-model-invocation` sem interromper o pipeline.
-
-## Economia de contexto do eixo de invocação
-
-A política de invocação documentada historicamente no framework reduziu skills permanentemente model-invoked de **65 para 9**, com redução aproximada de **4.987 para 668 tokens** de descriptions permanentemente carregadas, cerca de **86% nesse componente específico de contexto**.
-
-Esse número não é apresentado como benchmark global do ReversaFeynman.
-
-## Impactos estruturais da camada adaptativa
-
-A nova camada permite:
-
-- transportar contexto epistemológico para MCI;
-- registrar experiências de decisão;
-- calcular reward auditável;
-- experimentar políticas de seleção de agentes;
-- calibrar abstention;
-- testar políticas sem conceder autoridade epistemológica;
-- manter ACME e OpenCode como integrações opcionais.
-
-## Trade-offs
-
-- mais contratos e eventos aumentam a superfície documental;
-- reward mal definido pode otimizar o comportamento errado;
-- políticas aprendidas precisam de avaliação offline antes de receber maior autonomia;
-- ACME real adiciona stack Python/RL no sidecar;
-- integração externa exige transporte configurado pelo operador;
-- linha independente não recebe mudanças de upstream automaticamente.
+Drift detectado também pode forçar contenção operacional pela governance.
 
 ---
 
 # Feynman Evidence & Understanding Layer
 
-## Gates
+| Gate | Pergunta operacional |
+|---|---|
+| `FEG-01` | O mecanismo pode ser explicado sem depender só do nome? |
+| `FEG-02` | A afirmação tem evidência/proveniência? |
+| `FEG-03` | Observação e inferência estão separadas? |
+| `FEG-04` | Existe teste/oracle que possa refutar? |
+| `FEG-05` | A solução resolve necessidade demonstrada ou é cargo cult? |
+| `FEG-06` | Qual menor experimento reduz a incerteza? |
+| `FEG-07` | A fonte humana explica mecanismo e transfere para cenário variante? |
 
-| Gate | Pergunta operacional | Tipo |
-|---|---|---|
-| `FEG-01` | O mecanismo pode ser explicado sem depender apenas do nome? | compreensão |
-| `FEG-02` | A afirmação forte possui evidência/proveniência? | evidência |
-| `FEG-03` | Observação e inferência estão separadas? | epistemologia |
-| `FEG-04` | Existe teste/oracle capaz de refutar? | falsificabilidade |
-| `FEG-05` | A solução resolve necessidade demonstrada ou é cargo cult? | arquitetura |
-| `FEG-06` | Qual menor experimento reduz a incerteza? | investigação |
-| `FEG-07` | A fonte humana explica mecanismo e transfere para cenário variante? | conhecimento humano |
-
-## Estados de evidência
-
-- `OBSERVED` — evidência direta adequada ao claim;
-- `INFERRED` — dedução plausível;
-- `UNVERIFIED` — sustentação insuficiente;
-- `BLOCKED` — validação necessária, mas indisponível.
-
-## Estados humanos
-
-- `HUMAN-VALIDATED`;
-- `HUMAN-PARTIAL`;
-- `HUMAN-CONFLICT`.
+Estados de evidência:
 
 ```text
-TEACHBACK_GREEN ≠ OBSERVED
-HUMAN-VALIDATED ≠ OBSERVED
-policy reward ≠ OBSERVED
-trust score ≠ OBSERVED
+OBSERVED
+INFERRED
+UNVERIFIED
+BLOCKED
 ```
 
-## `/reversa-feynman`
+Estados humanos:
 
-Auditor somente-leitura de FEG-01..06 e detector de candidatos FEG-07.
+```text
+HUMAN-VALIDATED
+HUMAN-PARTIAL
+HUMAN-CONFLICT
+```
 
 Score-base:
 
@@ -607,46 +703,9 @@ FEG-01..06 = 0..12
 
 FEG-07 permanece fora do score-base.
 
-## `/reversa-teachback`
-
-Validador de conhecimento humano material:
-
-```text
-explicação livre
-      ↓
-probe de mecanismo
-      ↓
-probe de transferência
-      ↓
-TEACHBACK_GREEN / YELLOW / RED
-      ↓
-HUMAN-VALIDATED / PARTIAL / CONFLICT
-```
-
-Persistência de `teachback.md` somente após consentimento explícito.
-
 ---
 
-# Instalação
-
-Na raiz do projeto a analisar:
-
-```bash
-npm exec --yes --package=github:MarceloClaro/reversaFeynman -- reversa install
-```
-
-Requisitos do core:
-
-- Node.js `>=18.20.2`;
-- pelo menos um harness/agente compatível.
-
-A integração adaptativa **não adiciona dependências npm obrigatórias**.
-
-ACME/JAX/TensorFlow continuam externos e opcionais.
-
----
-
-# Como usar
+# Workflows principais
 
 | Objetivo | Comando |
 |---|---|
@@ -657,7 +716,7 @@ ACME/JAX/TensorFlow continuam externos e opcionais.
 | Projeto novo expresso | `/reversa-new expresso "<ideia>"` |
 | Evoluir feature | `/reversa-forward` |
 | Pequena emenda | `/reversa-add` |
-| Sincronizar addendum | `/reversa-sync` |
+| Convergir addendum | `/reversa-sync` |
 | Migrar/reconstruir | `/reversa-migrate` |
 | Documentar | `/reversa-docs` |
 | Registrar bug | `/reversa-debugger` |
@@ -669,16 +728,16 @@ ACME/JAX/TensorFlow continuam externos e opcionais.
 | Teach-back | `/reversa-teachback` |
 | Ajuda | `/reversa-agents-help` |
 
-## `CONTINUAR` e handoff seguro
+## Handoff seguro
 
 ```mermaid
 flowchart TD
-    C["Usuário: CONTINUAR"] --> R["Reavaliar estágio físico"]
+    C["Usuário: CONTINUAR"] --> R["Reavaliar estágio"]
     R --> S["Resolver próxima skill"]
     S --> M["Ler SKILL.md + openai.yaml"]
     M --> P{"Invocação implícita proibida?"}
-    P -->|"sim"| X["Read-and-execute no contexto atual"]
-    P -->|"não"| N["Invocação nativa / fallback compatível"]
+    P -->|"sim"| X["Read-and-execute"]
+    P -->|"não"| N["Invocação nativa / fallback"]
     X --> D["Executar fase"]
     N --> D
     D --> R2["Reavaliar estágio"]
@@ -686,59 +745,32 @@ flowchart TD
 
 ---
 
-# Equipes e agentes
-
-A taxonomia funcional preserva os grupos herdados e acrescenta a camada transversal Feynman.
+# Equipes funcionais
 
 | Grupo | Função |
 |---|---|
 | Discovery Core | extrair conhecimento e produzir specs |
 | Migration | reconstrução/migração |
 | Translators | adaptar fontes estruturadas |
-| Pricing | estimativa e perfil |
-| Forward | requirements → implementação |
+| Pricing | perfil, tamanho e estimativa |
+| Forward | requirements → implementação → sync |
 | Documentation | site, mapas e narrativa |
 | Ideation | problema → alternativas → pre-spec |
 | New Project | ideia → PRD → SDD |
 | Bugs | memória causal, diagnóstico e fix |
 | Refactor | melhoria interna preservando comportamento |
 | ReversaFeynman | auditoria epistemológica e Teach-back |
+| Adaptive Governance | aprendizagem observável, drift e gates |
 
-## Discovery Core
+Discovery Core inclui, entre outros: Reversa, Autonomous, Scout, Archaeologist, Detective, Architect, Writer, Reviewer, Visor, Data Master, Design System, Agents Help e Reconstructor.
 
-- Reversa;
-- Autonomous;
-- Scout;
-- Archaeologist;
-- Detective;
-- Architect;
-- Writer;
-- Reviewer;
-- Visor;
-- Data Master;
-- Design System;
-- Agents Help;
-- Reconstructor.
-
-## Ideation
-
-```text
-Framer → Explorer → Challenger → Arbiter → Pre-Spec
-```
-
-## New Project
-
-```text
-Ideator → Researcher → Drafter → Spec SDD
-```
-
-## Forward
+Forward preserva:
 
 ```text
 requirements → clarify → quality → plan → to-do → audit → coding → sync
 ```
 
-A extensão Feynman usa:
+Extensão Feynman no Forward:
 
 ```text
 Quality → FEG-01 / FEG-04
@@ -747,25 +779,9 @@ Clarify → FEG-07 quando necessário
 Feynman → FEG-01..06 + candidatos FEG-07
 ```
 
-## Migration
-
-```text
-Paradigm Advisor → Curator → Strategist → Designer → Screen Translator → Inspector
-```
-
-## Bugs
-
-```text
-SPEC ↔ CODE ↔ TEST ↔ BUG
-```
-
-## Refactor
-
-Especialistas incluem Restructure, Modularize, Decouple, Optimize, Simplify, Standardize e Prune.
-
 ---
 
-# O que é gerado
+# Artefatos principais
 
 ## Discovery
 
@@ -821,7 +837,7 @@ _reversa_forward/
         └── teachback.md
 ```
 
-## Demais áreas
+Outros diretórios:
 
 ```text
 _reversa_docs/
@@ -829,7 +845,7 @@ _reversa_bugs/
 _reversa_refactor/
 ```
 
-A camada adaptativa trabalha com objetos/eventos em memória. Persistência externa de experiências deve ser definida pelo transport/sidecar e não é habilitada automaticamente.
+A camada adaptativa mantém ledger/history em memória por padrão. Persistência externa não é ativada implicitamente.
 
 ---
 
@@ -854,6 +870,23 @@ A camada adaptativa trabalha com objetos/eventos em memória. Persistência exte
 
 ---
 
+# Instalação
+
+```bash
+npm exec --yes --package=github:MarceloClaro/reversaFeynman -- reversa install
+```
+
+Requisitos do core:
+
+- Node.js `>=18.20.2`;
+- pelo menos um harness compatível.
+
+A camada adaptativa não adiciona dependências npm obrigatórias.
+
+ACME/JAX/TensorFlow/OpenCode permanecem externos e opcionais.
+
+---
+
 # CLI
 
 ```bash
@@ -865,11 +898,11 @@ npm exec --yes --package=github:MarceloClaro/reversaFeynman -- reversa export-di
 npm exec --yes --package=github:MarceloClaro/reversaFeynman -- reversa uninstall
 ```
 
-O `update`:
+O updater desta edição:
 
 - usa a distribuição em execução como fonte;
-- não consulta `registry.npmjs.org/reversa/latest`;
-- não faz sync com `sandeco/reversa`;
+- não consulta `registry.npmjs.org/reversa/latest` para definir autoridade de versão;
+- não faz sync automático com `sandeco/reversa`;
 - preserva customizações detectadas pelo manifest;
 - grava `distribution = MarceloClaro/reversaFeynman`.
 
@@ -891,7 +924,7 @@ reversa-docs
 reversa-agents-help
 ```
 
-Skills de fase protegidas mantêm lockstep:
+Skills protegidas mantêm lockstep:
 
 ```text
 SKILL.md: disable-model-invocation: true
@@ -900,26 +933,7 @@ openai.yaml: policy.allow_implicit_invocation: false
 
 ---
 
-# Independência de upstream
-
-ReversaFeynman pode estudar e incorporar ideias externas, inclusive do Reversa original, OpenCode Ecosystem Core e ACME. Isso não significa sincronização automática nem dependência de runtime.
-
-O guard estrutural rejeita padrões de sync automático como:
-
-```text
-gh repo sync
-git remote add upstream
-git remote set-url upstream
-git fetch upstream
-git pull upstream
-git merge upstream/...
-```
-
-`package.json` permanece `private: true`.
-
----
-
-# Verificação estrutural
+# Verificação
 
 ```bash
 npm run verify
@@ -935,45 +949,95 @@ scripts/test-installer-transport.mjs
 scripts/test-adaptive-bridges.mjs
 ```
 
-O teste adaptativo verifica, entre outros:
+O teste adaptativo v2 cobre:
 
-- schemas versionados;
-- reward entre `-1` e `1`;
-- MCI gates;
+- validação dos schemas;
+- UUID/timestamp/confidence/trust;
+- reward em `[-1,1]`;
+- FEGs no MCI envelope;
 - abstention;
 - allowlist;
+- proteção contra bypass de `candidateActions`;
+- `route:coding` com approval gate;
 - `learned-policy → OBSERVED` bloqueado;
-- evidência direta → `OBSERVED` permitido.
+- evidência direta → `OBSERVED` permitido;
+- ledger/deduplicação/hash-chain;
+- contextual shadow ranking;
+- drift detection;
+- runtime integrado;
+- shadow mode não executável por padrão.
 
-> Falha de provisionamento de runner não deve ser apresentada como falha dos testes nem como aprovação dos testes.
+> Workflow só deve ser declarado aprovado quando seus steps realmente executarem. Falha de provisionamento do runner não é resultado do código.
 
 ---
 
-# Estrutura interna
+# Impactos e limites
+
+## Melhorias estruturais
+
+Adaptive Governance v2 acrescenta:
+
+- contratos mais rígidos;
+- IDs de evento mais seguros;
+- replay deduplicado;
+- trilha auditável por hash-chain;
+- shadow policy contextual;
+- proteção contra candidate-action allowlist bypass;
+- drift detection;
+- separação explícita shadow → active;
+- gate de aprovação para ações mutantes;
+- runtime unificado sem execução automática.
+
+## O que ainda não foi demonstrado
+
+Não são feitas alegações de que:
+
+- `contextual-shadow-v1` seja policy ótima;
+- `heuristic-v1` seja reward ótimo;
+- thresholds de drift sejam universais;
+- ACME melhore empiricamente o Reversa sem benchmark;
+- MCI aumente qualidade sem avaliação comparativa.
+
+Essas hipóteses devem ser testadas com dados reais e avaliação reprodutível.
+
+## Trade-offs
+
+- mais governança aumenta complexidade;
+- ledger e history aumentam volume de estado;
+- reward mal especificado pode induzir comportamento indesejado;
+- drift thresholds exigem calibração por domínio;
+- maior autonomia exige mais evidência, não menos;
+- sidecars externos ampliam superfície operacional e de segurança.
+
+---
+
+# Referências de integração
+
+A camada foi desenhada para interoperar com:
+
+- `MarceloClaro/opencode-ecosystem-core` — MCI, MetaBus, Blackboard, Trust/Confidence, SDD/TDD e coordenação multiagente;
+- `MarceloClaro/acme` — Actor/Learner, reinforcement learning e execução escalável.
+
+Eles permanecem projetos externos e opcionais. ReversaFeynman implementa contratos de fronteira, não cópias internas desses ecossistemas.
+
+---
+
+# Independência de upstream
+
+O guard estrutural rejeita sincronização automática com upstream, incluindo padrões como:
 
 ```text
-.reversa/
-├── state.json
-├── config.toml
-├── config.user.toml
-├── plan.md
-├── version
-├── context/
-└── _config/
-
-agents/
-lib/
-├── commands/
-├── installer/
-├── integrations/
-│   └── adaptive/
-└── utils/
-
-scripts/
-specs/
-docs/
-INDEPENDENCE.md
+gh repo sync
+git remote add upstream
+git remote set-url upstream
+git fetch upstream
+git pull upstream
+git merge upstream/...
 ```
+
+Mudanças externas podem ser estudadas e incorporadas apenas por decisão/revisão/commit explícitos.
+
+`package.json` permanece `private: true`.
 
 ---
 
@@ -986,26 +1050,18 @@ npm install
 npm run verify
 ```
 
-Ao criar ou alterar uma integração adaptativa:
+Ao alterar a camada adaptativa:
 
-1. não permita que policy/trust/reward gere `OBSERVED`;
-2. mantenha ações externas allowlisted;
-3. mantenha transport injetado, não implícito;
-4. não adicione JAX/TensorFlow/ACME ao core sem decisão arquitetural explícita;
-5. versionar mudanças de schema incompatíveis;
-6. tratar reward como hipótese falsificável;
-7. preservar FEG-02/03/04 como gates de evidência.
-
----
-
-# Referências de integração
-
-A nova camada foi desenhada para interoperar com:
-
-- `MarceloClaro/opencode-ecosystem-core` — orquestração multiagente, MCI, MetaBus, Blackboard, Trust/Confidence e bridges;
-- `MarceloClaro/acme` — framework de reinforcement learning com conceitos Actor/Learner e execução escalável.
-
-Esses projetos permanecem externos e opcionais. O ReversaFeynman implementa os **contratos de fronteira** para integração, não uma cópia interna desses ecossistemas.
+1. nunca permita que policy/trust/reward crie `OBSERVED`;
+2. preserve a allowlist global;
+3. não trate candidate list como autorização;
+4. mantenha shadow como default;
+5. exija approval para ações mutantes;
+6. interrompa promoção sob drift;
+7. versione mudanças incompatíveis de schema;
+8. trate reward/policy/thresholds como hipóteses falsificáveis;
+9. mantenha transports explícitos;
+10. não adicione JAX/TensorFlow/ACME ao core sem decisão arquitetural explícita.
 
 ---
 
@@ -1020,7 +1076,6 @@ Extensões desta linha incluem:
 - FEG-01..FEG-07;
 - `/reversa-feynman`;
 - `/reversa-teachback`;
-- integração Feynman em Reviewer, Clarify, Quality, Audit e Challenger;
 - distribuição independente;
 - guard contra upstream sync;
 - Adaptive MCI + ACME Bridge;
@@ -1028,8 +1083,14 @@ Extensões desta linha incluem:
 - MCI Envelope v1;
 - ACME Experience v1;
 - reward `heuristic-v1`;
-- action allowlist;
-- epistemic guard para políticas aprendidas.
+- Evidence Guard;
+- Adaptive Governance v2;
+- schema validation;
+- hash-chain audit ledger;
+- `contextual-shadow-v1`;
+- drift detection;
+- adaptive runtime;
+- active-mode governance.
 
 Licença: **MIT** — consulte [`LICENSE`](LICENSE).
 
@@ -1043,7 +1104,6 @@ Reversa original
     ├── engenharia reversa
     ├── SDD e rastreabilidade
     ├── pipelines especializados
-    ├── migração / bugs / docs / refactor
     └── multi-engine installer
 
             +
@@ -1060,23 +1120,27 @@ ReversaFeynman
 
             +
 
-Adaptive Layer
+Adaptive Governance v2
     │
+    ├── schema validation
+    ├── audit hash-chain
     ├── MCI envelope
-    ├── calibrated abstention input
     ├── ACME experience
     ├── reward baseline
-    ├── action allowlist
+    ├── contextual shadow policy
+    ├── drift detection
+    ├── allowlist + approval gates
+    ├── runtime coordenado
     └── learned policy ≠ evidence authority
 ```
 
-O ReversaFeynman passa, portanto, de:
+O ciclo evolui de:
 
 ```text
 extrair → especificar → executar → verificar
 ```
 
-para uma arquitetura extensível de:
+para:
 
 ```text
 extrair
@@ -1086,8 +1150,10 @@ extrair
   → executar
   → verificar
   → calibrar
-  → aprender
+  → aprender em shadow
+  → detectar drift
+  → governar ativação
   → reavaliar
 ```
 
-sem permitir que o aprendizado probabilístico substitua evidência verificável.
+sem permitir que aprendizagem probabilística substitua evidência verificável.
