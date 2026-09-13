@@ -3,7 +3,7 @@ name: Verify invocation axis
 # Gates executáveis de independência, invocação, rigor Feynman e camadas adaptativas.
 # Garante que a edição MarceloClaro não sincronize com upstream,
 # preserva lockstep user/model-invoked, metadados OpenAI, transporte pelo installer
-# e invariantes das bridges MCI/ACME + Adaptive Governance + Offline Policy Evaluation + Hermes Bridge.
+# e invariantes das bridges MCI/ACME + Adaptive Governance + Offline Policy Evaluation + Hermes.
 
 on:
   push:
@@ -13,7 +13,7 @@ on:
       - 'lib/integrations/hermes/**'
       - 'specs/SPEC-FEYNMAN-EVIDENCE-UNDERSTANDING-LAYER.md'
       - 'specs/SPEC-ADAPTIVE-*.md'
-      - 'specs/SPEC-HERMES-BRIDGE-V1.md'
+      - 'specs/SPEC-HERMES-*.md'
       - 'scripts/verify-no-upstream-sync.py'
       - 'scripts/verify-invocation.py'
       - 'scripts/verify-feynman-layer.py'
@@ -21,6 +21,7 @@ on:
       - 'scripts/test-adaptive-bridges.mjs'
       - 'scripts/test-offline-policy-evaluation.mjs'
       - 'scripts/test-hermes-bridge.mjs'
+      - 'scripts/test-hermes-evidence-authority.mjs'
       - 'scripts/test-hermes-optionality.mjs'
       - 'lib/commands/update.js'
       - 'package.json'
@@ -33,7 +34,7 @@ on:
       - 'lib/integrations/hermes/**'
       - 'specs/SPEC-FEYNMAN-EVIDENCE-UNDERSTANDING-LAYER.md'
       - 'specs/SPEC-ADAPTIVE-*.md'
-      - 'specs/SPEC-HERMES-BRIDGE-V1.md'
+      - 'specs/SPEC-HERMES-*.md'
       - 'scripts/verify-no-upstream-sync.py'
       - 'scripts/verify-invocation.py'
       - 'scripts/verify-feynman-layer.py'
@@ -41,6 +42,7 @@ on:
       - 'scripts/test-adaptive-bridges.mjs'
       - 'scripts/test-offline-policy-evaluation.mjs'
       - 'scripts/test-hermes-bridge.mjs'
+      - 'scripts/test-hermes-evidence-authority.mjs'
       - 'scripts/test-hermes-optionality.mjs'
       - 'lib/commands/update.js'
       - 'package.json'
@@ -73,5 +75,7 @@ jobs:
         run: node scripts/test-offline-policy-evaluation.mjs
       - name: Verificar Hermes Bridge v1
         run: node scripts/test-hermes-bridge.mjs
+      - name: Verificar Hermes Evidence Authority v2
+        run: node scripts/test-hermes-evidence-authority.mjs
       - name: Verificar opcionalidade Hermes
         run: node scripts/test-hermes-optionality.mjs
