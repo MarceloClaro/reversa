@@ -6,7 +6,7 @@ license: MIT
 compatibility: Claude Code, Codex, Cursor, Gemini CLI e demais agentes compatíveis com Agent Skills.
 metadata:
   author: sandeco
-  version: "1.0.0"
+  version: "1.1.0"
   framework: reversa
   team: ideation
   stage: challenger
@@ -39,6 +39,35 @@ Para cada opção de `options.md`, produza:
 3. **Custo escondido:** o que ninguém orça. Em legado, ancore em arquivo ou spec concreta. Em greenfield, aponte a categoria (operação, suporte, migração de dados, autenticação, conformidade).
 4. **Ponto sem volta:** a partir de que momento desfazer essa escolha fica caro.
 
+## Feynman Gate adversarial
+
+Aplique estes gates a **cada opção**, sem exceção:
+
+### FEG-03 — Observação ≠ inferência
+
+Separe explicitamente:
+- `OBSERVED`: o que está ancorado em código, artefato, execução ou dado fornecido;
+- `INFERRED`: o que é dedução plausível;
+- `UNVERIFIED`: hipótese ainda sem suporte;
+- `BLOCKED`: o que exigiria recurso/fonte não disponível.
+
+Se uma opção depender de algo `INFERRED` ou `UNVERIFIED`, isso precisa aparecer junto à premissa central. Não trate expectativa como fato.
+
+### FEG-05 — Anti-cargo-cult
+
+Para cada padrão, framework, ritual ou arquitetura importante proposto em `options.md`, retire mentalmente o nome e responda:
+1. qual problema concreto ele resolve;
+2. onde está a evidência de que esse problema existe;
+3. que propriedade da solução ataca esse problema;
+4. qual custo/complexidade entra junto;
+5. o que aconteceria se a opção usasse uma solução menor.
+
+Se a justificativa restante for apenas “é padrão”, “é best practice”, “todo mundo usa” ou equivalente, marque `cargo-cult suspect` no risco da opção.
+
+### FEG-06 — Incerteza e experimento mínimo
+
+A premissa que mata deve terminar em um teste mínimo capaz de mudar a decisão. Prefira a menor intervenção informativa: leitura de contrato, spike curto, teste de carga focal, protótipo descartável, consulta ao usuário ou inspeção de dados. Não proponha experimento grande quando um teste pequeno resolve.
+
 ## Riscos transversais
 
 Independentes de opção, verifique e registre só o que se aplicar:
@@ -49,6 +78,9 @@ Independentes de opção, verifique e registre só o que se aplicar:
 4. Mudança que exige migração de dados existentes
 5. Fluxo de autenticação ou permissão sendo tocado
 6. Compromisso de disponibilidade ou desempenho não declarado
+7. Premissa `INFERRED`/`UNVERIFIED` tratada como fato (FEG-03)
+8. Padrão/arquitetura sem dor comprovada (FEG-05)
+9. Premissa decisiva sem experimento mínimo viável (FEG-06)
 
 Não invente risco para preencher lista. Categoria que não se aplica fica de fora.
 
@@ -69,7 +101,9 @@ Não invente risco para preencher lista. Categoria que não se aplica fica de fo
 
 ## Opção A, <nome>
 - **Premissa que mata:** 🟡 <...>
-- **Teste barato da premissa:** 🟡 <...> , ou `[sem teste barato disponível]`
+- **Status da premissa — FEG-03:** OBSERVED | INFERRED | UNVERIFIED | BLOCKED
+- **Teste mínimo — FEG-06:** 🟡 <...> , ou `[sem teste barato disponível]`
+- **Cargo-cult check — FEG-05:** PASS | SUSPECT — <justificativa>
 - **Custo escondido:** 🟡 <...>
 - **Ponto sem volta:** 🟡 <...>
 
@@ -95,6 +129,7 @@ Regras de preenchimento:
 - Ataque **todas** as opções com o mesmo rigor, inclusive "não construir". Poupar uma opção é escolher por ela pelas costas.
 - Nada de risco genérico do tipo "pode haver atraso". Risco sem mecanismo concreto não entra.
 - Em legado, cite o arquivo ou a spec de onde saiu o custo escondido. Sem fonte, marque `🟡 [inferido, sem âncora no legado]`.
+- Não invente experimento, resultado, benchmark ou evidência já realizada. Teste proposto é `PLANEJADO` até ser executado.
 - Use `<doc_language>` para o conteúdo do documento.
 
 ## Persistência
@@ -110,6 +145,7 @@ Atualize `.reversa/active-ideation.json#current-stage` para `decision`.
 1. Caminho absoluto de `risks.md`.
 2. A manchete de premortem escolhida pelo usuário.
 3. As opções cuja premissa central **não** tem teste barato, se houver.
+4. Quantidade de `INFERRED`/`UNVERIFIED` (FEG-03), cargo-cult suspects (FEG-05) e premissas sem teste mínimo (FEG-06).
 
 Termine sempre com:
 
