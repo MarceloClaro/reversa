@@ -1,13 +1,13 @@
 # SPEC — Hermes Bridge v1
 
-Status: proposed → implementation target  
+Status: implemented  
 Method: Specification-Driven Development (SDD) + Test-Driven Development (TDD)  
 Repository: ReversaFeynman  
 Integration source: NousResearch/hermes-agent (via MarceloClaro/hermes-agent fork)
 
 ## 1. Problem
 
-ReversaFeynman already provides reverse documentation engineering, epistemic control, governed adaptive routing, an audit ledger, drift detection and offline policy evaluation. It does not yet expose a stable boundary for longitudinal agent memory, self-improving skill proposals, execution trajectories and distributed execution outcomes.
+ReversaFeynman already provides reverse documentation engineering, epistemic control, governed adaptive routing, an audit ledger, drift detection and offline policy evaluation. It did not expose a stable boundary for longitudinal agent memory, self-improving skill proposals, execution trajectories and distributed execution outcomes.
 
 Hermes Agent provides persistent memory, skill evolution, subagents, tools, scheduled execution and trajectory generation. Directly importing Hermes state into the Reversa evidence model would be unsafe because a remembered or learned statement is not equivalent to direct evidence.
 
@@ -77,6 +77,8 @@ Required fields:
 - `requires_tests: true`
 - `evidence_authority: false`
 
+`skill_id` MUST be a safe identifier and MUST NOT contain path separators or traversal segments.
+
 Invariant HERMES-03: a skill proposal MUST never mutate files by itself.
 
 Invariant HERMES-04: a skill proposal MUST start in shadow mode and require review + tests before any normal repository workflow may apply it.
@@ -103,6 +105,8 @@ Each step MUST contain:
 - `tool | null`
 - `status`
 - `duration_ms | null`
+
+Steps MUST be ordered from index `0` without gaps, and `ended_at` MUST NOT precede `started_at`.
 
 Invariant HERMES-05: trajectories are execution history and training/evaluation data; they are not evidence of the truth of arbitrary claims.
 
@@ -166,7 +170,7 @@ Required gates for eligibility:
 - explicit `testsPassing === true`;
 - explicit `feynmanApproved === true`;
 - no drift flag when supplied;
-- requested skill id must be non-empty;
+- requested skill id must be non-empty and safe;
 - no evidence-authority escalation.
 
 The gate returns eligibility only. It MUST NOT write files.
@@ -220,6 +224,7 @@ If no transport is configured, dispatch MUST return `{ requested: false }` rathe
 - No automatic policy activation.
 - No secret fields are introduced by the contract.
 - Unknown top-level metadata may be carried only inside a `metadata` object.
+- Numeric metrics MUST use actual numeric types rather than numeric strings.
 
 ## 12. TDD acceptance criteria
 
@@ -237,11 +242,13 @@ The test suite MUST prove at least:
 10. execution result with direct `test` evidence can be accepted by existing Evidence Guard;
 11. bridge dispatch is inert without a transport;
 12. all contracts have `evidence_authority=false`;
-13. Hermes remains optional and package dependencies are unchanged.
+13. Hermes remains optional and package dependencies are unchanged;
+14. unsafe/path-like skill IDs are rejected;
+15. numeric-string success/failure counters are rejected.
 
 ## 13. Integration
 
-The implementation SHOULD live in:
+The implementation lives in:
 
 ```text
 lib/integrations/hermes/
@@ -256,17 +263,18 @@ lib/integrations/hermes/
 └── index.js
 ```
 
-Test target:
+Test targets:
 
 ```text
 scripts/test-hermes-bridge.mjs
+scripts/test-hermes-optionality.mjs
 ```
 
-The root `npm run verify` and GitHub verification workflow MUST include the new test.
+The root `npm run verify` and GitHub verification workflow include the new tests.
 
 ## 14. Documentation
 
-README MUST document:
+README documents:
 
 - Hermes role in the architecture;
 - optional nature of the bridge;
@@ -276,4 +284,6 @@ README MUST document:
 - provenance of Nous Research / Hermes Agent;
 - invariant: Hermes memory/skill confidence ≠ `OBSERVED`.
 
-`docs/ACADEMIC-PROVENANCE.md` SHOULD acknowledge Nous Research/Hermes as the external origin of the integrated concepts, without confusing this with authorship of the ReversaFeynman bridge.
+`docs/ACADEMIC-PROVENANCE.md` acknowledges Nous Research/Hermes as the external origin of the integrated concepts without confusing this with authorship of the ReversaFeynman bridge.
+
+Detailed technical documentation is in `docs/HERMES-BRIDGE.md`.
