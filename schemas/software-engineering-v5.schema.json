@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MarceloClaro/reversaFeynman/schemas/software-engineering-v5.schema.json",
+  "title": "ReversaFeynman Software Engineering Intelligence v5",
+  "$defs": {
+    "benchmarkResult": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["schema", "variant", "total", "succeeded", "success_rate", "mean_latency_ms", "mean_cost", "regressions", "evidence_authority"],
+      "properties": {
+        "schema": { "const": "reversa.benchmark.result/v1" },
+        "variant": { "type": "string", "minLength": 1 },
+        "total": { "type": "integer", "minimum": 0 },
+        "succeeded": { "type": "integer", "minimum": 0 },
+        "success_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "mean_latency_ms": { "type": "number", "minimum": 0 },
+        "mean_cost": { "type": "number", "minimum": 0 },
+        "regressions": { "type": "integer", "minimum": 0 },
+        "evidence_authority": { "const": false }
+      }
+    },
+    "optimizerProposal": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["schema", "proposal_id", "target", "candidate", "score", "mode", "auto_apply", "evidence_authority"],
+      "properties": {
+        "schema": { "const": "reversa.optimizer.proposal/v1" },
+        "proposal_id": { "type": "string", "minLength": 1 },
+        "target": { "type": "string", "minLength": 1 },
+        "candidate": { "type": "string", "minLength": 1 },
+        "score": { "type": "number" },
+        "mode": { "const": "shadow" },
+        "auto_apply": { "const": false },
+        "evidence_authority": { "const": false }
+      }
+    }
+  }
+}
