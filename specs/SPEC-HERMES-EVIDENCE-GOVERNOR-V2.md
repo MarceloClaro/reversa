@@ -1,6 +1,6 @@
 # SPEC — Hermes Evidence Governor v2
 
-Status: implementation target  
+Status: implemented  
 Method: Specification-Driven Development (SDD) + Test-Driven Development (TDD)  
 Repository: ReversaFeynman  
 External inspiration/runtime: NousResearch/hermes-agent (via MarceloClaro/hermes-agent fork)
@@ -11,7 +11,7 @@ The operational component previously documented as **Evidence Guard** is replace
 
 The replacement changes the ownership and orchestration boundary, not the epistemic standard. Hermes becomes the evidence-governance runtime boundary, while deterministic evidence rules remain explicit, inspectable and testable inside ReversaFeynman.
 
-The legacy module `lib/integrations/adaptive/evidence-guard.js` MAY remain only as a compatibility shim. New code MUST use the Hermes governor API directly.
+The legacy module `lib/integrations/adaptive/evidence-guard.js` remains only as a compatibility shim. New code MUST use the Hermes governor API directly.
 
 ## 2. Goal
 
@@ -34,7 +34,7 @@ Provide a Hermes-centered evidence-governance component that:
 
 ## 4. Public API
 
-Primary API MUST live under `lib/integrations/hermes/`.
+Primary API lives under `lib/integrations/hermes/`.
 
 Required exports:
 
@@ -42,12 +42,12 @@ Required exports:
 - `applyHermesEvidenceProposal(claim, proposal)`
 - `createHermesEvidenceGovernor({ transport })`
 
-Compatibility aliases MAY exist:
+Compatibility aliases remain available:
 
 - `evaluateEvidenceProposal`
 - `applyEvidenceProposal`
 
-but MUST delegate to the Hermes implementation.
+but delegate to the Hermes implementation.
 
 ## 5. Epistemic rules
 
@@ -92,7 +92,7 @@ These sources may inform context or produce a weaker epistemic state, but cannot
 
 ## 7. Optional Hermes transport
 
-`createHermesEvidenceGovernor({ transport })` MUST work without a transport.
+`createHermesEvidenceGovernor({ transport })` works without a transport.
 
 Without transport:
 
@@ -101,15 +101,15 @@ Without transport:
 
 With transport:
 
-- `collectEvidence(request)` MAY call the transport;
-- the returned payload MUST NOT automatically become `OBSERVED`;
-- any returned evidence still passes local normalization and deterministic evaluation.
+- `collectEvidence(request)` may call the transport;
+- the returned payload does not automatically become `OBSERVED`;
+- any returned evidence passes local deterministic evaluation.
 
 The remote runtime is an evidence collector/advisor, not a root of epistemic authority.
 
 ## 8. Decision record
 
-Every evaluation SHOULD return a decision object including:
+Every evaluation returns a decision object including:
 
 - `governor: "hermes-evidence-governor/v2"`
 - `accepted`
@@ -120,23 +120,23 @@ Every evaluation SHOULD return a decision object including:
 - `evidence_authority`
 - `source`
 
-For accepted direct evidence, `evidence_authority` MUST be `"direct-traceable-evidence"`.
+For accepted direct evidence, `evidence_authority` is `"direct-traceable-evidence"`.
 
-For rejected or non-OBSERVED transitions it MUST NOT claim direct evidence authority.
+For rejected or non-OBSERVED transitions it does not claim direct evidence authority.
 
 ## 9. Compatibility migration
 
-`lib/integrations/adaptive/evidence-guard.js` MUST become a thin compatibility layer only.
+`lib/integrations/adaptive/evidence-guard.js` is a thin compatibility layer only.
 
-It MUST NOT contain an independent ruleset after migration.
+It contains no independent ruleset after migration.
 
-All old tests using `applyEvidenceProposal()` MUST continue to pass through delegation.
+Old callers using `applyEvidenceProposal()` continue to pass through delegation.
 
-New tests and documentation MUST use `applyHermesEvidenceProposal()`.
+New tests and documentation use the Hermes governor API.
 
 ## 10. TDD acceptance criteria
 
-The test suite MUST prove:
+The suite proves:
 
 1. direct `test` evidence can promote `INFERRED -> OBSERVED`;
 2. Hermes memory cannot promote to `OBSERVED` even at confidence 1.0;
@@ -148,10 +148,11 @@ The test suite MUST prove:
 8. optional transport can collect a candidate but cannot bypass local rules;
 9. legacy `applyEvidenceProposal()` delegates and yields the same result;
 10. the compatibility shim contains no duplicated decision rules;
-11. no Hermes/Python runtime dependency is added.
+11. no Hermes/Python runtime dependency is added;
+12. `createHermesBridge()` exposes the governor natively.
 
 ## 11. Documentation
 
-README and Hermes documentation MUST replace architectural references to **Evidence Guard** with **Hermes Evidence Governor**, while noting the legacy compatibility shim where relevant.
+README and Hermes documentation identify **Hermes Evidence Governor** as the active evidence-governance component and document the legacy compatibility shim.
 
-Academic provenance MUST continue to attribute Hermes Agent to Nous Research and distinguish Hermes Agent from the ReversaFeynman governor implementation.
+Academic provenance continues to attribute Hermes Agent to Nous Research and distinguishes Hermes Agent from the ReversaFeynman governor implementation.
