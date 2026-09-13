@@ -6,6 +6,7 @@ import {
   applyHermesEvidenceProposal,
   buildHermesExecutionResult,
   buildHermesMemoryEvent,
+  createHermesBridge,
   createHermesEvidenceAuthority,
   evaluateHermesEvidenceProposal,
   executionResultToEvidenceProposals,
@@ -18,6 +19,10 @@ import {
 } from '../lib/integrations/adaptive/index.js';
 
 const authority = createHermesEvidenceAuthority();
+const bridge = createHermesBridge();
+assert.equal(bridge.evidenceAuthority.engine, 'hermes-evidence-authority-v2');
+assert.strictEqual(bridge.evaluateEvidence, bridge.evidenceAuthority.evaluate);
+assert.strictEqual(bridge.applyEvidence, bridge.evidenceAuthority.apply);
 
 const directSource = { kind: 'test', direct: true, ref: 'tests/payment.test.js:42' };
 assert.equal(isHermesDirectEvidence(directSource), true);
