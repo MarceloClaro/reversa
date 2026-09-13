@@ -1,0 +1,35 @@
+\section{Experimental Status and Result-Gating}
+
+The evaluation protocol in the previous section is now backed by an executable \emph{ReversaBench Experimental Harness}. The harness implements versioned task/run/report contracts, task--seed pairing, deterministic percentile bootstrap confidence intervals, regression and cost aggregation, and an explicit \emph{false-observed rate}. It also preserves ablation metadata for the Feynman layer, Hermes Evidence Governor, Code Intelligence, multi-candidate repair, mutation gate, and offline optimizer.
+
+\subsection{Engineering smoke validation versus scientific evidence}
+
+The repository contains a deterministic smoke manifest whose only purpose is to verify the benchmark machinery. Smoke records are tagged with \texttt{smoke=true}. When a caller requests a confirmatory report and only smoke records are available, the harness returns \texttt{confirmatory=false} with a blocking reason. Synthetic smoke outcomes therefore cannot be promoted into a confirmatory table by configuration alone.
+
+This distinction is deliberate. Smoke execution can validate serialization, pairing, aggregation, confidence-interval generation, report rendering, and CI plumbing, but it does not test whether ReversaFeynman performs better than Reversa-original or another coding agent.
+
+\subsection{Confirmatory result gate}
+
+A confirmatory ReversaBench report requires non-smoke task runs with immutable repository and commit provenance. Each run retains task identifier, variant, seed, latency, cost, regression count, observed-claim count, false-observed-claim count, and ablation state. The default report continues to declare \texttt{causal\_claim=false}; causality is a property of the experimental design, not of the aggregation code.
+
+The manuscript may include generated tables when a result artifact exists:
+
+\IfFileExists{generated/reversabench-confirmatory.tex}{%
+  \input{generated/reversabench-confirmatory}%
+}{%
+  \paragraph{Current result status.} No confirmatory ReversaBench result artifact is committed in this version. Consequently, the paper makes no empirical superiority claim. The repository contains the executable harness and pre-specified protocol needed to produce such a result under controlled runs.
+}
+
+\subsection{Artifact path}
+
+The experimental implementation is linked to the paper through the following artifacts:
+\begin{itemize}
+  \item \texttt{specs/SPEC-REVERSABENCH-EXPERIMENTAL-HARNESS-V1.md};
+  \item \texttt{lib/integrations/software-engineering/experimental-harness.js};
+  \item \texttt{scripts/test-reversabench-experimental-harness.mjs};
+  \item \texttt{benchmarks/reversabench/manifest.smoke.json};
+  \item \texttt{scripts/run-reversabench-smoke.mjs};
+  \item \texttt{scripts/render-reversabench-report.mjs}.
+\end{itemize}
+
+This gating mechanism ensures that the distinction between an implemented evaluation instrument and a completed empirical study remains machine-enforced as well as editorially stated.
