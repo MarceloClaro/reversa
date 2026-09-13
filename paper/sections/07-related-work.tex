@@ -1,0 +1,31 @@
+\section{Related Work}
+
+\subsection{Reverse documentation and legacy understanding}
+
+Reversa is the direct foundation of this work. It frames legacy analysis as reverse documentation engineering and emphasizes traceability, explicit confidence marking, preserved gaps, and operational specifications for downstream agents \cite{macedo2026reversa}. ReversaFeynman retains this problem definition and extends the system after extraction with evidence governance and software engineering execution layers.
+
+\subsection{Automated software engineering and repair}
+
+Agentless demonstrated that a comparatively simple localization--repair--validation pipeline can be competitive with more complex autonomous agent scaffolds on software-engineering benchmarks \cite{xia2024agentless}. This result motivates ReversaFeynman's separation of structural localization, multiple patch generation, and independent validation rather than assuming that increasingly complex orchestration is always beneficial.
+
+SWE-bench established a widely used evaluation setting for real-world GitHub issue resolution \cite{jimenez2024swebench}. SWE-smith later addressed the scarcity and cost of training/evaluation data by generating large numbers of software engineering tasks and execution environments \cite{yang2025swesmith}. ReversaBench is designed to interoperate with these styles of evaluation while adding specification and epistemic-governance metrics.
+
+\subsection{Repository context and static program analysis}
+
+Aider's repository-map approach uses Tree-sitter-derived structural information to summarize large repositories for LLM context selection \cite{aider2026repomap}. ReversaFeynman's Code Intelligence Graph generalizes this idea behind a provider-neutral contract. Semantic static analysis systems such as Semgrep provide another source of structural and policy-oriented findings \cite{semgrep2026}. These findings are treated as validation signals rather than automatic truth claims.
+
+\subsection{Mutation testing and falsifiability}
+
+Mutation testing evaluates the adequacy of tests by introducing controlled program changes and measuring whether the test suite detects them. ReversaFeynman uses mutation-testing results, for example from StrykerJS-style providers, as an executable probe for FEG-04 \cite{stryker2026}. A high mutation score indicates stronger sensitivity of the current oracle to the tested mutation operators; it does not by itself establish functional correctness.
+
+\subsection{Agent observability and durable orchestration}
+
+Modern agent systems increasingly require traces, experiments, and persistent state. Phoenix provides open-source observability and evaluation facilities for LLM applications \cite{phoenix2026}, while LangGraph provides stateful and durable orchestration primitives \cite{langgraph2026}. ReversaFeynman integrates these concerns through neutral tracing and checkpoint interfaces so that observability and workflow engines do not own epistemic policy.
+
+\subsection{Programmatic prompt and agent optimization}
+
+DSPy treats LM pipelines as programmable and optimizable modules rather than fixed prompt strings \cite{khattab2024dspy}. GEPA extends this direction with reflective prompt evolution over trajectories and demonstrates that language-level optimization can compete with or outperform some reinforcement-learning approaches while using fewer rollouts in the reported tasks \cite{agrawal2026gepa}. ReversaFeynman permits such systems as offline optimization providers, but optimization results remain shadow proposals until independent evaluation and governance gates are satisfied.
+
+\subsection{Positioning}
+
+The distinguishing goal of ReversaFeynman is not to replace specialized systems for execution, static analysis, observability, workflow durability, or optimization. Instead, it provides an evidence-governed integration architecture in which those systems remain optional and their scores do not silently acquire epistemic authority.
