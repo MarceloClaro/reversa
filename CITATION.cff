@@ -23,17 +23,12 @@ references:
   - type: article
     title: "Reversa: A Reverse Documentation Engineering Framework for Converting Legacy Software into Operational Specifications for AI Agents"
     authors:
-      - family-names: de Macedo
+      - family-names: Macedo
         given-names: Sanderson Oliveira
-      - family-names: da Costa
+        name-particle: de
+      - family-names: Costa
         given-names: Ronaldo Martins
+        name-particle: da
     year: 2026
     doi: 10.48550/arXiv.2605.18684
     url: https://arxiv.org/abs/2605.18684
-    notes: "arXiv:2605.18684; primary class cs.SE"
-  - type: software
-    title: Reversa
-    authors:
-      - name: sandeco
-    repository-code: https://github.com/sandeco/reversa
-    license: MIT
