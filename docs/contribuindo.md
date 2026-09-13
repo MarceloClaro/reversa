@@ -55,12 +55,12 @@ reversa/
 
 Do not add automated `gh repo sync`, `git fetch upstream`, `git pull upstream`, or merge jobs from `sandeco/reversa`.
 
-See [`INDEPENDENCE.md`](../INDEPENDENCE.md).
+See [INDEPENDENCE.md](https://github.com/MarceloClaro/reversa/blob/main/INDEPENDENCE.md).
 
 ---
 
 ## License and provenance
 
-MIT. See [`LICENSE`](../LICENSE).
+MIT. See [LICENSE](https://github.com/MarceloClaro/reversa/blob/main/LICENSE).
 
 This line derives historically from the original Reversa project; attribution is preserved while development and release policy are maintained independently under `MarceloClaro/reversa`.
