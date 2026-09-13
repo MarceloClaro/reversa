@@ -1,0 +1,34 @@
+{
+  "schema": "reversa.imo.source/v1",
+  "name": "Google DeepMind IMO-Bench",
+  "repository": "google-deepmind/superhuman",
+  "repository_commit": "80b2527a0b4e4bfc6a8b28825fadbdcfdd6048a1",
+  "paper": {
+    "title": "Towards Robust Mathematical Reasoning",
+    "venue": "EMNLP 2025",
+    "url": "https://aclanthology.org/2025.emnlp-main.1794/"
+  },
+  "datasets": {
+    "answerbench": {
+      "path": "imobench/answerbench_v2.csv",
+      "blob_sha": "7c469922ec65f92f701b015423c20ffbcfd2f195",
+      "tasks": 400
+    },
+    "proofbench": {
+      "path": "imobench/proofbench_v2.csv",
+      "blob_sha": "60315de763ffaedd761e87d2762c1fce4465e0a6",
+      "tasks": 60
+    },
+    "gradingbench": {
+      "path": "imobench/gradingbench.csv",
+      "blob_sha": "716ca964355808928cac6f8370370529550dbdd8",
+      "tasks": 1000
+    },
+    "leanproofbench": {
+      "path": "imobench/lean_proof_bench_v2.csv",
+      "blob_sha": "3804bae025dc6fb9a5b953a35e649e414ee083f0"
+    }
+  },
+  "license_note": "Software is Apache-2.0 and benchmark materials are CC-BY-4.0 upstream; see google-deepmind/superhuman/imobench/README.md.",
+  "evidence_authority": false
+}

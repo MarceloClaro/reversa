@@ -8,9 +8,10 @@
   },
   "type": "module",
   "scripts": {
-    "verify": "python3 scripts/verify-no-upstream-sync.py && python3 scripts/verify-invocation.py && python3 scripts/verify-feynman-layer.py && node scripts/test-installer-transport.mjs && node scripts/test-adaptive-bridges.mjs && node scripts/test-offline-policy-evaluation.mjs && node scripts/test-hermes-bridge.mjs && node scripts/test-hermes-optionality.mjs && node scripts/test-hermes-evidence-governor.mjs && node scripts/test-software-engineering-intelligence-v5.mjs && node scripts/test-reversabench-experimental-harness.mjs",
+    "verify": "python3 scripts/verify-no-upstream-sync.py && python3 scripts/verify-invocation.py && python3 scripts/verify-feynman-layer.py && node scripts/test-installer-transport.mjs && node scripts/test-adaptive-bridges.mjs && node scripts/test-offline-policy-evaluation.mjs && node scripts/test-hermes-bridge.mjs && node scripts/test-hermes-optionality.mjs && node scripts/test-hermes-evidence-governor.mjs && node scripts/test-software-engineering-intelligence-v5.mjs && node scripts/test-reversabench-experimental-harness.mjs && node scripts/test-imo-scientific-orchestration.mjs",
     "bench:smoke": "node scripts/run-reversabench-smoke.mjs benchmarks/reversabench/manifest.smoke.json .reversa-bench/smoke-report.json",
-    "bench:smoke:paper": "node scripts/run-reversabench-smoke.mjs benchmarks/reversabench/manifest.smoke.json .reversa-bench/smoke-report.json && node scripts/render-reversabench-report.mjs .reversa-bench/smoke-report.json paper/generated/reversabench-smoke.tex"
+    "bench:smoke:paper": "node scripts/run-reversabench-smoke.mjs benchmarks/reversabench/manifest.smoke.json .reversa-bench/smoke-report.json && node scripts/render-reversabench-report.mjs .reversa-bench/smoke-report.json paper/generated/reversabench-smoke.tex",
+    "imo:smoke": "node scripts/run-imo-orchestration-smoke.mjs .reversa-bench/imo-smoke-report.json"
   },
   "keywords": [
     "legacy",
@@ -27,6 +28,9 @@
     "benchmark",
     "code-intelligence",
     "calibration",
+    "mathematical-reasoning",
+    "imo",
+    "multi-model-orchestration",
     "claude",
     "codex",
     "gemini",

@@ -1,0 +1,50 @@
+name: IMO Scientific Orchestration
+
+on:
+  push:
+    paths:
+      - 'lib/integrations/math/**'
+      - 'benchmarks/imo-superhuman/**'
+      - 'scripts/test-imo-scientific-orchestration.mjs'
+      - 'scripts/run-imo-orchestration-smoke.mjs'
+      - 'scripts/run-imo-superhuman.mjs'
+      - 'scripts/extract-imobench-problem.py'
+      - 'specs/SPEC-IMO-*.md'
+      - '.github/workflows/imo-orchestration.yml'
+  pull_request:
+    paths:
+      - 'lib/integrations/math/**'
+      - 'benchmarks/imo-superhuman/**'
+      - 'scripts/test-imo-scientific-orchestration.mjs'
+      - 'scripts/run-imo-orchestration-smoke.mjs'
+      - 'scripts/run-imo-superhuman.mjs'
+      - 'scripts/extract-imobench-problem.py'
+      - 'specs/SPEC-IMO-*.md'
+      - '.github/workflows/imo-orchestration.yml'
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Test orchestration contracts
+        run: node scripts/test-imo-scientific-orchestration.mjs
+      - name: Run synthetic multi-model smoke
+        run: node scripts/run-imo-orchestration-smoke.mjs .reversa-bench/imo-smoke-report.json
+      - name: Assert smoke is not scientific result
+        run: |
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          const artifact = JSON.parse(fs.readFileSync('.reversa-bench/imo-smoke-report.json', 'utf8'));
+          if (artifact.scientific_result !== false) throw new Error('smoke must never be scientific_result=true');
+          if (artifact.run.run_class !== 'smoke') throw new Error('smoke run_class expected');
+          console.log('Smoke correctly isolated from scientific results.');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: imo-orchestration-smoke
+          path: .reversa-bench/imo-smoke-report.json

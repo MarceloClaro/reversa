@@ -1,7 +1,7 @@
 name: Verify invocation axis
 
 # Gates executáveis de independência, invocação, rigor Feynman, camadas adaptativas,
-# Hermes Evidence Governance, Software Engineering Intelligence v5 e ReversaBench.
+# Hermes Evidence Governance, Software Engineering Intelligence, ReversaBench e IMO orchestration.
 
 on:
   push:
@@ -10,17 +10,21 @@ on:
       - 'lib/integrations/adaptive/**'
       - 'lib/integrations/hermes/**'
       - 'lib/integrations/software-engineering/**'
+      - 'lib/integrations/math/**'
       - 'benchmarks/reversabench/**'
+      - 'benchmarks/imo-superhuman/**'
       - 'schemas/**'
       - 'specs/SPEC-FEYNMAN-EVIDENCE-UNDERSTANDING-LAYER.md'
       - 'specs/SPEC-ADAPTIVE-*.md'
       - 'specs/SPEC-HERMES-*.md'
       - 'specs/SPEC-SOFTWARE-ENGINEERING-INTELLIGENCE-V5.md'
       - 'specs/SPEC-REVERSABENCH-*.md'
+      - 'specs/SPEC-IMO-*.md'
       - 'scripts/verify-no-upstream-sync.py'
       - 'scripts/verify-invocation.py'
       - 'scripts/verify-feynman-layer.py'
       - 'scripts/test-*.mjs'
+      - 'scripts/run-imo-*.mjs'
       - 'lib/commands/update.js'
       - 'package.json'
       - 'INDEPENDENCE.md'
@@ -31,17 +35,21 @@ on:
       - 'lib/integrations/adaptive/**'
       - 'lib/integrations/hermes/**'
       - 'lib/integrations/software-engineering/**'
+      - 'lib/integrations/math/**'
       - 'benchmarks/reversabench/**'
+      - 'benchmarks/imo-superhuman/**'
       - 'schemas/**'
       - 'specs/SPEC-FEYNMAN-EVIDENCE-UNDERSTANDING-LAYER.md'
       - 'specs/SPEC-ADAPTIVE-*.md'
       - 'specs/SPEC-HERMES-*.md'
       - 'specs/SPEC-SOFTWARE-ENGINEERING-INTELLIGENCE-V5.md'
       - 'specs/SPEC-REVERSABENCH-*.md'
+      - 'specs/SPEC-IMO-*.md'
       - 'scripts/verify-no-upstream-sync.py'
       - 'scripts/verify-invocation.py'
       - 'scripts/verify-feynman-layer.py'
       - 'scripts/test-*.mjs'
+      - 'scripts/run-imo-*.mjs'
       - 'lib/commands/update.js'
       - 'package.json'
       - 'INDEPENDENCE.md'
@@ -81,3 +89,7 @@ jobs:
         run: node scripts/test-software-engineering-intelligence-v5.mjs
       - name: Verificar ReversaBench Experimental Harness v1
         run: node scripts/test-reversabench-experimental-harness.mjs
+      - name: Verificar IMO Scientific Orchestration v1
+        run: node scripts/test-imo-scientific-orchestration.mjs
+      - name: Smoke IMO multi-modelo
+        run: node scripts/run-imo-orchestration-smoke.mjs .reversa-bench/imo-smoke-report.json

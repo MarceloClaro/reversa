@@ -25,6 +25,13 @@ This file links manuscript claims to concrete implementation artifacts.
 | ReversaBench TDD | `scripts/test-reversabench-experimental-harness.mjs` |
 | Smoke pipeline | `benchmarks/reversabench/manifest.smoke.json`, `scripts/run-reversabench-smoke.mjs` |
 | Paper table renderer | `scripts/render-reversabench-report.mjs`, `paper/sections/06a-experimental-status.tex` |
+| IMO Scientific Orchestration | `specs/SPEC-IMO-SCIENTIFIC-ORCHESTRATION-V1.md`, `lib/integrations/math/imo-orchestrator.js` |
+| IMO provider routing | `lib/integrations/math/provider-router.js`, `scripts/run-imo-superhuman.mjs` |
+| IMO benchmark provenance | `benchmarks/imo-superhuman/source.json`, `benchmarks/imo-superhuman/README.md` |
+| IMO task extraction | `scripts/extract-imobench-problem.py` |
+| IMO orchestration TDD | `scripts/test-imo-scientific-orchestration.mjs` |
+| IMO synthetic smoke | `scripts/run-imo-orchestration-smoke.mjs`, `.github/workflows/imo-orchestration.yml` |
+| IMO paper protocol | `paper/sections/06b-imo-scientific-orchestration.tex` |
 | MCP-ready gateway | `lib/integrations/software-engineering/mcp-gateway.js` |
 | Durable workflow | `lib/integrations/software-engineering/durable-workflow.js` |
 | Offline optimizer | `lib/integrations/software-engineering/offline-optimizer.js` |
@@ -42,19 +49,22 @@ Every reported confirmatory run must archive:
 4. random seeds;
 5. provider/adapter versions;
 6. normalized execution results;
-7. ReversaBench records;
+7. ReversaBench/IMO orchestration records;
 8. traces required for error analysis;
 9. statistical-analysis scripts;
 10. exact ReversaFeynman commit/tag.
 
+For IMO multi-model runs, also archive the role assignment (proposer/critic/verifier/reviser/judge), request/response hashes, judge disagreement, candidate lineage, and proof of benchmark-reference isolation from non-judge roles.
+
 ## Result gate
 
-The paper distinguishes three states:
+The paper distinguishes four operational states:
 
 - **implemented capability** — code/SPEC/test exists;
 - **engineering smoke validation** — synthetic fixtures verify the evaluation machinery;
-- **confirmatory empirical result** — non-smoke paired runs over real immutable tasks are available.
+- **pilot/replay** — real or historical model outputs without all confirmatory controls;
+- **confirmatory empirical result** — real multi-model runs over immutable benchmark tasks with independent judges and reference isolation.
 
-The ReversaBench harness enforces part of this distinction mechanically: a confirmatory report requires non-smoke data, at least two variants, and at least one paired task×seed cell. Smoke output is therefore not a substitute for comparative evidence.
+The ReversaBench and IMO orchestration harnesses enforce part of this distinction mechanically. Smoke output is therefore not a substitute for comparative evidence, and replayed public solutions are not mislabeled as new model inference.
 
 The manuscript deliberately separates **implemented capability** from **empirically demonstrated benefit**. This artifact map supports independent verification of the former and controlled experiments for the latter.

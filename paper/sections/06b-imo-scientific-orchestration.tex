@@ -1,0 +1,48 @@
+\section{Multi-Model Scientific Reasoning on IMO-Bench}
+
+To evaluate whether ReversaFeynman's orchestration mechanisms generalize beyond software engineering, we add a mathematical-reasoning protocol targeting the Google DeepMind IMO-Bench suite \cite{luong2025robustmath}. IMO-Bench contains short-answer, proof-generation, grading, and Lean-oriented tasks at olympiad level. The integration pins the upstream repository revision and dataset blob identifiers rather than relying on a mutable branch tip.
+
+\subsection{Scientific orchestration protocol}
+
+The protocol separates generation, criticism, verification, revision, and grading:
+
+\begin{enumerate}
+  \item two or more proposer models generate solutions independently;
+  \item critics attack a candidate produced by a different model whenever possible;
+  \item verifiers independently test the argument, searching for counterexamples, hidden assumptions, and missing cases;
+  \item revisers repair only demonstrated gaps and preserve candidate lineage;
+  \item candidate identities are removed before grading;
+  \item two or more independent judge models score both the initial and revised candidates;
+  \item the system selects a final candidate from blind scores and records judge disagreement rather than hiding it behind a single scalar.
+\end{enumerate}
+
+The reference answer, reference solution, and grading rubric are isolated from proposer, critic, verifier, and reviser roles. They are provided only to the judge or to an explicitly separated deterministic evaluator. This prevents a benchmark answer from leaking into the reasoning context of the solver.
+
+\subsection{Scientific reasoning contract}
+
+Every reasoning role receives a role-specific contract requiring an explicit strategy, attempted falsification, edge-case analysis, separation of proved steps from unresolved gaps, and a prohibition on using confidence or fluent exposition as a substitute for proof. This mirrors the Feynman evidence gates used elsewhere in ReversaFeynman but adapts them to mathematical proof search.
+
+\subsection{Run classification}
+
+The implementation distinguishes four classes:
+
+\begin{itemize}
+  \item \texttt{smoke}: synthetic/mock providers used only to validate orchestration machinery;
+  \item \texttt{replay}: previously generated outputs re-evaluated through the pipeline;
+  \item \texttt{pilot}: real inference without all confirmatory independence controls;
+  \item \texttt{multi-model-confirmatory}: real inference with at least two solver model IDs, at least two independent judge model IDs, pinned benchmark provenance, and isolated reference material.
+\end{itemize}
+
+Only the last class receives \texttt{scientific\_result=true}. Even then, the result retains \texttt{evidence\_authority=false}: performance on IMO-Bench is empirical evidence about the orchestration strategy, not authority to promote unrelated claims to \texttt{OBSERVED}.
+
+\subsection{Metrics beyond final score}
+
+A central purpose of the design is to test whether orchestration adds value over the best independent model. For each problem, the harness records the best initial blind score, best revised score, final score, orchestration gain relative to the best initial candidate, correction rate after critique/revision, degradation rate, average judge disagreement, model diversity by role, critic/verifier independence rates, latency, cost, and tool calls.
+
+This distinction is important because a multi-agent system can appear strong merely by sampling more solutions. The \emph{orchestration gain} specifically asks whether critique, verification, revision, and selection improve upon the strongest candidate already available before orchestration.
+
+\subsection{Current empirical status}
+
+The contract-level TDD and synthetic multi-provider smoke are intended to validate leakage prevention, candidate lineage, cross-model critique, blind judging, score aggregation, and scientific-result gating. These smoke artifacts are not IMO-Bench results. A confirmatory experiment requires external model providers to be connected and executed over fresh benchmark tasks under a fixed inference budget and model-version manifest.
+
+The repository provides a provider-agnostic runner so that OpenAI/Codex, Gemini, Claude, OpenRouter, vLLM, Ollama, or other model runtimes can be combined without making any one SDK a mandatory dependency. The resulting artifacts preserve provider, model version, seed, request/response hashes, score disagreement, cost, and latency for subsequent analysis.
