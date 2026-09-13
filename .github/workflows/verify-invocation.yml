@@ -1,22 +1,27 @@
 name: Verify invocation axis
 
-# Gate executável do eixo de invocação (ver docs/invocation-policy.md).
-# Garante que toda skill é user-invoked ou model-invoked com as duas marcas em
-# lockstep, que todo agents/openai.yaml existe, que as descrições user-invoked
-# não têm gatilho de modelo, e que as marcas atravessam a cópia do installer.
+# Gates executáveis de invocação e rigor Feynman.
+# Garante lockstep user/model-invoked, metadados OpenAI, transporte pelo installer
+# e presença dos Feynman Evidence & Understanding Gates nos agentes críticos.
 
 on:
   push:
     paths:
       - 'agents/**'
+      - 'specs/SPEC-FEYNMAN-EVIDENCE-UNDERSTANDING-LAYER.md'
       - 'scripts/verify-invocation.py'
+      - 'scripts/verify-feynman-layer.py'
       - 'scripts/test-installer-transport.mjs'
+      - 'package.json'
       - '.github/workflows/verify-invocation.yml'
   pull_request:
     paths:
       - 'agents/**'
+      - 'specs/SPEC-FEYNMAN-EVIDENCE-UNDERSTANDING-LAYER.md'
       - 'scripts/verify-invocation.py'
+      - 'scripts/verify-feynman-layer.py'
       - 'scripts/test-installer-transport.mjs'
+      - 'package.json'
   workflow_dispatch:
 
 jobs:
@@ -32,5 +37,7 @@ jobs:
           node-version: '20'
       - name: Verificar eixo de invocação
         run: python3 scripts/verify-invocation.py
+      - name: Verificar Feynman Evidence & Understanding Layer
+        run: python3 scripts/verify-feynman-layer.py
       - name: Smoke test de transporte do installer
         run: node scripts/test-installer-transport.mjs

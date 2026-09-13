@@ -6,7 +6,7 @@ license: MIT
 compatibility: Claude Code, Codex, Cursor, Gemini CLI e demais agentes compatíveis com Agent Skills.
 metadata:
   author: sandeco
-  version: "1.0.0"
+  version: "1.1.0"
   framework: reversa
   phase: forward
   stage: audit
@@ -52,15 +52,33 @@ Verifique cada par de artefatos quanto a:
    4.1. Dependências apontam para IDs existentes
    4.2. Tarefas marcadas `[//]` não compartilham arquivo alvo
    4.3. Não há ciclo de dependência
+5. Proveniência — FEG-02
+   5.1. Afirmações fortes e itens 🟢 apontam para código, contrato, execução, log, teste ou artefato verificável
+   5.2. Números, percentuais, desempenho e alegações de melhoria possuem origem rastreável
+   5.3. Referências a componentes/contratos externos apontam para fonte concreta quando o repositório local não basta
+6. Observação versus inferência — FEG-03
+   6.1. Algo inferido no requirements não aparece como fato no roadmap/actions
+   6.2. Uma decisão planejada não é descrita retroativamente como comportamento já observado no legado
+   6.3. `UNVERIFIED`/`BLOCKED` permanecem explícitos até existir evidência
+
+## Feynman Gate de evidência
+
+### FEG-02 — Evidência e proveniência
+
+Quando encontrar uma afirmação forte sem âncora, registre finding. Não invente linha, execução, métrica ou fonte para preencher a lacuna. Para item quantitativo sem origem, use severidade mínima HIGH quando ele influenciar decisão de arquitetura, capacidade ou aceitação.
+
+### FEG-03 — Observação ≠ inferência
+
+Classifique o suporte de cada finding relevante como `OBSERVED`, `INFERRED`, `UNVERIFIED` ou `BLOCKED`. Se um item 🟢 do legado for sustentado apenas por inferência, registre HIGH e recomende rebaixamento de confiança no skill apropriado; este auditor não altera o artefato.
 
 ## Severidade
 
 | Severidade | Quando aplicar |
 |------------|----------------|
-| CRITICAL | Conflito direto com regra 🟢 do legado, contrato externo quebrado, ciclo de dependência |
-| HIGH | Requisito sem cobertura no roadmap, decisão sem ação correspondente, identificador fantasma |
-| MEDIUM | Inconsistência terminológica entre dois documentos, dependência apontando para fora da lista |
-| LOW | Cosmético, ortografia em ID, paralelismo subutilizado |
+| CRITICAL | Conflito direto com regra 🟢 do legado, contrato externo quebrado, ciclo de dependência ou falsa confirmação em segurança/auth/compliance/dados |
+| HIGH | Requisito sem cobertura no roadmap, decisão sem ação correspondente, identificador fantasma, FEG-02 sem proveniência em decisão central, ou FEG-03 promovendo inferência a fato |
+| MEDIUM | Inconsistência terminológica entre dois documentos, dependência apontando para fora da lista, evidência parcial |
+| LOW | Cosmético, ortografia em ID, paralelismo subutilizado, rastreabilidade melhorável sem efeito na decisão |
 
 ## Construção do relatório
 
@@ -68,9 +86,10 @@ Grave em `feature-dir/audit/cross-check.md`:
 
 1. Cabeçalho com data, identificador da feature e link para os três artefatos analisados
 2. Resumo: contagem de findings por severidade
-3. Tabela `ID | Severidade | Eixo | Descrição | Onde está`
+3. Tabela `ID | Severidade | Eixo | Status de evidência | Descrição | Onde está`
 4. Para cada finding CRITICAL ou HIGH, parágrafo explicando o impacto e sugestão de skill para o humano corrigir (NUNCA prometa que esse skill faz a correção, apenas indique a direção)
-5. Lista de itens verificados que passaram, agrupados por eixo (para o humano enxergar o que está OK)
+5. Lista de itens verificados que passaram, agrupados por eixo
+6. Resumo Feynman com contagem de findings `FEG-02` e `FEG-03`
 
 Use IDs no formato `A001`, `A002`, ... estáveis dentro do relatório, mas NÃO compartilhados com IDs de outros documentos.
 
@@ -88,10 +107,11 @@ Aplique `after-audit` da forma padrão.
 
 1. Caminho absoluto do `cross-check.md`
 2. Contagem de findings por severidade (CRITICAL, HIGH, MEDIUM, LOW)
-3. Aviso explícito: nenhum dos três artefatos foi alterado
-4. Sugestão de próximo passo:
-   4.1. Se houver CRITICAL ou HIGH, sugerir revisão manual antes de seguir
-   4.2. Caso contrário, sugerir `/reversa-coding`
+3. Contagem FEG-02 e FEG-03
+4. Aviso explícito: nenhum dos três artefatos foi alterado
+5. Sugestão de próximo passo:
+   5.1. Se houver CRITICAL ou HIGH, sugerir `/reversa-clarify`, `/reversa-feynman` ou revisão manual conforme o finding
+   5.2. Caso contrário, sugerir `/reversa-coding`
 
 Termine com:
 

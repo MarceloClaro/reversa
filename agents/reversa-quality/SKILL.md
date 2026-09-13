@@ -6,7 +6,7 @@ license: MIT
 compatibility: Claude Code, Codex, Cursor, Gemini CLI e demais agentes compatíveis com Agent Skills.
 metadata:
   author: sandeco
-  version: "1.0.0"
+  version: "1.1.0"
   framework: reversa
   phase: forward
   stage: quality
@@ -42,6 +42,22 @@ Cada item do relatório se encaixa em uma destas categorias:
 | Ausência de jargão | A escrita seria entendida por um humano novo no time? |
 | Ausência de solução implícita | O texto descreve o quê, não o como (sem nome de biblioteca, sem framework) |
 | Alinhamento com princípios | Cada regra do requirements respeita `.reversa/principles.md` |
+| Entendimento operacional — FEG-01 | Se eu remover o nome técnico, ainda fica claro o mecanismo, entrada, saída e condição de mudança? |
+| Falsificabilidade — FEG-04 | Existe observação, cenário ou limite que permita provar que o requisito falhou? |
+
+## Feynman Gate textual
+
+Aplique obrigatoriamente dois gates antes do veredito:
+
+### FEG-01 — Nome ≠ entendimento
+
+Procure frases em que um rótulo substitui explicação. Exemplos de risco: “seguro”, “escalável”, “clean”, “event-driven”, “IA inteligente”, “tempo real”, “best practice”. A frase só passa se o comportamento esperado puder ser explicado sem depender do rótulo.
+
+### FEG-04 — Falsificabilidade
+
+Para cada requisito relevante, pergunte: “o que eu observaria se isto estivesse errado?”. Se não houver cenário, oracle, limite, exemplo ou condição de aceitação que possa falhar, gere item reprovado. Não invente métrica; marque a lacuna e sugira qual tipo de limite precisa ser definido.
+
+Um finding FEG-01 ou FEG-04 que afete requisito central conta como `CRITICAL` para o veredito textual quando impossibilitar implementação/teste sem interpretação humana.
 
 ## Como gerar os itens
 
@@ -52,6 +68,7 @@ Cada item do relatório se encaixa em uma destas categorias:
 5. Após avaliar, marque `[X]` os aprovados, `[ ]` os reprovados
 6. Para reprovados, adicione linha extra `> motivo: <razão objetiva>`
 7. Para reprovados que poderiam ser auto-corrigidos pelo redator, adicione linha extra `> sugestão: <texto curto>`
+8. Findings Feynman devem incluir o ID `FEG-01` ou `FEG-04` na categoria para rastreabilidade.
 
 ## Veredito final
 
@@ -59,7 +76,7 @@ Ao final do relatório, emita uma de três classificações:
 
 - **Aprovado**, todos os itens passaram
 - **Aprovado com ressalvas**, até três itens reprovados, nenhum CRITICAL
-- **Reprovado**, mais de três itens reprovados, ou pelo menos um CRITICAL (cobertura de cenários ausente, princípio violado, contradição interna)
+- **Reprovado**, mais de três itens reprovados, ou pelo menos um CRITICAL (cobertura de cenários ausente, princípio violado, contradição interna ou Feynman Gate central falho)
 
 ## Persistência
 
@@ -76,11 +93,12 @@ Aplique `after-quality` da forma padrão.
 1. Caminho absoluto de `requirements-audit.md`
 2. Veredito (Aprovado, Aprovado com ressalvas, Reprovado)
 3. Top três itens reprovados, com motivo, se houver
-4. Aviso explícito: o `requirements.md` NÃO foi modificado
-5. Sugestão de próximo passo:
-   5.1. Aprovado, sugerir `/reversa-plan`
-   5.2. Aprovado com ressalvas, sugerir `/reversa-clarify`
-   5.3. Reprovado, sugerir reescrita manual ou nova execução de `/reversa-requirements`
+4. Quantidade de findings FEG-01 e FEG-04
+5. Aviso explícito: o `requirements.md` NÃO foi modificado
+6. Sugestão de próximo passo:
+   6.1. Aprovado, sugerir `/reversa-plan`
+   6.2. Aprovado com ressalvas, sugerir `/reversa-clarify`
+   6.3. Reprovado, sugerir reescrita manual, `/reversa-feynman` ou nova execução de `/reversa-requirements`
 
 Termine com:
 
