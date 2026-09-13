@@ -86,7 +86,7 @@ The updater does not query the npm `reversa` package and does not fetch or merge
 
 The source of truth for this edition is `MarceloClaro/reversa`. The repository contains an executable guard, `scripts/verify-no-upstream-sync.py`, which rejects automated upstream synchronization patterns in GitHub workflows.
 
-See the normative policy in [`INDEPENDENCE.md`](../INDEPENDENCE.md).
+See the normative policy in [INDEPENDENCE.md](https://github.com/MarceloClaro/reversa/blob/main/INDEPENDENCE.md).
 
 ---
 
