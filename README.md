@@ -2,7 +2,9 @@
 
 **Engenharia reversa, especificações executáveis, validação epistemológica e aprendizagem adaptativa governada para agentes de IA.**
 
-**Repositório canônico:** `MarceloClaro/reversaFeynman`
+**Identidade canônica preparada:** `MarceloClaro/reversaFeynman`
+
+> **Estado do slug no GitHub — 13/09/2026:** o repositório físico ainda está publicado como `MarceloClaro/reversa`. A identidade `MarceloClaro/reversaFeynman` já é usada pelo código e pela documentação, mas o rename administrativo do GitHub ainda não foi concluído. Até esse rename, comandos que apontem diretamente para `github:MarceloClaro/reversaFeynman` podem falhar.
 
 ReversaFeynman é uma linha independente mantida por **Marcelo Claro Laranjeira**, derivada historicamente do framework **Reversa** original e licenciada sob MIT.
 
@@ -10,7 +12,7 @@ A edição preserva a base de engenharia reversa, SDD, rastreabilidade, pipeline
 
 - **Feynman Evidence & Understanding Layer** — FEG-01..FEG-07, evidência, falsificabilidade e Teach-back;
 - **Invocation Governance** — handoff seguro para skills protegidas;
-- **Adaptive Governance v2** — MCI/ACME bridges, ledger auditável, shadow policy, drift detection e promoção controlada para modo ativo.
+- **Adaptive Governance v2** — MCI/ACME bridges, ledger auditável, shadow policy, drift detection e promoção explícita/controlada para modo ativo.
 
 > A linha independente não apaga a proveniência do Reversa original. Licença, referências e atribuição histórica permanecem preservadas.
 
@@ -51,7 +53,7 @@ O ReversaFeynman adiciona duas perguntas:
 | Policy | determinística/heurística | determinística/heurística | `contextual-shadow-v1` baseline |
 | Drift | não | não | reward/confidence/epistemic mix |
 | Auditoria de eventos | artefatos | artefatos + Feynman | hash-chain SHA-256 |
-| Execução adaptativa | não | não | shadow por padrão; active somente via gates |
+| Execução adaptativa | não | não | shadow por padrão; active somente via activation + gates |
 | Dependência RL | nenhuma | nenhuma | nenhuma no core; sidecar externo opcional |
 | Upstream | projeto original | sem sync automático | sem sync automático |
 
@@ -193,7 +195,9 @@ flowchart TB
     MB --> GOV
 
     GOV --> SHADOW["Shadow mode"]
-    GOV --> ACTIVE{"Elegível para active mode?"}
+    SHADOW --> ACTREQ["requestPolicyActivation"]
+    ACTREQ --> AR["requester + reason + timestamp"]
+    AR --> ACTIVE{"Elegível para active mode?"}
     ACTIVE -->|"não"| ABSTAIN["Abstain / deterministic routing"]
     ACTIVE -->|"sim"| APPROVAL{"Ação mutante?"}
     APPROVAL -->|"sim"| HUMAN["Workflow approval"]
@@ -511,6 +515,17 @@ Thresholds são configuráveis e devem ser tratados como hipóteses falsificáve
 
 Uma proposal só pode ser executável quando os gates operacionais forem satisfeitos.
 
+A ativação exige primeiro:
+
+```js
+const activeProposal = requestPolicyActivation(proposal, {
+  requestedBy: 'operator:marcelo',
+  reason: 'offline evaluation aprovada',
+});
+```
+
+Isso produz um `activation_request` rastreável com solicitante, motivo e timestamp. Alterar manualmente `mode: 'active'` não satisfaz a governance.
+
 Possíveis bloqueios:
 
 ```text
@@ -566,17 +581,26 @@ const result = await runtime.ingest(event);
 console.log(result.proposal.mode);          // shadow
 console.log(result.governance.executable); // false por padrão
 console.log(result.ledger.valid);           // true
+
+const activation = runtime.requestActivation(
+  { ...result.proposal, confidence: 0.90, history_count: 20 },
+  {
+    requestedBy: 'operator:marcelo',
+    reason: 'canary controlado',
+  },
+);
 ```
 
 Por padrão, o runtime:
 
+- valida `candidateActions` antes do primeiro ingest;
 - não despacha para MCI/ACME externo;
 - não executa action proposal;
 - permanece em shadow mode;
 - deduplica eventos;
 - mantém histórico limitado;
 - avalia drift;
-- expõe método separado para avaliar ativação.
+- exige activation request explícito antes de avaliar modo ativo.
 
 ---
 
@@ -616,6 +640,7 @@ Exigir:
 - histórico mínimo;
 - confidence mínima;
 - drift estável;
+- activation request explícito;
 - approval quando mutante.
 
 ## 5. Learner externo
@@ -872,6 +897,20 @@ A camada adaptativa mantém ledger/history em memória por padrão. Persistênci
 
 # Instalação
 
+## Enquanto o slug físico continuar `MarceloClaro/reversa`
+
+O comando que aponta para o repositório que existe hoje é:
+
+```bash
+npm exec --yes --package=github:MarceloClaro/reversa -- reversa install
+```
+
+Isso é uma medida **transitória**. O código interno já identifica a distribuição futura como `MarceloClaro/reversaFeynman`; por isso, comandos de update/documentação podem apontar para o slug canônico ainda pendente de rename.
+
+## Depois do rename administrativo para `MarceloClaro/reversaFeynman`
+
+Use:
+
 ```bash
 npm exec --yes --package=github:MarceloClaro/reversaFeynman -- reversa install
 ```
@@ -888,6 +927,15 @@ ACME/JAX/TensorFlow/OpenCode permanecem externos e opcionais.
 ---
 
 # CLI
+
+### Slug físico atual
+
+```bash
+npm exec --yes --package=github:MarceloClaro/reversa -- reversa install
+npm exec --yes --package=github:MarceloClaro/reversa -- reversa status
+```
+
+### Identidade canônica após o rename
 
 ```bash
 npm exec --yes --package=github:MarceloClaro/reversaFeynman -- reversa install
@@ -959,6 +1007,7 @@ O teste adaptativo v2 cobre:
 - allowlist;
 - proteção contra bypass de `candidateActions`;
 - `route:coding` com approval gate;
+- activation request obrigatório;
 - `learned-policy → OBSERVED` bloqueado;
 - evidência direta → `OBSERVED` permitido;
 - ledger/deduplicação/hash-chain;
@@ -984,6 +1033,7 @@ Adaptive Governance v2 acrescenta:
 - shadow policy contextual;
 - proteção contra candidate-action allowlist bypass;
 - drift detection;
+- activation request rastreável;
 - separação explícita shadow → active;
 - gate de aprovação para ações mutantes;
 - runtime unificado sem execução automática.
@@ -1043,6 +1093,15 @@ Mudanças externas podem ser estudadas e incorporadas apenas por decisão/revis�
 
 # Desenvolvimento
 
+Enquanto o rename administrativo estiver pendente:
+
+```bash
+git clone https://github.com/MarceloClaro/reversa.git
+git -C reversa checkout main
+```
+
+Após o rename:
+
 ```bash
 git clone https://github.com/MarceloClaro/reversaFeynman.git
 cd reversaFeynman
@@ -1056,12 +1115,13 @@ Ao alterar a camada adaptativa:
 2. preserve a allowlist global;
 3. não trate candidate list como autorização;
 4. mantenha shadow como default;
-5. exija approval para ações mutantes;
-6. interrompa promoção sob drift;
-7. versione mudanças incompatíveis de schema;
-8. trate reward/policy/thresholds como hipóteses falsificáveis;
-9. mantenha transports explícitos;
-10. não adicione JAX/TensorFlow/ACME ao core sem decisão arquitetural explícita.
+5. exija activation request para sair de shadow;
+6. exija approval para ações mutantes;
+7. interrompa promoção sob drift;
+8. versione mudanças incompatíveis de schema;
+9. trate reward/policy/thresholds como hipóteses falsificáveis;
+10. mantenha transports explícitos;
+11. não adicione JAX/TensorFlow/ACME ao core sem decisão arquitetural explícita.
 
 ---
 
@@ -1089,6 +1149,7 @@ Extensões desta linha incluem:
 - hash-chain audit ledger;
 - `contextual-shadow-v1`;
 - drift detection;
+- activation request explícito;
 - adaptive runtime;
 - active-mode governance.
 
@@ -1129,6 +1190,7 @@ Adaptive Governance v2
     ├── reward baseline
     ├── contextual shadow policy
     ├── drift detection
+    ├── activation request
     ├── allowlist + approval gates
     ├── runtime coordenado
     └── learned policy ≠ evidence authority
@@ -1152,6 +1214,7 @@ extrair
   → calibrar
   → aprender em shadow
   → detectar drift
+  → solicitar ativação
   → governar ativação
   → reavaliar
 ```
