@@ -18,6 +18,12 @@ const task = createBenchmarkTask({
 assert.equal(task.schema, 'reversa.bench.task/v1');
 assert.equal(task.evidence_authority, false);
 assert.throws(() => createBenchmarkTask({ task_id: 'x' }), /suite|repository_url|commit_sha/i);
+assert.throws(() => createBenchmarkTask({
+  task_id: 'bad-sha',
+  suite: 'x',
+  repository_url: 'https://github.com/example/repo',
+  commit_sha: 'main',
+}), /commit_sha/i);
 
 const run = createBenchmarkRun({
   task,
@@ -42,6 +48,7 @@ assert.equal(run.schema, 'reversa.bench.run/v1');
 assert.equal(run.evidence_authority, false);
 assert.equal(run.false_observed_claims, 1);
 assert.throws(() => createBenchmarkRun({ task, variant: 'x', seed: '7', success: true }), /seed/i);
+assert.throws(() => createBenchmarkRun({ task, variant: 'x', seed: -1, success: true }), /seed/i);
 
 const bench = createReversaBenchExperimentalHarness({ bootstrapSamples: 400, bootstrapSeed: 1234 });
 bench.registerTask(task);
@@ -74,6 +81,26 @@ const confirmatory = bench.report({ confirmatory: true });
 assert.equal(confirmatory.confirmatory, false, 'smoke-only data must not become confirmatory');
 assert.equal(confirmatory.confirmatory_blocked_reason, 'no non-smoke runs available');
 
+const oneVariantBench = createReversaBenchExperimentalHarness({ variants: ['reversa-original'], bootstrapSamples: 100 });
+const oneVariantTask = createBenchmarkTask({
+  task_id: 'single-variant',
+  suite: 'pilot',
+  repository_url: 'https://github.com/example/single',
+  commit_sha: '3333333333333333333333333333333333333333',
+  smoke: false,
+});
+oneVariantBench.registerTask(oneVariantTask);
+oneVariantBench.recordRun(createBenchmarkRun({
+  task: oneVariantTask,
+  variant: 'reversa-original',
+  seed: 1,
+  success: true,
+}));
+const oneVariantReport = oneVariantBench.report({ confirmatory: true });
+assert.equal(oneVariantReport.confirmatory, false);
+assert.equal(oneVariantReport.confirmatory_blocked_reason, 'fewer than two variants available');
+assert.equal(oneVariantReport.paired_cells, 0);
+
 const task2 = createBenchmarkTask({
   task_id: 'real-001',
   suite: 'pilot-public',
@@ -101,6 +128,7 @@ for (const variant of ['reversa-original', 'reversafeynman-v5']) {
 const reportA = bench.report({ confirmatory: true });
 const reportB = bench.report({ confirmatory: true });
 assert.equal(reportA.confirmatory, true);
+assert.equal(reportA.paired_cells, 3);
 assert.deepEqual(reportA, reportB, 'bootstrap must be deterministic under configured seed');
 assert.ok(reportA.results.every((x) => x.evidence_authority === false));
 
