@@ -49,6 +49,7 @@ assert.ok(mci.metacognition.required_gates.includes('FEG-03'));
 const experience = buildAcmeExperience(event);
 assert.equal(experience.schema, 'reversa.acme.experience/v1');
 assert.equal(experience.action.allowed, true);
+assert.equal(experience.action.requires_approval, false);
 assert.equal(experience.extras.evidence_authority, false);
 assert.equal(experience.observation.vector.length, 7);
 
@@ -58,6 +59,10 @@ assert.equal(reward.policy, 'heuristic-v1');
 
 const blockedAction = validateAdaptiveAction('exec:rm-rf');
 assert.equal(blockedAction.allowed, false);
+
+const codingAction = validateAdaptiveAction('route:coding');
+assert.equal(codingAction.allowed, true);
+assert.equal(codingAction.requires_approval, true);
 
 const learnedPromotion = applyEvidenceProposal(
   { id: 'claim-1', epistemic_state: 'INFERRED' },
