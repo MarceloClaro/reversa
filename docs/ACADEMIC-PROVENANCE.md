@@ -53,7 +53,6 @@ Esses elementos constituem a base histórica e arquitetural sobre a qual a linha
 - governança de invocação metadata-aware para skills protegidas;
 - linha de distribuição independente sem sincronização automática com upstream;
 - integração opcional MCI/ACME;
-- Evidence Guard;
 - Audit Ledger em hash-chain SHA-256;
 - contextual shadow policy;
 - drift detection;
@@ -62,9 +61,11 @@ Esses elementos constituem a base histórica e arquitetural sobre a qual a linha
 - Offline Policy Evaluation v3;
 - holdout temporal, Brier Score, ECE, reward/regret e IC95% bootstrap;
 - Adaptive Governance Report;
-- Hermes Bridge v1: contratos, Memory Firewall, Skill Mutation Gate, trajetória e adaptador de evidência.
+- Hermes Bridge v1: contratos, Memory Firewall, Skill Mutation Gate, trajetória e adaptador de evidência;
+- Hermes Evidence Authority v2: substituição da implementação autônoma do Evidence Guard por uma autoridade epistemológica canônica dentro da integração Hermes;
+- fachada retrocompatível `adaptive/evidence-guard.js`, sem algoritmo de decisão independente.
 
-A tabela acima é uma delimitação de proveniência de engenharia. Ela não pretende reescrever a história de commits do projeto original nem atribuir ao ReversaFeynman contribuições anteriores à sua linha independente.
+A lista acima é uma delimitação de proveniência de engenharia. Ela não pretende reescrever a história de commits do projeto original nem atribuir ao ReversaFeynman contribuições anteriores à sua linha independente.
 
 ## 4. Referência acadêmica recomendada — ABNT
 
@@ -108,17 +109,21 @@ Ao publicar resultados obtidos com ReversaFeynman, recomenda-se citar **duas cam
 1. o paper do Reversa original, para reconhecer a contribuição científica e arquitetural de origem;
 2. a versão específica do ReversaFeynman utilizada no experimento, preferencialmente com commit, tag ou release reproduzível.
 
+Quando a integração Hermes for material ao método, deve-se adicionar uma terceira camada de atribuição para o projeto Hermes Agent da Nous Research e identificar claramente quais componentes são interoperabilidade ReversaFeynman e quais capacidades são herdadas/conceitualmente inspiradas no projeto externo.
+
 Exemplo textual:
 
-> Este trabalho utilizou o ReversaFeynman, uma linha independente derivada do framework Reversa de Macedo e Costa (2026), preservando a arquitetura-base de reverse documentation engineering e acrescentando camadas de validação epistemológica, governança adaptativa e avaliação offline de políticas.
+> Este trabalho utilizou o ReversaFeynman, uma linha independente derivada do framework Reversa de Macedo e Costa (2026), preservando a arquitetura-base de reverse documentation engineering e acrescentando camadas de validação epistemológica, governança adaptativa, avaliação offline de políticas e uma autoridade de evidência implementada na integração Hermes.
 
 ## 7. Princípio de atribuição
 
 Nenhuma extensão desta linha deve ser descrita de forma que obscureça a origem do framework Reversa ou atribua ao ReversaFeynman a autoria de conceitos, agentes, pipelines ou mecanismos já presentes no projeto original. Sempre que a distinção for material, a documentação deve usar explicitamente as expressões **“Reversa original”**, **“derivado de sandeco/reversa”** e **“extensão ReversaFeynman”**.
 
+Da mesma forma, a presença de um fork local de Hermes não transfere autoria do Hermes Agent para o mantenedor do ReversaFeynman.
+
 ## 8. Integração externa — Hermes Agent / Nous Research
 
-A **Hermes Bridge v1** do ReversaFeynman foi inspirada pelas capacidades publicamente documentadas do **Hermes Agent**, projeto externo da **Nous Research**, incluindo memória persistente, sistema de skills/procedural memory, melhoria de skills a partir de experiência, subagentes, ferramentas e geração de trajetórias.
+A integração Hermes do ReversaFeynman utiliza como referência capacidades publicamente documentadas do **Hermes Agent**, projeto externo da **Nous Research**, incluindo memória persistente, sistema de skills/procedural memory, melhoria de skills a partir de experiência, subagentes, ferramentas e geração de trajetórias.
 
 Projeto original Hermes Agent:
 
@@ -132,9 +137,9 @@ Fork utilizado para estudo no ecossistema MarceloClaro:
 
 O repositório `MarceloClaro/hermes-agent` é um fork do projeto `NousResearch/hermes-agent`. A existência desse fork não transfere autoria do Hermes Agent para o mantenedor do ReversaFeynman.
 
-### Delimitação específica
+### Capacidades atribuídas ao Hermes/Nous Research
 
-Pertencem ao projeto Hermes/Nous Research, enquanto conceitos e capacidades externas estudadas:
+Enquanto conceitos e capacidades externas estudadas, permanecem atribuídas ao projeto Hermes/Nous Research:
 
 - Hermes Agent como agente autoaperfeiçoável;
 - memória persistente/cross-session;
@@ -143,16 +148,56 @@ Pertencem ao projeto Hermes/Nous Research, enquanto conceitos e capacidades exte
 - ferramentas, subagentes e backends de execução;
 - geração e compressão de trajetórias.
 
-Pertencem à linha ReversaFeynman, como implementação de interoperabilidade e governança:
+### Extensões de interoperabilidade atribuídas ao ReversaFeynman
+
+Pertencem à linha ReversaFeynman, como implementação própria de interoperabilidade e governança:
 
 - `reversa.hermes.memory/v1`;
 - `reversa.hermes.skill.proposal/v1`;
 - `reversa.hermes.trajectory/v1`;
 - `reversa.hermes.execution.result/v1`;
-- Memory Firewall que impede memória de produzir `OBSERVED`;
+- `reversa.hermes.evidence.decision/v1`;
+- Memory Firewall que impede memória de se autodeclarar `OBSERVED`;
 - Skill Mutation Gate que mantém propostas em shadow e exige review/testes/Feynman;
 - extração conservadora de sinais de trajetória;
-- adaptador que só encaminha evidência direta, rastreável e explicitamente mapeada ao Evidence Guard existente;
+- adaptador que só encaminha evidência direta, rastreável e explicitamente mapeada a claims;
+- Hermes Evidence Authority v2 como motor canônico de decisão epistemológica;
 - transport bridge opcional e sem dependência de runtime do Hermes.
 
-Portanto, a formulação correta é **“Hermes Bridge v1 do ReversaFeynman, interoperando com conceitos/capacidades do Hermes Agent da Nous Research”**, e não “Hermes Agent desenvolvido pelo ReversaFeynman”.
+## 9. Distinção crítica: autoridade Hermes ≠ memória Hermes como verdade
+
+A decisão arquitetural atual é:
+
+```text
+Hermes Evidence Authority v2 = autoridade canônica de decisão epistemológica
+```
+
+Isso **não** significa:
+
+```text
+Hermes memory = evidência direta
+Hermes confidence = evidência direta
+Hermes skill success = evidência direta
+```
+
+A autoridade implementada pelo ReversaFeynman dentro da camada Hermes continua exigindo evidência direta rastreável para promover uma claim a `OBSERVED`.
+
+Assim, a formulação acadêmica correta é:
+
+> O ReversaFeynman substitui a implementação autônoma anterior do Evidence Guard por uma Hermes Evidence Authority v2, uma extensão de interoperabilidade/governança do próprio ReversaFeynman inspirada no ecossistema Hermes e explicitamente distinta da autoria original do Hermes Agent da Nous Research.
+
+## 10. Compatibilidade histórica
+
+O arquivo:
+
+```text
+lib/integrations/adaptive/evidence-guard.js
+```
+
+é preservado exclusivamente como fachada retrocompatível para consumidores existentes. A lógica canônica reside em:
+
+```text
+lib/integrations/hermes/evidence-authority.js
+```
+
+Portanto, referências acadêmicas ou técnicas a versões posteriores a esta evolução devem descrever **Hermes Evidence Authority v2** como a implementação de decisão epistemológica vigente.
