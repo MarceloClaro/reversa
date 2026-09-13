@@ -5,6 +5,7 @@ import {
   buildAcmeExperience,
   buildMciEnvelope,
   computeAdaptiveReward,
+  createAdaptiveRuntime,
   createAuditLedger,
   createLearningEvent,
   detectAdaptiveDrift,
@@ -153,6 +154,12 @@ assert.equal(shadowProposal.mode, 'shadow');
 assert.equal(shadowProposal.action_id, 'route:reviewer');
 assert.equal(shadowProposal.evidence_authority, false);
 
+assert.throws(() => proposeShadowAction({
+  observation: experience.observation,
+  experiences: policyHistory,
+  candidateActions: ['exec:rm-rf'],
+}), /allowlist adaptativa/);
+
 const shadowGovernance = governAdaptiveProposal({ proposal: shadowProposal });
 assert.equal(shadowGovernance.executable, false);
 assert.ok(shadowGovernance.reasons.includes('shadow-mode'));
@@ -191,4 +198,21 @@ const driftGovernance = governAdaptiveProposal({
 assert.equal(driftGovernance.executable, false);
 assert.equal(shouldForceAbstention({ governance: driftGovernance, mciEnvelope: mci }), true);
 
-console.log('✓ Adaptive MCI/ACME v2: contratos, evidência, ledger, policy, drift e governança OK');
+// Runtime integra ledger + MCI + ACME + shadow policy sem executar ações automaticamente.
+const runtime = createAdaptiveRuntime({
+  candidateActions: ['route:reviewer', 'route:clarify'],
+  maxHistory: 20,
+});
+const runtimeResult = await runtime.ingest(sampleEvent({ action: { id: 'route:reviewer' } }));
+assert.equal(runtimeResult.duplicate, false);
+assert.equal(runtimeResult.ledger.valid, true);
+assert.equal(runtimeResult.proposal.mode, 'shadow');
+assert.equal(runtimeResult.governance.executable, false);
+assert.equal(runtimeResult.dispatch.requested, false);
+assert.equal(runtime.history().length, 1);
+const runtimeDuplicate = await runtime.ingest(runtimeResult.mci_envelope.provenance.event_id === event.event_id
+  ? event
+  : runtime.ledgerSnapshot()[0].event);
+assert.equal(runtimeDuplicate.duplicate, true);
+
+console.log('✓ Adaptive MCI/ACME v2: contratos, evidência, ledger, policy, drift, runtime e governança OK');
