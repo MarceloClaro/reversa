@@ -22,15 +22,12 @@ assert.equal(problem.schema, 'reversa.imo.problem/v1');
 assert.equal(problem.evidence_authority, false);
 
 const seen = [];
-const scoreByCandidate = new Map();
-let candidateCounter = 0;
 
 async function invoke(model, request) {
   seen.push({ model: { ...model }, request: structuredClone(request) });
   const role = request.role;
 
   if (role === 'proposer') {
-    candidateCounter += 1;
     return {
       text: model.model_id === 'solver-a'
         ? 'Candidate A: incomplete proof.'
@@ -82,7 +79,6 @@ async function invoke(model, request) {
     const score = request.candidate.text.startsWith('Revised A') ? 6
       : request.candidate.text.includes('Candidate B') ? 7
         : 5;
-    scoreByCandidate.set(request.candidate.candidate_id, score);
     return {
       score,
       correct: score === 7,
@@ -121,8 +117,13 @@ assert.equal(run.run_class, 'smoke');
 assert.equal(run.scientific_result, false);
 assert.equal(run.evidence_authority, false);
 assert.equal(run.proposals.length, 2);
+assert.equal(run.revisions.length, 2);
 assert.equal(run.final_candidate.score_mean, 7);
-assert.ok(run.metrics.orchestration_gain >= 0);
+assert.equal(run.metrics.best_initial_score, 7);
+assert.equal(run.metrics.best_revised_score, 7);
+assert.equal(run.metrics.orchestration_gain, 0);
+assert.equal(run.metrics.correction_rate, 0.5);
+assert.equal(run.metrics.degradation_rate, 0);
 assert.equal(run.metrics.solver_model_count, 2);
 assert.equal(run.metrics.judge_model_count, 2);
 assert.ok(run.metrics.judge_disagreement >= 0);
@@ -144,7 +145,7 @@ const criticRequests = seen.filter((x) => x.request.role === 'critic');
 assert.ok(criticRequests.every(({ model, request }) => model.model_id !== request.candidate.author_model_id));
 
 const judgeRequests = seen.filter((x) => x.request.role === 'judge');
-assert.equal(judgeRequests.length, 4, 'two candidates x two judges expected');
+assert.equal(judgeRequests.length, 8, 'four blinded candidate versions x two judges expected');
 assert.ok(judgeRequests.every(({ request }) => request.candidate.author_model_id === undefined));
 assert.ok(judgeRequests.every(({ request }) => request.reference.reference_solution));
 
