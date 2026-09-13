@@ -8,7 +8,7 @@ import { clearTerminalForLogo, renderReversaLogo } from '../lib/utils/banner.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const pkg = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf8'));
-const GITHUB_PACKAGE = 'github:MarceloClaro/reversa';
+const GITHUB_PACKAGE = 'github:MarceloClaro/reversaFeynman';
 const CLI_PREFIX = `npm exec --yes --package=${GITHUB_PACKAGE} -- reversa`;
 
 const [,, command, ...args] = process.argv;
@@ -26,15 +26,15 @@ if (!command || command === '--help' || command === '-h') {
   clearTerminalForLogo();
   console.log(renderReversaLogo(chalk) + `
 
-  reversa v${pkg.version} — MarceloClaro independent edition
+  ReversaFeynman v${pkg.version} — MarceloClaro independent edition
 
   Uso: ${CLI_PREFIX} <comando>
 
   Comandos:
-    install            Instala o Reversa no projeto atual (todos os agentes)
-    update             Atualiza a instalação usando esta distribuição MarceloClaro
+    install            Instala o ReversaFeynman no projeto atual (todos os agentes)
+    update             Atualiza a instalação usando esta distribuição ReversaFeynman
     status             Mostra o estado atual da análise
-    uninstall          Remove o Reversa do projeto
+    uninstall          Remove o ReversaFeynman do projeto
     add-engine         Adiciona suporte a uma engine
     export-diagrams    Exporta diagramas Mermaid como imagens SVG/PNG
                        Opções: --format=svg|png  --output=<pasta>
@@ -46,8 +46,10 @@ if (!command || command === '--help' || command === '-h') {
     /reversa-forward  Implementa ou evolui código a partir das specs
     /reversa-migrate  Planeja a migração de um sistema legado
     /reversa-docs     Gera o mini-site visual da documentação
+    /reversa-feynman  Audita evidência, entendimento e falsificabilidade
+    /reversa-teachback Valida conhecimento humano usado como fonte da spec
 
-  Repositório: https://github.com/MarceloClaro/reversa
+  Repositório canônico: https://github.com/MarceloClaro/reversaFeynman
   Política: esta edição não sincroniza automaticamente com sandeco/reversa.
   `);
   process.exit(0);
