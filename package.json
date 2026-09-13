@@ -2,7 +2,7 @@
   "name": "reversa",
   "version": "1.3.3",
   "private": true,
-  "description": "Independent MarceloClaro edition of Reversa: executable specifications for AI coding agents",
+  "description": "ReversaFeynman: independent MarceloClaro edition with evidence, Feynman gates and teach-back",
   "bin": {
     "reversa": "bin/reversa.js"
   },
@@ -15,6 +15,8 @@
     "reverse-engineering",
     "specifications",
     "ai",
+    "feynman",
+    "teach-back",
     "claude",
     "codex",
     "gemini",
@@ -36,11 +38,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MarceloClaro/reversa.git"
+    "url": "git+https://github.com/MarceloClaro/reversaFeynman.git"
   },
-  "homepage": "https://github.com/MarceloClaro/reversa",
+  "homepage": "https://github.com/MarceloClaro/reversaFeynman",
   "bugs": {
-    "url": "https://github.com/MarceloClaro/reversa/issues"
+    "url": "https://github.com/MarceloClaro/reversaFeynman/issues"
   },
   "engines": {
     "node": ">=18.20.2"
