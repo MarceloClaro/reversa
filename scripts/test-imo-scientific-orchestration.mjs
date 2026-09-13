@@ -4,6 +4,7 @@ import {
   createIMOProblem,
   createIMOScientificOrchestrator,
 } from '../lib/integrations/math/imo-orchestrator.js';
+import { createOpenAICompatibleIMOAdapter } from '../lib/integrations/math/provider-router.js';
 
 const problem = createIMOProblem({
   problem_id: 'imo-smoke-001',
@@ -209,4 +210,50 @@ const pilotRun = await pilot.run(realProblem, { seed: 2 });
 assert.equal(pilotRun.run_class, 'pilot');
 assert.equal(pilotRun.scientific_result, false);
 
-console.log('✓ IMO Scientific Orchestration v1: leakage, diversidade, julgamento cego e gates científicos OK');
+// OpenAI-compatible adapter is validated without external network access.
+const fetchCalls = [];
+const fakeFetch = async (url, options) => {
+  fetchCalls.push({ url, options: structuredClone(options) });
+  const body = JSON.parse(options.body);
+  const request = JSON.parse(body.messages[1].content);
+  const payload = request.role === 'judge'
+    ? { score: 7, correct: true, rationale: 'complete', confidence: 0.95 }
+    : request.role === 'verifier'
+      ? { text: 'checked independently', verdict: 'plausible' }
+      : { text: 'independent candidate' };
+  return {
+    ok: true,
+    status: 200,
+    async json() {
+      return {
+        choices: [{ message: { content: JSON.stringify(payload) } }],
+        usage: { prompt_tokens: 10, completion_tokens: 5, total_tokens: 15 },
+      };
+    },
+  };
+};
+
+const compat = createOpenAICompatibleIMOAdapter({
+  baseUrl: 'https://provider.example/v1',
+  apiKey: 'test-key',
+  fetchImpl: fakeFetch,
+  temperature: 0,
+  maxTokens: 1024,
+});
+const compatModel = { model_id: 'canonical-provider-model', provider: 'compat', version: '2026-09', execution: 'real' };
+const compatOut = await compat(compatModel, {
+  role: 'proposer',
+  problem: { statement: 'Solve without hidden reference.' },
+  scientific_method: { requirements: ['attempt falsification'] },
+  instruction: 'Solve.',
+});
+assert.equal(compatOut.text, 'independent candidate');
+assert.equal(fetchCalls.length, 1);
+assert.equal(fetchCalls[0].url, 'https://provider.example/v1/chat/completions');
+const compatBody = JSON.parse(fetchCalls[0].options.body);
+assert.equal(compatBody.model, 'canonical-provider-model');
+assert.equal(compatBody.temperature, 0);
+assert.equal(fetchCalls[0].options.headers.authorization, 'Bearer test-key');
+assert.ok(!fetchCalls[0].options.body.includes('Reference proof hidden from solvers.'));
+
+console.log('✓ IMO Scientific Orchestration v1: leakage, diversidade, julgamento cego, adapter compatível e gates científicos OK');
