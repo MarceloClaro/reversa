@@ -5,7 +5,7 @@ license: MIT
 compatibility: Claude Code, Codex, Cursor, Gemini CLI e demais agentes compatíveis com Agent Skills.
 metadata:
   author: sandeco
-  version: "1.0.0"
+  version: "1.1.0"
   framework: reversa
   role: help
 ---
@@ -30,6 +30,8 @@ O Reversa é um time de especialistas. Cada agente faz uma coisa só — e faz b
 | Implementar ou evoluir código a partir das specs | `/reversa-forward` | Code Forward Agents |
 | Planejar a migração de um legado | `/reversa-migrate` | Migration Agents |
 | Gerar um mini-site visual da documentação | `/reversa-docs` | Documentation Agents |
+| Auditar evidência, compreensão e falsificabilidade | `/reversa-feynman` | Feynman Evidence Layer |
+| Validar conhecimento humano usado como fonte da spec | `/reversa-teachback` | Feynman Evidence Layer |
 | Entender qual agente usar | `/reversa-agents-help` | Guia de agentes |
 
 Os times de Pricing e Translators têm comandos especializados. Use `/reversa-pricing-profile`, `/reversa-pricing-size`, `/reversa-pricing-estimate` ou `/reversa-n8n` conforme a necessidade.
@@ -132,7 +134,25 @@ O tabelião transforma o que foi descoberto em contratos formais, precisos e ras
 
 O Reviewer pega os contratos do Writer e tenta furar: *"Isso é contradição. Esse ponto não tem prova. Essa regra some se o usuário fizer X."* Ele não quer destruir, quer garantir que o que ficou de pé seja sólido.
 
-> Use o Reviewer após o Writer. Ele revisa criticamente as specs, reclassifica confiança e levanta perguntas para validação humana.
+> Use o Reviewer após o Writer. Ele revisa criticamente as specs, reclassifica confiança, aplica os gates Feynman e levanta perguntas para validação humana.
+
+---
+
+## 🔬 Reversa Feynman — o perito que pergunta “cadê a prova?”
+**Comando:** `/reversa-feynman`
+
+O perito não se impressiona porque o documento usa os nomes certos. Ele apaga mentalmente os rótulos e verifica: o mecanismo está explicado? Há evidência? A frase pode ser refutada? O padrão resolve uma dor real ou está ali porque parece profissional?
+
+> Use o Reversa Feynman quando quiser uma auditoria dedicada de evidência, entendimento, falsificabilidade, cargo cult e incertezas. Ele é somente leitor dos artefatos canônicos e produz `feynman-audit.md`.
+
+---
+
+## 🧑‍🏫 Reversa Teach-back — a testemunha que precisa reconstruir o mecanismo
+**Comando:** `/reversa-teachback`
+
+Às vezes o código não responde e a única fonte é alguém da equipe que diz “eu sei como funciona”. O Teach-back não pergunta apenas “é isso mesmo?”. Ele pede que a pessoa explique o mecanismo com as próprias palavras, depois testa uma condição causal e um cenário variante. A primeira parte em que a explicação vira rótulo ou conjectura mostra onde a spec ainda está frágil.
+
+> Use o Reversa Teach-back quando uma regra de negócio, exceção operacional ou interpretação importante depende de conhecimento humano não documentado. Ele separa `HUMAN-VALIDATED` de `OBSERVED` e nunca altera a spec diretamente; registra apenas `teachback.md` após consentimento.
 
 ---
 
@@ -173,6 +193,9 @@ Migração:       /reversa → /reversa-migrate → /reversa-forward
 Pipeline legado manual:
 Scout → Archaeologist (N sessões) → Detective → Architect → Writer → Reviewer
 
+Qualidade epistemológica opcional:
+/reversa-feynman → se houver lacuna humana material → /reversa-teachback
+
 Opcionais em qualquer fase:
-Soul Extractor · Visor · Data Master · Design System · Reversa Docs
+Soul Extractor · Visor · Data Master · Design System · Reversa Docs · Reversa Feynman · Reversa Teach-back
 ```
