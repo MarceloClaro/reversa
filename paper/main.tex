@@ -1,0 +1,49 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{caption}
+
+\geometry{margin=2.4cm}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\setlist{nosep}
+
+\title{\textbf{ReversaFeynman: Evidence-Governed Software Engineering Agents for Reverse Documentation, Repair, and Adaptive Evaluation}}
+\author{Marcelo Claro Laranjeira\\Independent Researcher}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Large-language-model-based software engineering agents increasingly operate over legacy repositories, execute tools, modify code, and learn from prior trajectories. These capabilities create a methodological tension: confidence, memory, benchmark performance, and learned policy scores can improve decision making, but none of them is equivalent to direct evidence about program behavior. This paper presents \emph{ReversaFeynman}, an evidence-governed extension of the Reversa reverse documentation engineering framework. The system preserves Reversa's multi-agent extraction of operational specifications while adding explicit epistemic states, Feynman-inspired falsifiability gates, governed human teach-back, adaptive policy evaluation, longitudinal Hermes memory and skill proposals, an evidence governor, and a Software Engineering Intelligence layer for code localization, sandboxable execution, multi-candidate repair, static and mutation testing, tracing, benchmarking, durable workflows, MCP-ready interoperability, and offline prompt/skill optimization. The implementation follows specification-driven development (SDD) and test-driven development (TDD), and keeps external frameworks optional through adapters. We define a reproducible evaluation protocol comparing the original Reversa, minimal repair baselines, and ReversaFeynman across specification quality, repair success, calibration, regressions, latency, cost, and epistemic error. We deliberately do not claim empirical superiority in this version; instead, we contribute an implemented architecture and an experimental protocol intended to make such claims testable.
+\end{abstract}
+
+\noindent\textbf{Keywords:} software engineering agents; reverse engineering; legacy systems; LLM agents; evidence governance; program repair; software benchmarks; calibration; SDD; TDD.
+
+\input{sections/01-introduction}
+\input{sections/02-background}
+\input{sections/03-method}
+\input{sections/04-architecture}
+\input{sections/05-implementation}
+\input{sections/06-evaluation}
+\input{sections/07-related-work}
+\input{sections/08-threats}
+\input{sections/09-conclusion}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
