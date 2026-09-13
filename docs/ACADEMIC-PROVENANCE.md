@@ -53,7 +53,6 @@ Esses elementos constituem a base histórica e arquitetural sobre a qual a linha
 - governança de invocação metadata-aware para skills protegidas;
 - linha de distribuição independente sem sincronização automática com upstream;
 - integração opcional MCI/ACME;
-- Evidence Guard;
 - Audit Ledger em hash-chain SHA-256;
 - contextual shadow policy;
 - drift detection;
@@ -62,7 +61,8 @@ Esses elementos constituem a base histórica e arquitetural sobre a qual a linha
 - Offline Policy Evaluation v3;
 - holdout temporal, Brier Score, ECE, reward/regret e IC95% bootstrap;
 - Adaptive Governance Report;
-- Hermes Bridge v1: contratos, Memory Firewall, Skill Mutation Gate, trajetória e adaptador de evidência.
+- Hermes Bridge v1: contratos, Memory Firewall, Skill Mutation Gate, trajetória e adaptador de evidência;
+- Hermes Evidence Governor v2, que substitui operacionalmente o antigo Evidence Guard mantendo regras determinísticas locais e compatibilidade por shim.
 
 A tabela acima é uma delimitação de proveniência de engenharia. Ela não pretende reescrever a história de commits do projeto original nem atribuir ao ReversaFeynman contribuições anteriores à sua linha independente.
 
@@ -118,7 +118,7 @@ Nenhuma extensão desta linha deve ser descrita de forma que obscureça a origem
 
 ## 8. Integração externa — Hermes Agent / Nous Research
 
-A **Hermes Bridge v1** do ReversaFeynman foi inspirada pelas capacidades publicamente documentadas do **Hermes Agent**, projeto externo da **Nous Research**, incluindo memória persistente, sistema de skills/procedural memory, melhoria de skills a partir de experiência, subagentes, ferramentas e geração de trajetórias.
+A **Hermes Bridge v1** e o **Hermes Evidence Governor v2** do ReversaFeynman foram inspirados pelas capacidades publicamente documentadas do **Hermes Agent**, projeto externo da **Nous Research**, incluindo memória persistente, sistema de skills/procedural memory, melhoria de skills a partir de experiência, subagentes, ferramentas e geração de trajetórias.
 
 Projeto original Hermes Agent:
 
@@ -152,7 +152,9 @@ Pertencem à linha ReversaFeynman, como implementação de interoperabilidade e 
 - Memory Firewall que impede memória de produzir `OBSERVED`;
 - Skill Mutation Gate que mantém propostas em shadow e exige review/testes/Feynman;
 - extração conservadora de sinais de trajetória;
-- adaptador que só encaminha evidência direta, rastreável e explicitamente mapeada ao Evidence Guard existente;
+- adaptador que encaminha evidência direta, rastreável e explicitamente mapeada ao Hermes Evidence Governor;
+- `hermes-evidence-governor/v2`, que aplica regras determinísticas locais e não permite que memória, confidence, user model ou policy se autodeclarem evidência direta;
+- `adaptive/evidence-guard.js` mantido somente como shim de compatibilidade, sem ruleset independente;
 - transport bridge opcional e sem dependência de runtime do Hermes.
 
-Portanto, a formulação correta é **“Hermes Bridge v1 do ReversaFeynman, interoperando com conceitos/capacidades do Hermes Agent da Nous Research”**, e não “Hermes Agent desenvolvido pelo ReversaFeynman”.
+Portanto, a formulação correta é **“Hermes Bridge e Hermes Evidence Governor do ReversaFeynman, interoperando com conceitos/capacidades do Hermes Agent da Nous Research”**, e não “Hermes Agent desenvolvido pelo ReversaFeynman”.
