@@ -1,198 +1,144 @@
-# Hermes Bridge v1 — Memory, Skill Evolution & Trajectory Layer
+# Hermes Bridge — Memory, Skills, Trajectories & Evidence Authority
 
 ## Status
 
-Implemented as an optional ReversaFeynman interoperability layer.
+- **Hermes Bridge v1:** implemented
+- **Hermes Evidence Authority v2:** implemented in this evolution
 
-Specification: [`../specs/SPEC-HERMES-BRIDGE-V1.md`](../specs/SPEC-HERMES-BRIDGE-V1.md)
+Specifications:
 
-Tests:
+```text
+specs/SPEC-HERMES-BRIDGE-V1.md
+specs/SPEC-HERMES-EVIDENCE-AUTHORITY-V2.md
+```
+
+Executable tests:
 
 ```text
 scripts/test-hermes-bridge.mjs
+scripts/test-hermes-evidence-authority.mjs
 scripts/test-hermes-optionality.mjs
 ```
 
 ## Provenance
 
-Hermes Agent is an external project built by **Nous Research**. The repository `MarceloClaro/hermes-agent` is a fork of `NousResearch/hermes-agent`.
+Hermes Agent is an external project built by **Nous Research**.
 
-- upstream/original project: `https://github.com/NousResearch/hermes-agent`
-- local fork used for study/integration: `https://github.com/MarceloClaro/hermes-agent`
-- license reported by GitHub/upstream: MIT
+- original/upstream: `https://github.com/NousResearch/hermes-agent`
+- fork used for study/interoperability: `https://github.com/MarceloClaro/hermes-agent`
+- license reported by the upstream repository: MIT
 
-ReversaFeynman does not claim authorship of Hermes Agent, its memory system, its skill system, its gateways, its tool execution model or its trajectory facilities. This document describes only the ReversaFeynman boundary contracts and governance added to interoperate with those concepts.
+ReversaFeynman does not claim authorship of Hermes Agent, its original memory system, skill system, gateways, tool runtime, subagents or trajectory facilities. The contracts, Memory Firewall, Skill Mutation Gate and **Hermes Evidence Authority v2** documented here are ReversaFeynman interoperability/governance extensions.
 
-## Why integrate Hermes
+## Architectural decision v2
 
-ReversaFeynman already provides:
+The previous standalone ReversaFeynman `Evidence Guard` implementation has been replaced as the canonical evidence-decision engine.
 
-- reverse documentation engineering;
-- SDD artifacts and traceability;
-- FEG-01..07;
-- Evidence Guard;
-- MCI/ACME boundary contracts;
-- Audit Ledger;
-- drift detection;
-- shadow policy;
-- Offline Policy Evaluation.
+Canonical implementation:
 
-Hermes adds a complementary axis:
+```text
+lib/integrations/hermes/evidence-authority.js
+```
 
-- persistent cross-session memory;
-- procedural memory/skills;
-- skill improvement from experience;
-- isolated subagents;
-- tool/RPC execution;
-- trajectories suitable for later evaluation or training;
-- scheduled/unattended operation.
+Historical compatibility path:
 
-The bridge intentionally does **not** merge these responsibilities.
+```text
+lib/integrations/adaptive/evidence-guard.js
+```
 
-## Architecture
+The historical file remains only as a compatibility facade and delegates its legacy exports directly to Hermes:
+
+```text
+assertEpistemicState
+    → assertHermesEpistemicState
+
+isDirectEvidence
+    → isHermesDirectEvidence
+
+evaluateEvidenceProposal
+    → evaluateHermesEvidenceProposal
+
+applyEvidenceProposal
+    → applyHermesEvidenceProposal
+```
+
+It no longer contains an independent allowlist or promotion algorithm.
+
+## Current architecture
 
 ```mermaid
 flowchart TB
-    RF["ReversaFeynman"] --> EG["Evidence Guard / FEG"]
+    RF["ReversaFeynman"] --> FEG["FEG-01..07"]
     RF --> MCI["OpenCode MCI / routing"]
 
-    MCI --> HB["Hermes Bridge v1"]
+    MCI --> HB["Hermes Bridge"]
     HB --> MEM["Memory Event"]
     HB --> SK["Skill Proposal"]
     HB --> TR["Trajectory Event"]
     HB --> EX["Execution Result"]
+    HB --> HEA["Hermes Evidence Authority v2"]
 
     MEM --> MF["Memory Firewall"]
     SK --> SG["Skill Mutation Gate"]
     TR --> LS["Learning Signals"]
     EX --> EA["Evidence Adapter"]
 
-    LS --> OPE["Adaptive / Offline Evaluation"]
-    SG --> SH["Shadow-only eligibility"]
-    EA --> EG
+    MF --> HEA
+    EA --> HEA
+    HEA --> ES["OBSERVED / INFERRED / UNVERIFIED / BLOCKED"]
 
+    LS --> OPE["Offline Policy Evaluation"]
     ACME["ACME optional sidecar"] --> OPE
     HERMES["Hermes runtime optional"] -. transport .-> HB
 ```
 
-Responsibility split:
+## Responsibility split
 
 | Layer | Responsibility |
 |---|---|
-| Reversa original | reverse documentation engineering and operational specs |
-| ReversaFeynman | evidence, falsifiability, epistemic state and traceability |
-| OpenCode MCI | metacognitive routing/trust/confidence |
-| Hermes | memory, skills, tools, subagents, execution trajectories |
+| Reversa original | reverse documentation engineering and operational specifications |
+| ReversaFeynman / FEG | falsifiability, provenance discipline, understanding audits |
+| OpenCode MCI | metacognitive routing, confidence/trust and orchestration |
+| Hermes Agent | memory, skills, tools, subagents and execution trajectories |
+| Hermes Bridge | safe versioned interoperability contracts |
+| Hermes Evidence Authority v2 | canonical epistemic promotion decision engine |
 | ACME | experimental policy learning/evaluation |
-| Hermes Bridge | safe, versioned contracts between Hermes concepts and ReversaFeynman |
 
-## Contracts
+## Evidence authority contract
 
-### Memory Event
+Every canonical decision uses:
 
 ```text
-reversa.hermes.memory/v1
+reversa.hermes.evidence.decision/v1
 ```
 
-Memory can inform context but cannot establish truth by itself.
+and identifies itself as:
 
 ```text
-Hermes memory      ≠ OBSERVED
-memory confidence  ≠ OBSERVED
-user model         ≠ OBSERVED
-session summary    ≠ OBSERVED
+authority = hermes
+engine = hermes-evidence-authority-v2
+evidence_authority = true
 ```
 
-Allowed memory epistemic states:
+`evidence_authority=true` refers to the **decision engine**. It does not turn memories, trajectories, skill proposals or execution envelopes into evidence authorities.
+
+Those contracts continue to use:
 
 ```text
-INFERRED
-UNVERIFIED
-BLOCKED
-```
-
-`OBSERVED` is rejected at validation time.
-
-### Skill Proposal
-
-```text
-reversa.hermes.skill.proposal/v1
-```
-
-Every proposal is created with:
-
-```text
-mode = shadow
-requires_review = true
-requires_tests = true
 evidence_authority = false
 ```
 
-A proposal cannot modify files through this bridge.
+## Promotion to OBSERVED
 
-Eligibility requires:
-
-```text
-reviewApproved
-AND testsPassing
-AND feynmanApproved
-AND no drift
-```
-
-Even then:
+Hermes Evidence Authority accepts `OBSERVED` only when all three conditions hold:
 
 ```text
-eligible = true
-executable = false
-file_mutation_performed = false
+source.direct === true
+AND source.kind is allowlisted
+AND source.ref is traceable/non-empty
 ```
 
-The normal repository workflow remains responsible for applying an accepted change.
-
-### Trajectory Event
-
-```text
-reversa.hermes.trajectory/v1
-```
-
-Trajectory events capture operational history. The bridge derives only measurable operational signals:
-
-- number of steps;
-- failed steps;
-- tool calls;
-- known duration;
-- repeated actions;
-- terminal/completion status.
-
-A trajectory is useful for adaptive/offline evaluation, but is not direct evidence for arbitrary claims.
-
-### Execution Result
-
-```text
-reversa.hermes.execution.result/v1
-```
-
-A successful execution does not automatically create `OBSERVED` claims.
-
-Promotion path:
-
-```text
-Hermes execution result
-        ↓
-explicit direct_evidence[]
-        ↓
-recognized evidence kind
-        ↓
-explicit claim_id mapping
-        ↓
-Evidence Proposal
-        ↓
-existing ReversaFeynman Evidence Guard
-        ↓
-OBSERVED only if the guard accepts it
-```
-
-Recognized direct evidence kinds remain defined by ReversaFeynman:
+Baseline accepted direct-evidence kinds remain:
 
 ```text
 code
@@ -204,143 +150,320 @@ dataset
 artifact
 ```
 
-## Memory Firewall
-
-`classifyHermesMemory()` prevents semantic memory from silently becoming evidence.
-
-Personalization memory is explicitly isolated:
+The following do not produce `OBSERVED` by themselves:
 
 ```text
-scope = personalization
+hermes-memory
+hermes-skill
+hermes-confidence
+learned-policy
+mci-trust
+human
+```
+
+Therefore:
+
+```text
+Hermes is the evidence decision authority
+```
+
+but:
+
+```text
+Hermes memory ≠ direct evidence
+Hermes confidence ≠ direct evidence
+Hermes skill success ≠ direct evidence
+```
+
+This distinction is intentional.
+
+## Memory Event
+
+Schema:
+
+```text
+reversa.hermes.memory/v1
+```
+
+Memory can inform context but cannot establish truth by itself.
+
+Allowed memory epistemic states:
+
+```text
+INFERRED
+UNVERIFIED
+BLOCKED
+```
+
+A memory contract declaring `OBSERVED` is rejected during validation.
+
+### Memory context inside the authority
+
+The Hermes Evidence Authority may receive a `memoryContext` array.
+
+Memory context is used diagnostically:
+
+- number of valid memory items;
+- number of invalid items;
+- number of personalization items;
+- memory references.
+
+It does not change an indirect claim into direct evidence.
+
+The same direct-evidence proposal must have the same accept/reject result with or without memory context.
+
+## Personalization isolation
+
+`scope=personalization` remains isolated from epistemic promotion.
+
+```text
+personalization memory
         ↓
-context/personalization only
+context/personalization
         ↓
 evidence_authority = false
 ```
 
-This protects project/scientific reasoning from user-model leakage.
+User modeling cannot silently enter scientific or engineering claims as truth.
 
-## Skill evolution flow
+## Skill Proposal
 
-Recommended flow:
+Schema:
 
 ```text
-Hermes experience
-      ↓
-Skill Proposal
-      ↓
-shadow
-      ↓
-Reviewer
-      ↓
-Tests
-      ↓
-Feynman audit
-      ↓
-Drift check
-      ↓
-eligible proposal
-      ↓
-normal Reversa repository change workflow
-      ↓
-new outcomes
-      ↓
-Offline Policy Evaluation
+reversa.hermes.skill.proposal/v1
 ```
 
-No self-improvement mechanism is allowed to bypass tests or epistemic review.
+Every proposal starts with:
+
+```text
+mode = shadow
+requires_review = true
+requires_tests = true
+evidence_authority = false
+```
+
+Eligibility requires:
+
+```text
+reviewApproved
+AND testsPassing
+AND feynmanApproved
+AND no drift
+```
+
+Even when eligible:
+
+```text
+executable = false
+file_mutation_performed = false
+```
+
+The bridge never silently rewrites a skill.
+
+## Trajectory Event
+
+Schema:
+
+```text
+reversa.hermes.trajectory/v1
+```
+
+Trajectory processing extracts operational signals only:
+
+- step count;
+- failed steps;
+- tool calls;
+- known duration;
+- repeated actions;
+- completion/terminal state.
+
+A trajectory is useful for offline evaluation but is not proof of arbitrary domain claims.
+
+## Execution Result
+
+Schema:
+
+```text
+reversa.hermes.execution.result/v1
+```
+
+The current promotion path is:
+
+```text
+Hermes execution result
+        ↓
+direct_evidence[]
+        ↓
+Hermes direct-evidence classifier
+        ↓
+explicit claim_id mapping
+        ↓
+Evidence Proposal
+        ↓
+Hermes Evidence Authority v2
+        ↓
+OBSERVED only if accepted
+```
+
+The evidence adapter now uses `isHermesDirectEvidence()` directly. It no longer imports the adaptive direct-evidence allowlist as its own decision mechanism.
+
+## New-API usage
+
+```js
+import { createHermesBridge } from './lib/integrations/hermes/index.js';
+
+const hermes = createHermesBridge();
+
+const decision = hermes.evaluateEvidence({
+  current: 'INFERRED',
+  proposed: 'OBSERVED',
+  source: {
+    kind: 'test',
+    direct: true,
+    ref: 'tests/example.test.js:42',
+  },
+});
+```
+
+The same bridge exposes:
+
+```text
+hermes.evidenceAuthority
+hermes.evaluateEvidence
+hermes.applyEvidence
+```
+
+## Legacy API compatibility
+
+Existing consumers may continue to import:
+
+```js
+import {
+  applyEvidenceProposal,
+  evaluateEvidenceProposal,
+} from './lib/integrations/adaptive/index.js';
+```
+
+These names now delegate to Hermes Evidence Authority v2.
+
+An applied claim contains the canonical field:
+
+```text
+hermes_evidence_authority
+```
+
+and temporarily also exposes:
+
+```text
+epistemic_guard
+```
+
+as a compatibility alias pointing to the exact same frozen decision object.
 
 ## SDD
 
-The bridge was specified before implementation in:
+The original bridge was specified in:
 
 ```text
 specs/SPEC-HERMES-BRIDGE-V1.md
 ```
 
-The SPEC defines:
+The replacement of Evidence Guard by Hermes is specified separately in:
 
-- problem and goal;
-- non-goals;
-- provenance;
-- four schemas;
-- epistemic invariants;
-- Memory Firewall;
-- Skill Mutation Gate;
-- trajectory signal extraction;
-- evidence adaptation;
-- transport boundary;
-- security requirements;
-- executable acceptance criteria.
+```text
+specs/SPEC-HERMES-EVIDENCE-AUTHORITY-V2.md
+```
+
+The v2 specification defines:
+
+- canonical Hermes evidence API;
+- compatibility facade requirements;
+- direct evidence rules;
+- memory-context semantics;
+- apply semantics;
+- adapter migration;
+- security invariants;
+- executable TDD criteria.
 
 ## TDD
 
-The implementation history intentionally follows:
+The v2 development sequence is:
 
 ```text
-SPEC
-  ↓
-RED: test imports API not implemented yet
-  ↓
-GREEN: implement contracts/gates/adapters
-  ↓
-REFACTOR: wire optionality + CI + docs
+SPEC v2
+   ↓
+RED: test imports Hermes Evidence Authority API before implementation
+   ↓
+GREEN: canonical Hermes authority + adaptive facade
+   ↓
+REFACTOR: Bridge exposure + adapter migration + docs/CI
 ```
 
-Primary acceptance test:
+Primary v2 test:
 
 ```text
-scripts/test-hermes-bridge.mjs
+scripts/test-hermes-evidence-authority.mjs
 ```
 
-It verifies:
+It proves that:
 
-- memory validation;
-- rejection of `OBSERVED` memory;
-- personalization isolation;
-- skill shadow mode;
-- review/test/Feynman gates;
-- drift blocking;
-- ordered trajectories;
-- trajectory signals;
-- no evidence from successful execution alone;
-- direct test evidence mapped to an explicit claim;
-- final authority delegated to the existing Evidence Guard;
-- inert dispatch without transport.
-
-Optionality test:
-
-```text
-scripts/test-hermes-optionality.mjs
-```
-
-It rejects the addition of Hermes, Nous or Python runtime dependencies to the Node package.
+- direct `test` evidence is accepted;
+- Hermes memory at confidence `1.0` still cannot create `OBSERVED`;
+- learned-policy, MCI trust, human state, Hermes skills and Hermes confidence are non-authoritative sources;
+- memory context cannot override indirect-evidence rejection;
+- direct decisions remain stable with/without memory context;
+- applied claims expose `hermes_evidence_authority`;
+- the legacy alias points to the same Hermes decision;
+- legacy Adaptive API delegates to Hermes;
+- the execution adapter uses Hermes classification;
+- the old Adaptive file contains no independent allowlist/promotion logic.
 
 ## Runtime optionality
 
-No Hermes dependency is present in `package.json`.
+Hermes Agent remains an optional external runtime.
 
-No builder or validator performs network calls.
+No Hermes/Nous/Python dependency is added to `package.json`.
 
-`createHermesBridge()` accepts an optional transport callback. Without it:
+The **Hermes Evidence Authority itself is local JavaScript code in ReversaFeynman**, so evidence decisions do not require network access or a running external Hermes process.
 
-```js
-const bridge = createHermesBridge();
-await bridge.dispatch(contract);
-// { requested: false, reason: 'no-transport-configured' }
-```
-
-This allows adapters for Hermes CLI, RPC, MCP or another transport to be added later without coupling the core to one execution backend.
+This avoids a critical failure mode where epistemic validation would disappear when an external agent runtime is unavailable.
 
 ## Security invariants
 
 ```text
-Hermes memory            ≠ direct evidence
-Hermes confidence        ≠ direct evidence
-Hermes user model        ≠ direct evidence
-Hermes skill proposal    ≠ executable mutation
-Hermes trajectory        ≠ claim truth
-Hermes execution success ≠ OBSERVED
+Hermes runtime unavailable      → local authority still works
+Hermes memory high confidence   → still not direct evidence
+Hermes skill successful         → still not direct evidence
+Policy reward/calibration       → still not direct evidence
+Human fluency/validation        → still not direct evidence
+Direct traceable source         → may authorize OBSERVED
 ```
 
-Only a direct, traceable evidence reference mapped to a claim may be forwarded as an `OBSERVED` proposal, and the existing Evidence Guard remains the final authority.
+No evidence decision performs network access, shell execution or file mutation.
+
+## Summary
+
+The architecture is now intentionally asymmetric:
+
+```text
+Before
+------
+Hermes execution/memory
+        ↓
+Evidence Adapter
+        ↓
+Adaptive Evidence Guard
+
+After
+-----
+Hermes memory / execution / skills / trajectory
+        ↓
+Hermes Bridge
+        ↓
+Hermes Evidence Authority v2
+        ↓
+Epistemic state
+```
+
+`adaptive/evidence-guard.js` survives only to prevent breaking existing callers; it is no longer the implementation authority.
