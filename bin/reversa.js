@@ -8,6 +8,8 @@ import { clearTerminalForLogo, renderReversaLogo } from '../lib/utils/banner.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const pkg = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf8'));
+const GITHUB_PACKAGE = 'github:MarceloClaro/reversa';
+const CLI_PREFIX = `npm exec --yes --package=${GITHUB_PACKAGE} -- reversa`;
 
 const [,, command, ...args] = process.argv;
 
@@ -24,13 +26,13 @@ if (!command || command === '--help' || command === '-h') {
   clearTerminalForLogo();
   console.log(renderReversaLogo(chalk) + `
 
-  reversa v${pkg.version}
+  reversa v${pkg.version} — MarceloClaro independent edition
 
-  Uso: npx reversa <comando>
+  Uso: ${CLI_PREFIX} <comando>
 
   Comandos:
     install            Instala o Reversa no projeto atual (todos os agentes)
-    update             Atualiza tudo para a última versão (todos os agentes)
+    update             Atualiza a instalação usando esta distribuição MarceloClaro
     status             Mostra o estado atual da análise
     uninstall          Remove o Reversa do projeto
     add-engine         Adiciona suporte a uma engine
@@ -45,7 +47,8 @@ if (!command || command === '--help' || command === '-h') {
     /reversa-migrate  Planeja a migração de um sistema legado
     /reversa-docs     Gera o mini-site visual da documentação
 
-  Documentação: https://github.com/sandeco/reversa
+  Repositório: https://github.com/MarceloClaro/reversa
+  Política: esta edição não sincroniza automaticamente com sandeco/reversa.
   `);
   process.exit(0);
 }
@@ -57,7 +60,7 @@ if (command === '--version' || command === '-v') {
 
 if (!commands[command]) {
   console.error(`\n  Comando desconhecido: "${command}"`);
-  console.error('  Execute "npx reversa --help" para ver os comandos disponíveis.\n');
+  console.error(`  Execute "${CLI_PREFIX} --help" para ver os comandos disponíveis.\n`);
   process.exit(1);
 }
 
