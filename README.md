@@ -17,25 +17,91 @@ A edição preserva engenharia reversa, SDD, rastreabilidade, pipelines especial
 
 > A linha independente não apaga a proveniência do Reversa original. Licença, referências e atribuição histórica permanecem preservadas.
 
-> Política de independência: [`INDEPENDENCE.md`](INDEPENDENCE.md)
+> Política de independência: [`INDEPENDENCE.md`](INDEPENDENCE.md)  
+> Proveniência acadêmica detalhada: [`docs/ACADEMIC-PROVENANCE.md`](docs/ACADEMIC-PROVENANCE.md)  
+> Metadados de citação: [`CITATION.cff`](CITATION.cff)
 
 ---
 
-## Origem científica
+# Origem acadêmica e atribuição explícita
 
-O Reversa original é associado ao trabalho:
+## Reversa original — obra de origem
 
-> **Reversa: A Reverse Documentation Engineering Framework for Converting Legacy Software into Operational Specifications for AI Agents** — Macedo & da Costa, 2026.
+O **ReversaFeynman é uma obra derivada do framework Reversa original**, desenvolvido e publicado no repositório:
 
-Paper: https://arxiv.org/abs/2605.18684
+**SANDECO — Reversa**  
+https://github.com/sandeco/reversa
 
-O objetivo central permanece: transformar conhecimento preso em sistemas legados em especificações operacionais rastreáveis para agentes de IA.
+O Reversa original define a base conceitual e arquitetural de **reverse documentation engineering** utilizada por esta linha: análise de sistemas legados, pipeline multiagente, extração de regras e decisões implícitas, geração de especificações operacionais rastreáveis e uso dessas especificações por agentes de IA.
 
-O ReversaFeynman acrescenta duas perguntas:
+A referência científica primária do framework original é:
 
-> **Como sabemos que aquilo que a especificação afirma está realmente sustentado por evidência?**
+**Sanderson Oliveira de Macedo; Ronaldo Martins da Costa.**  
+**Reversa: A Reverse Documentation Engineering Framework for Converting Legacy Software into Operational Specifications for AI Agents.**  
+arXiv, 2026. `arXiv:2605.18684`. Categoria principal `cs.SE`. Submetido em 18 de maio de 2026.  
+https://arxiv.org/abs/2605.18684  
+DOI persistente: https://doi.org/10.48550/arXiv.2605.18684
 
-> **Como aprender com outcomes sem transformar probabilidade aprendida em verdade observada?**
+O paper original descreve o Reversa como um framework de engenharia de documentação reversa que converte conhecimento implícito em sistemas legados em especificações operacionais rastreáveis para agentes de IA, usando um pipeline multiagente e mecanismos explícitos de rastreabilidade, confiança e preservação de lacunas para validação humana.
+
+## Referência do paper original — ABNT
+
+> MACEDO, Sanderson Oliveira de; COSTA, Ronaldo Martins da. **Reversa: A Reverse Documentation Engineering Framework for Converting Legacy Software into Operational Specifications for AI Agents**. arXiv, 2026. arXiv:2605.18684. DOI: 10.48550/arXiv.2605.18684. Disponível em: https://arxiv.org/abs/2605.18684. Acesso em: 13 set. 2026.
+
+## Referência do software original — ABNT
+
+> SANDECO. **Reversa**: transform legacy systems into executable specifications for AI coding agents. GitHub, 2026. Disponível em: https://github.com/sandeco/reversa. Acesso em: 13 set. 2026.
+
+## BibTeX do paper original
+
+```bibtex
+@misc{demacedo2026reversa,
+  title         = {Reversa: A Reverse Documentation Engineering Framework for Converting Legacy Software into Operational Specifications for AI Agents},
+  author        = {Sanderson Oliveira de Macedo and Ronaldo Martins da Costa},
+  year          = {2026},
+  eprint        = {2605.18684},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.SE},
+  doi           = {10.48550/arXiv.2605.18684},
+  url           = {https://arxiv.org/abs/2605.18684}
+}
+```
+
+## BibTeX do repositório original
+
+```bibtex
+@software{sandeco_reversa_2026,
+  author = {{sandeco}},
+  title  = {Reversa},
+  year   = {2026},
+  url    = {https://github.com/sandeco/reversa},
+  note   = {Original Reversa repository; MIT License}
+}
+```
+
+## Delimitação de autoria e contribuição
+
+Para evitar ambiguidade acadêmica, este repositório usa a seguinte distinção:
+
+| Camada | Proveniência |
+|---|---|
+| conceito de reverse documentation engineering | **Reversa original — Macedo & da Costa / sandeco** |
+| Discovery e pipeline multiagente de extração | **Reversa original** |
+| especificações operacionais rastreáveis | **Reversa original** |
+| estrutura `.reversa/`, famílias `/reversa-*` e compatibilidade multi-engine | **Reversa original / evolução histórica do projeto-base** |
+| Forward, Migration, Documentation, Bugs, Refactor e equipes herdadas | **arquitetura-base Reversa** |
+| Feynman Evidence & Understanding Layer | **extensão ReversaFeynman** |
+| FEG-01..FEG-07 e Teach-back | **extensão ReversaFeynman** |
+| `OBSERVED / INFERRED / UNVERIFIED / BLOCKED` | **extensão ReversaFeynman** |
+| handoff metadata-aware para skills protegidas | **extensão ReversaFeynman** |
+| MCI/ACME Adaptive Governance | **extensão ReversaFeynman** |
+| Audit Ledger, shadow policy e drift detection | **extensão ReversaFeynman** |
+| Offline Policy Evaluation v3 | **extensão ReversaFeynman** |
+| Brier/ECE, regret, IC95% e governance report | **extensão ReversaFeynman** |
+
+A expressão **“Reversa original”** neste README refere-se explicitamente ao projeto `sandeco/reversa` e ao trabalho científico de Macedo e Costa (2026). A expressão **“ReversaFeynman”** refere-se às extensões e à linha independente mantida neste repositório.
+
+> Independência de desenvolvimento não significa independência de proveniência. O ReversaFeynman reconhece explicitamente o Reversa original como sua base histórica, arquitetural e científica.
 
 ---
 
@@ -246,7 +312,7 @@ Nunca:
 outcome atual → histórico → decisão do mesmo evento
 ```
 
-A API agora oferece:
+A API oferece:
 
 ```js
 const decision = runtime.decide(event);
@@ -315,7 +381,7 @@ Isso reduz a chance de declarar melhora usando o mesmo resultado que foi usado p
 
 ---
 
-# Shadow outcomes e counterfactual
+# Shadow outcomes e contrafactual
 
 A v3 é conservadora:
 
@@ -331,7 +397,7 @@ Quando:
 shadow_action != executed_action
 ```
 
-o sistema **não inventa** o outcome counterfactual.
+o sistema **não inventa** o outcome contrafactual.
 
 Reward/regret estimados para ações não executadas usam médias de ação/estágio aprendidas no bloco de treino e são rotulados como:
 
@@ -343,6 +409,8 @@ not causal
 ---
 
 # Brier Score e ECE
+
+A `policy.confidence` representa probabilidade estimada de sucesso a partir de outcomes binários históricos ponderados por similaridade. Ela é separada do reward/utility score usado no ranking.
 
 Calibração é calculada apenas em `shadow-matched-only`.
 
@@ -407,22 +475,7 @@ Readiness também exige:
 - ledger válido;
 - limite inferior do IC95% do delta >= threshold.
 
-Possíveis bloqueios:
-
-```text
-offline-evaluation-unavailable
-insufficient-records
-insufficient-shadow-matches
-low-shadow-coverage
-brier-above-threshold
-ece-above-threshold
-estimated-shadow-regret-high
-reward-delta-ci-not-positive-enough
-drift-detected
-ledger-invalid
-```
-
-Mesmo quando todos passam:
+Mesmo quando todos os critérios passam:
 
 ```text
 eligible_for_activation_request = true
@@ -457,22 +510,7 @@ await writeAdaptiveGovernanceReport(report, { rootDir: process.cwd() });
 
 O writer rejeita path traversal para fora de `rootDir`.
 
-O relatório inclui:
-
-- registros treino/holdout;
-- shadow matches e coverage;
-- agreement baseline × shadow;
-- Brier;
-- ECE;
-- reward baseline/shadow;
-- delta + IC95%;
-- regret baseline/shadow;
-- drift;
-- validade do ledger;
-- readiness;
-- blockers;
-- matrizes de desempenho;
-- caveats metodológicos.
+O relatório inclui registros treino/holdout, shadow coverage, agreement baseline × shadow, Brier, ECE, reward, regret, IC95%, drift, validade do ledger, readiness, blockers e caveats metodológicos.
 
 ---
 
@@ -520,18 +558,7 @@ applyEvidenceProposal(
 
 # Reward baseline
 
-`heuristic-v1` combina:
-
-- aceitação da spec;
-- testes;
-- ganho de evidência observada;
-- redução de incerteza;
-- calibração;
-- regressões;
-- findings HIGH/CRITICAL;
-- custo;
-- latência;
-- retries.
+`heuristic-v1` combina aceitação da spec, testes, ganho de evidência observada, redução de incerteza, calibração, regressões, findings HIGH/CRITICAL, custo, latência e retries.
 
 ```text
 -1 ≤ reward ≤ 1
@@ -575,8 +602,9 @@ Propriedades:
 3. busca experiências anteriores da mesma ação;
 4. calcula similaridade entre observation vectors;
 5. estima reward empírico ponderado;
-6. acrescenta bônus de incerteza;
-7. ranqueia ações.
+6. estima probabilidade de sucesso quando há outcomes binários;
+7. acrescenta bônus de incerteza para ranking;
+8. ranqueia ações.
 
 Toda proposal nasce com:
 
@@ -591,11 +619,7 @@ Uma lista externa de candidatos não redefine a allowlist global.
 
 # Drift Detector
 
-A v2/v3 compara janela de referência e janela recente usando:
-
-- reward médio;
-- confidence média;
-- proporção `OBSERVED`.
+A v2/v3 compara janela de referência e janela recente usando reward médio, confidence média e proporção `OBSERVED`.
 
 Estados:
 
@@ -722,10 +746,10 @@ Esse número não é apresentado como benchmark global do ReversaFeynman.
 
 ## V3
 
-- remove interpretação ambígua de decisão pós-outcome;
 - separa `decide()` e `observe()`;
+- evita look-ahead do outcome atual;
 - mede política fora do bloco usado para estimativa;
-- mede calibração;
+- mede calibração com Brier/ECE;
 - mede regret;
 - produz IC95% reprodutível;
 - gera report auditável;
@@ -977,6 +1001,8 @@ git merge upstream/...
 
 `package.json` permanece `private: true`.
 
+A independência operacional não altera a obrigação de atribuir academicamente o Reversa original e seus autores. A política de proveniência está documentada em [`docs/ACADEMIC-PROVENANCE.md`](docs/ACADEMIC-PROVENANCE.md).
+
 ---
 
 # Verificação estrutural
@@ -1038,6 +1064,7 @@ lib/
 scripts/
 specs/
 docs/
+CITATION.cff
 INDEPENDENCE.md
 ```
 
@@ -1054,11 +1081,23 @@ Esses projetos permanecem externos e opcionais. O ReversaFeynman implementa cont
 
 ---
 
-# Proveniência e licença
+# Proveniência, prioridade acadêmica e licença
 
-ReversaFeynman deriva historicamente do projeto **Reversa** original.
+## Projeto e paper de origem
 
-Extensões desta linha incluem:
+O framework-base deste repositório é o **Reversa original**, de `sandeco/reversa`, associado ao paper de **Sanderson Oliveira de Macedo** e **Ronaldo Martins da Costa**:
+
+> MACEDO, Sanderson Oliveira de; COSTA, Ronaldo Martins da. **Reversa: A Reverse Documentation Engineering Framework for Converting Legacy Software into Operational Specifications for AI Agents**. arXiv, 2026. arXiv:2605.18684. DOI: 10.48550/arXiv.2605.18684. Disponível em: https://arxiv.org/abs/2605.18684. Acesso em: 13 set. 2026.
+
+Repositório original:
+
+> SANDECO. **Reversa**. GitHub, 2026. Disponível em: https://github.com/sandeco/reversa. Acesso em: 13 set. 2026.
+
+A prioridade intelectual do conceito-base, da arquitetura original e dos mecanismos já existentes em `sandeco/reversa` permanece atribuída ao projeto e aos autores originais.
+
+## Extensões desta linha
+
+Extensões desenvolvidas na linha ReversaFeynman incluem:
 
 - handoff seguro para skills protegidas;
 - Feynman Evidence & Understanding Layer;
@@ -1084,15 +1123,18 @@ Extensões desta linha incluem:
 - IC95% bootstrap;
 - separação `decide → observe`.
 
-Licença: **MIT** — consulte [`LICENSE`](LICENSE).
+Para trabalhos acadêmicos, recomenda-se citar **o paper original do Reversa** e, separadamente, identificar a versão/commit/tag do ReversaFeynman utilizado no experimento.
+
+Licença do software: **MIT** — consulte [`LICENSE`](LICENSE).
 
 ---
 
 # Síntese
 
 ```text
-Reversa original
+Reversa original — sandeco / Macedo & Costa (2026)
     │
+    ├── reverse documentation engineering
     ├── engenharia reversa
     ├── SDD e rastreabilidade
     ├── pipelines especializados
@@ -1100,7 +1142,7 @@ Reversa original
 
             +
 
-ReversaFeynman
+ReversaFeynman — extensão independente
     │
     ├── evidence provenance
     ├── observation ≠ inference
@@ -1161,4 +1203,4 @@ extrair
   → reavaliar
 ```
 
-sem permitir que aprendizagem probabilística, confiança estatística ou métricas offline substituam evidência verificável.
+sem permitir que aprendizagem probabilística, confiança estatística ou métricas offline substituam evidência verificável, e preservando explicitamente a autoria e a prioridade acadêmica do Reversa original.
