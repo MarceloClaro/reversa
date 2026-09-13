@@ -1,0 +1,5 @@
+interface:
+  display_name: "Reversa Teach-back"
+  short_description: "Valida conhecimento humano por explicação, mecanismo e transferência"
+policy:
+  allow_implicit_invocation: false
