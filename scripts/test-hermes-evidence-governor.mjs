@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import {
   HERMES_EVIDENCE_GOVERNOR,
   applyHermesEvidenceProposal,
+  createHermesBridge,
   createHermesEvidenceGovernor,
   evaluateHermesEvidence,
 } from '../lib/integrations/hermes/index.js';
@@ -80,6 +81,24 @@ assert.equal(collected.requested, true);
 assert.equal(collected.decision.accepted, false);
 assert.equal(collected.decision.effective, 'UNVERIFIED');
 
+const bridge = createHermesBridge();
+assert.equal(bridge.evidence.governor, HERMES_EVIDENCE_GOVERNOR);
+assert.equal(bridge.evidence.evaluate({
+  current: 'INFERRED',
+  proposed: 'OBSERVED',
+  source: { kind: 'artifact', direct: true, ref: 'artifact:sha256:abc' },
+}).accepted, true);
+
+const bridgeWithRemoteEvidence = createHermesBridge({
+  evidenceTransport: async () => ({
+    proposed: 'OBSERVED',
+    source: { kind: 'hermes-confidence', direct: true, ref: 'confidence:1.0' },
+  }),
+});
+const bridgeCollected = await bridgeWithRemoteEvidence.evidence.collectEvidence({ claim_id: 'bridge-claim' });
+assert.equal(bridgeCollected.requested, true);
+assert.equal(bridgeCollected.decision.accepted, false);
+
 const legacy = applyEvidenceProposal(
   { id: 'claim-legacy', epistemic_state: 'INFERRED' },
   {
@@ -109,4 +128,4 @@ const deps = Object.keys({ ...(pkg.dependencies ?? {}), ...(pkg.optionalDependen
   .map((name) => name.toLowerCase());
 assert.equal(deps.some((name) => name.includes('hermes') || name.includes('nous') || name.includes('python')), false);
 
-console.log('✓ Hermes Evidence Governor v2: replacement, local rules, transport containment and compatibility OK');
+console.log('✓ Hermes Evidence Governor v2: replacement, native bridge integration, local rules, transport containment and compatibility OK');
