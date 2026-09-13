@@ -29,6 +29,8 @@ As bridges geram envelopes e experiências. Transporte/execução é injetado ex
 
 Uma política externa pode propor somente ações da allowlist configurada. Ações fora dela são rejeitadas antes do envio/execução.
 
+Estar na allowlist não equivale a autorização automática. Ações potencialmente mutantes, inicialmente `route:coding`, recebem `requires_approval=true` e continuam subordinadas aos gates do workflow.
+
 ### ADP-04 — Recompensa não é verdade
 
 Reward mede utilidade operacional de um outcome. Reward alto não altera `OBSERVED / INFERRED / UNVERIFIED / BLOCKED`.
@@ -100,6 +102,8 @@ A observação inicial codifica:
 6. confiança calibrada;
 7. trust.
 
+A action inclui `allowed` e `requires_approval`, separando proposta de política de autorização real de execução.
+
 ## Reward heuristic-v1
 
 O reward inicial é deliberadamente heurístico e auditável. Combina:
@@ -133,7 +137,10 @@ flowchart TB
     SIDE --> POL["Policy proposal"]
     OUT --> RF
     POL --> SAFE{"Action allowlisted?"}
-    SAFE -->|"sim"| RF
+    SAFE -->|"sim"| APPROVAL{"Requires approval?"}
+    APPROVAL -->|"não"| RF
+    APPROVAL -->|"sim"| GATE["Workflow approval gate"]
+    GATE --> RF
     SAFE -->|"não"| REJ["Reject"]
 ```
 
@@ -141,7 +148,7 @@ flowchart TB
 
 Usar a camada ACME inicialmente para **seleção adaptativa de agentes/rotas**, preferencialmente como contextual bandit/offline policy evaluation antes de qualquer RL profundo de horizonte longo.
 
-Exemplos de ações seguras:
+Exemplos de ações seguras de roteamento/controle:
 
 - `route:reviewer`;
 - `route:feynman`;
@@ -151,13 +158,16 @@ Exemplos de ações seguras:
 - `control:request-evidence`;
 - `control:abstain`.
 
+`route:coding` pode ser proposta, mas é classificada como mutante e requer aprovação do workflow.
+
 ## Critérios de aceitação
 
 - CA1: política aprendida não consegue promover claim a `OBSERVED`.
 - CA2: evidência direta rastreável consegue promover claim a `OBSERVED`.
 - CA3: ação fora da allowlist é rejeitada.
-- CA4: experience ACME é serializável e contém `evidence_authority=false`.
-- CA5: envelope MCI inclui gates FEG obrigatórios.
-- CA6: `BLOCKED` ou confiança abaixo do limiar ativa abstention.
-- CA7: reward permanece entre `-1` e `1`.
-- CA8: `npm run verify` executa o teste estrutural da camada adaptativa.
+- CA4: ação mutante allowlisted retorna `requires_approval=true`.
+- CA5: experience ACME é serializável e contém `evidence_authority=false`.
+- CA6: envelope MCI inclui gates FEG obrigatórios.
+- CA7: `BLOCKED` ou confiança abaixo do limiar ativa abstention.
+- CA8: reward permanece entre `-1` e `1`.
+- CA9: `npm run verify` executa o teste estrutural da camada adaptativa.
