@@ -1,12 +1,12 @@
 ---
 name: reversa-reviewer
-description: Revisa criticamente as especificações geradas pelo reversa-writer — encontra inconsistências, reclassifica confiança e gera perguntas para validação humana. Use na fase de revisão de uma análise de engenharia reversa.
+description: Revisa criticamente as especificações geradas pelo reversa-writer — encontra inconsistências, reclassifica confiança, aplica os gates Feynman e valida lacunas humanas materiais por teach-back quando necessário. Use na fase de revisão de uma análise de engenharia reversa.
 disable-model-invocation: true
 license: MIT
 compatibility: Claude Code, Codex, Cursor, Gemini CLI e demais agentes compatíveis com Agent Skills.
 metadata:
   author: sandeco
-  version: "1.2.0"
+  version: "1.3.0"
   framework: reversa
   phase: revisao
 ---
@@ -29,10 +29,11 @@ O campo `doc_level` do state.json controla o comportamento da revisão:
 |---------|-----------|----------|-----------|
 | Revisão cruzada via Codex | não oferece | oferece (opcional) | obrigatória |
 | `questions.md` | só para 🔴 críticos que bloqueiam reimplementação | todos os 🔴 | todos os 🔴 |
-| `gaps.md` | não (incorpora no confidence-report) | sim | sim com categorização por severidade (crítico/moderado/cosmético) |
-| Validação de matrizes | não (pula code-spec e spec-impact) | sim | sim |
-| `confidence-report.md` | sim (simplificado) | sim (completo) | sim (completo) |
+| `gaps.md` | não (incorpora no confidence-report) | sim | sim com categorização por severidade |
+| Validação de matrizes | não | sim | sim |
+| `confidence-report.md` | simplificado | completo | completo |
 | Feynman Gate | resumido | completo | completo + findings obrigatórios |
+| FEG-07 Teach-back | só crítico | quando material | obrigatório quando a única fonte for humana e a decisão for material |
 
 ## Passo 0 — Verificar disponibilidade do Codex e oferecer revisão cruzada
 
@@ -69,7 +70,7 @@ Para cada unit em `<output_folder>/`:
 
 ## Passo F — Feynman Evidence & Understanding Gate
 
-Antes de gerar o relatório de confiança, aplique os seis gates em cada unit e nos artefatos globais relevantes. A integração é metodológica; não faça roleplay de Richard Feynman.
+Antes de gerar o relatório de confiança, aplique FEG-01..FEG-06 em cada unit e nos artefatos globais relevantes. Depois identifique se FEG-07 é aplicável. A integração é metodológica; não faça roleplay de Richard Feynman.
 
 ### FEG-01 — Nome ≠ entendimento
 
@@ -95,11 +96,44 @@ Para padrão, arquitetura, processo ou biblioteca, remova mentalmente o nome e p
 
 Toda incerteza relevante termina em evidência suficiente, pergunta humana, teste mínimo ou `BLOCKED`. Prefira o menor experimento capaz de mudar a classificação: um grep, leitura de contrato, teste focal ou reprodução curta antes de um benchmark amplo.
 
-### Consequência sobre confiança
+### FEG-07 — Teach-back e fronteira de conhecimento
+
+FEG-07 só é aplicado quando:
+
+1. a lacuna muda requisito, risco, regra de negócio ou interpretação material;
+2. o código/contrato/teste/log não contém evidência suficiente;
+3. um humano é a fonte necessária.
+
+Nesses casos, NÃO aceite automaticamente uma resposta curta ou “sim/não” como confirmação. Use o mini-protocolo Teach-back ou recomende/encaminhe para `/reversa-teachback`:
+
+1. peça explicação livre nas palavras do usuário, sem múltipla escolha;
+2. faça UMA pergunta causal de mecanismo baseada na resposta;
+3. faça UMA pergunta de transferência com variante/edge case;
+4. classifique `TEACHBACK_GREEN | TEACHBACK_YELLOW | TEACHBACK_RED`;
+5. mantenha a classificação da evidência separada.
+
+Use também:
+
+- `HUMAN-VALIDATED` — explicação coerente e transferível, sem implicar observação técnica;
+- `HUMAN-PARTIAL` — explicação útil, mas incompleta;
+- `HUMAN-CONFLICT` — resposta humana conflita com evidência ou outra fonte material.
+
+#### Consequência de FEG-07
+
+- `TEACHBACK_GREEN` + evidência técnica compatível pode sustentar promoção conforme `confidence-rules.md`.
+- `TEACHBACK_GREEN` sem evidência técnica permanece `HUMAN-VALIDATED`; NÃO chame de `OBSERVED`.
+- `TEACHBACK_YELLOW` mantém a lacuna aberta.
+- `TEACHBACK_RED` impede tratar a resposta como resolução e deve registrar o conflito.
+- Se o comportamento pode ser descoberto no repositório, investigue o repositório; não use teach-back como substituto de leitura técnica.
+- Não use velocidade, hesitação, vocabulário ou eloquência como critério de conhecimento.
+- No máximo duas tentativas no mesmo ponto antes de fornecer a evidência disponível ou marcar `UNVERIFIED/BLOCKED`.
+
+## Consequência geral sobre confiança
 
 - FEG-02 ou FEG-03 falhando em item 🟢 → rebaixamento obrigatório até existir evidência.
 - FEG-04 falhando em requisito central → 🔴 se impede implementação/teste sem interpretação humana.
 - FEG-05 sem justificativa funcional → 🟡 no mínimo; 🔴 quando gera dependência/arquitetura irreversível.
+- FEG-07 parcial/conflitante → não remover lacuna como resolvida.
 - Nunca escreva “verificado”, “confirmado”, “reproduzido” ou equivalente sem apontar para o artefato ou execução que sustenta a palavra.
 - Não fabrique resultados, métricas, fontes, linhas de código ou testes executados.
 
@@ -107,7 +141,9 @@ Toda incerteza relevante termina em evidência suficiente, pergunta humana, test
 
 Para cada 🔴 que só o usuário pode resolver, crie uma entrada seguindo `references/questions-template.md` e agrupe em `_reversa_sdd/questions.md`.
 
-Se `answer_mode = "chat"`, apresente as perguntas diretamente. Se `answer_mode = "file"`, escreva `questions.md` e aguarde o usuário preencher.
+Se `answer_mode = "chat"`, apresente as perguntas diretamente. Para lacuna FEG-07, use explicação livre + probe de mecanismo + probe de transferência, não múltipla escolha.
+
+Se `answer_mode = "file"`, escreva `questions.md`. Marque itens FEG-07 como `NEEDS-TEACHBACK`; respostas escritas de uma linha não promovem a confiança sozinhas. Depois que o usuário sinalizar conclusão, faça a validação interativa necessária ou mantenha a lacuna explícita.
 
 ## Relatório de confiança final
 
@@ -125,20 +161,26 @@ Inclua também:
 | FEG-04 | ... | ... | ... | ... |
 | FEG-05 | ... | ... | ... | ... |
 | FEG-06 | ... | ... | ... | ... |
+| FEG-07 | N/A | ... | ... | NOT_APPLICABLE/CANDIDATE/HUMAN-VALIDATED/HUMAN-PARTIAL/HUMAN-CONFLICT |
 
+- Feynman score-base: <0..12>/12
 - Itens rebaixados por falta de proveniência: <N>
 - Inferências que estavam marcadas como fato: <N>
 - Requisitos não falsificáveis: <N>
 - Cargo-cult suspects: <N>
 - Testes mínimos pendentes: <N>
+- Candidatos FEG-07: <N>
+- HUMAN-VALIDATED: <N> | HUMAN-PARTIAL: <N> | HUMAN-CONFLICT: <N>
 ```
+
+O score `0..12` é calculado apenas sobre FEG-01..FEG-06. FEG-07 fica fora do cálculo para preservar comparabilidade e não confundir interação humana com evidência técnica.
 
 Se houve revisão cruzada, inclua seção com engine, apontamentos recebidos, aceitos, rejeitados e pendentes.
 
 ## Saída
 
 **Sempre:**
-- `_reversa_sdd/confidence-report.md`
+- `_reversa_sdd/confidence-report.md`.
 - `_reversa_sdd/questions.md` quando houver lacunas que exijam validação humana.
 
 **Apenas se `doc_level` for `completo` ou `detalhado`:**
@@ -155,5 +197,7 @@ Informe ao Reversa:
 - Quantidade de reclassificações.
 - Número de perguntas geradas/respondidas.
 - Percentual geral de confiança final.
-- Contagem de findings FEG-01..FEG-06 e itens rebaixados por falta de evidência.
-- Se houver HIGH/CRITICAL de entendimento/proveniência, sugira `/reversa-feynman` para auditoria dedicada.
+- Contagem de findings FEG-01..FEG-07 e itens rebaixados por falta de evidência.
+- Contagem HUMAN-VALIDATED/PARTIAL/CONFLICT.
+- Se houver HIGH/CRITICAL de entendimento/proveniência, sugira `/reversa-feynman`.
+- Se houver lacuna humana material, sugira `/reversa-teachback`.
