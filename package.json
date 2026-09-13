@@ -2,13 +2,13 @@
   "name": "reversa",
   "version": "1.3.3",
   "private": true,
-  "description": "ReversaFeynman: independent MarceloClaro edition with evidence, Feynman gates and teach-back",
+  "description": "ReversaFeynman: independent MarceloClaro edition with evidence, Feynman gates, teach-back and governed adaptive evaluation",
   "bin": {
     "reversa": "bin/reversa.js"
   },
   "type": "module",
   "scripts": {
-    "verify": "python3 scripts/verify-no-upstream-sync.py && python3 scripts/verify-invocation.py && python3 scripts/verify-feynman-layer.py && node scripts/test-installer-transport.mjs && node scripts/test-adaptive-bridges.mjs"
+    "verify": "python3 scripts/verify-no-upstream-sync.py && python3 scripts/verify-invocation.py && python3 scripts/verify-feynman-layer.py && node scripts/test-installer-transport.mjs && node scripts/test-adaptive-bridges.mjs && node scripts/test-offline-policy-evaluation.mjs"
   },
   "keywords": [
     "legacy",
@@ -19,6 +19,8 @@
     "teach-back",
     "metacognition",
     "reinforcement-learning",
+    "offline-policy-evaluation",
+    "calibration",
     "claude",
     "codex",
     "gemini",
