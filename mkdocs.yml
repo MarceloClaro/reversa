@@ -1,11 +1,11 @@
-site_name: Reversa
-site_url: https://sandeco.github.io/reversa
+site_name: Reversa — MarceloClaro Edition
+site_url: https://marceloclaro.github.io/reversa
 site_description: Transforme sistemas legados em especificações executáveis por agentes de IA.
-site_author: sandeco
-repo_url: https://github.com/sandeco/reversa
-repo_name: sandeco/reversa
+site_author: Marcelo Claro Laranjeira
+repo_url: https://github.com/MarceloClaro/reversa
+repo_name: MarceloClaro/reversa
 edit_uri: edit/main/docs/
-copyright: '"Reversa" by sandeco'
+copyright: 'Reversa — MarceloClaro independent edition. Derived from the original MIT-licensed Reversa project.'
 
 theme:
   name: material

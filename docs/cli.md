@@ -1,6 +1,14 @@
 # CLI
 
-Reversa has a simple CLI to manage the installation and lifecycle of agents in your project. All commands run with `npx reversa` in the project root.
+Reversa has a simple CLI to manage the installation and lifecycle of agents in your project. In the MarceloClaro independent edition, commands are executed directly from `github:MarceloClaro/reversa`.
+
+Define mentally the prefix below for all examples:
+
+```bash
+npm exec --yes --package=github:MarceloClaro/reversa -- reversa
+```
+
+This edition does not automatically synchronize with `sandeco/reversa` and the `update` command does not query the npm `reversa` package.
 
 ---
 
@@ -8,7 +16,7 @@ Reversa has a simple CLI to manage the installation and lifecycle of agents in y
 
 When the CLI starts and before it shows the Reversa ASCII logo, it must clear the terminal screen. The logo should appear at the top of the terminal, with no previous content above it.
 
-The `by sandeco` signature must appear in white on the last line of the artwork, after a right-side margin from the end of the large `Reversa` word. It must not float in the middle of the logo height.
+The signature of this distribution is `MarceloClaro edition` on the last line of the artwork.
 
 Expected format:
 
@@ -18,10 +26,12 @@ Expected format:
   | |_/ /_____   _____ _ __ ___  __ _
   |    // _ \ \ / / _ \ '__/ __|/ _` |
   | |\ \  __/\ V /  __/ |  \__ \ (_| |
-  \_| \_\___| \_/ \___|_|  |___/\__,_|  by sandeco
+  \_| \_\___| \_/ \___|_|  |___/\__,_|  MarceloClaro edition
 
   AI-Powered Reverse Engineering Framework
 ```
+
+Historical attribution and MIT provenance are preserved in the repository documentation and license.
 
 ---
 
@@ -30,10 +40,10 @@ Expected format:
 ### `install`
 
 ```bash
-npx reversa install
+npm exec --yes --package=github:MarceloClaro/reversa -- reversa install
 ```
 
-Installs Reversa in the current legacy project. Detects present engines, asks for your preferences, and creates the entire required structure.
+Installs Reversa in the current legacy project. Detects present engines, asks for your preferences, and creates the required structure.
 
 Use once, in the root of the project you want to analyze.
 
@@ -41,56 +51,62 @@ Use once, in the root of the project you want to analyze.
 
 The installer must treat the menu as the main interface, not as a text dump. Questions must be numbered, have a blank line before the question, and, when options are shown, a blank line between the question and the list.
 
-After the user confirms a multi-select question, the CLI must not print every selected item in one continuous line. This is forbidden because it creates a long, unreadable paragraph. Use one of these alternatives:
+After the user confirms a multi-select question, the CLI must not print every selected item in one continuous line. Use one of these alternatives:
 
 - Do not render the full selection and continue to the next question.
 - Render a short summary, one line per team.
 
-There is no agent selection: the installer always installs **all** agents shipped with the package. The final installation summary breaks the count down by team (Discovery, Migration, Code Forward, New Project, Documentation, Translators and Pricing).
+The installer resolves the agents shipped with this distribution and their dependencies locally.
 
 ---
 
 ### `status`
 
 ```bash
-npx reversa status
+npm exec --yes --package=github:MarceloClaro/reversa -- reversa status
 ```
 
-Shows the current analysis state: which phase is in progress, which agents have already run, what's left to complete.
-
-Useful for a quick overview before resuming a session.
+Shows the current analysis state: which phase is in progress, which agents have already run, and what's left to complete.
 
 ---
 
 ### `update`
 
 ```bash
-npx reversa update
+npm exec --yes --package=github:MarceloClaro/reversa -- reversa update
 ```
 
-Updates everything to the latest version of Reversa: all agents shipped with the package are reinstalled, including agents that didn't exist when you first installed.
+Refreshes the managed installation from the **currently executing MarceloClaro distribution**. All agents shipped with that distribution are reconciled, including agents that did not exist when the project was first installed.
 
-The command is smart: it checks the SHA-256 manifest of each file and never overwrites files you've customized. If you made adjustments to any agent, they stay intact.
+The command checks the SHA-256 manifest of each managed file and preserves files customized by the user.
+
+Important independence property: `update` does **not** query `registry.npmjs.org/reversa/latest`, does not run `gh repo sync`, and does not fetch or merge `sandeco/reversa`.
 
 ---
 
 ### `add-engine`
 
 ```bash
-npx reversa add-engine
+npm exec --yes --package=github:MarceloClaro/reversa -- reversa add-engine
 ```
 
-Adds support for an AI engine that wasn't present when you installed. For example: you installed only for Claude Code and now want to add Codex.
+Adds support for an AI engine that wasn't present when you installed.
 
 ---
 
 ### `uninstall`
 
 ```bash
-npx reversa uninstall
+npm exec --yes --package=github:MarceloClaro/reversa -- reversa uninstall
 ```
 
 Removes Reversa from the project: deletes the files created by the installation (`.reversa/`, `.agents/skills/reversa-*/`, engine entry files).
 
 !!! info "Your files stay intact"
-    `uninstall` removes **only** what Reversa created. No original project file is touched. Specifications generated in `_reversa_sdd/` are also preserved by default.
+    `uninstall` removes only what Reversa created. No original project file is touched. Specifications generated in `_reversa_sdd/` are preserved by default.
+
+---
+
+## Independence policy
+
+The executable guard is `scripts/verify-no-upstream-sync.py`. The normative policy is documented in `INDEPENDENCE.md` at the repository root.

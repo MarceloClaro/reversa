@@ -1,6 +1,6 @@
 # Contributing
 
-Contributions are welcome. If you found a bug, have an idea for a new agent, or want to improve something, the process is simple.
+Contributions are welcome. This documentation refers to the independent `MarceloClaro/reversa` line.
 
 ---
 
@@ -8,14 +8,17 @@ Contributions are welcome. If you found a bug, have an idea for a new agent, or 
 
 Open an issue first to discuss what you want to change. This avoids wasted work on both sides, especially for larger changes.
 
+Changes from external projects, including the original Reversa upstream, must be reviewed and committed explicitly. This repository does not perform automatic upstream synchronization.
+
 ---
 
 ## Local setup
 
 ```bash
-git clone https://github.com/sandeco/reversa.git
+git clone https://github.com/MarceloClaro/reversa.git
 cd reversa
 npm install
+npm run verify
 ```
 
 ---
@@ -29,6 +32,8 @@ reversa/
 ├── lib/
 │   ├── commands/       ← CLI command implementations
 │   └── installer/      ← installation and engine detection logic
+├── scripts/            ← structural guards and smoke tests
+├── specs/              ← formal evolution specifications
 ├── templates/          ← config templates and engine entry files
 └── docs/               ← documentation (you are here)
 ```
@@ -38,12 +43,24 @@ reversa/
 ## Adding a new agent
 
 1. Create the folder `agents/reversa-[name]/`
-2. Create `SKILL.md` following the format of existing agents (required frontmatter: `name`, `description`, `license`, `compatibility`, `metadata`)
+2. Create `SKILL.md` following the format of existing agents
 3. Add a `references/` folder if the agent needs schema or reference templates
-4. Update `lib/installer/` to include the new agent in the install list
+4. Verify installer discovery/transport
+5. Add structural checks when the new agent introduces an invariant
+6. Run `npm run verify`
 
 ---
 
-## License
+## Upstream policy
 
-MIT. See [LICENSE](https://github.com/sandeco/reversa/blob/main/LICENSE) for details.
+Do not add automated `gh repo sync`, `git fetch upstream`, `git pull upstream`, or merge jobs from `sandeco/reversa`.
+
+See [INDEPENDENCE.md](https://github.com/MarceloClaro/reversa/blob/main/INDEPENDENCE.md).
+
+---
+
+## License and provenance
+
+MIT. See [LICENSE](https://github.com/MarceloClaro/reversa/blob/main/LICENSE).
+
+This line derives historically from the original Reversa project; attribution is preserved while development and release policy are maintained independently under `MarceloClaro/reversa`.
