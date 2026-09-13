@@ -1,14 +1,16 @@
-# Política de Independência — MarceloClaro/reversa
+# Política de Independência — MarceloClaro/reversaFeynman
 
-Este repositório é mantido como uma linha de desenvolvimento independente por **Marcelo Claro Laranjeira**.
+Este repositório é mantido como uma linha de desenvolvimento independente por **Marcelo Claro Laranjeira**, sob a identidade **ReversaFeynman**.
 
 ## Fonte de verdade
 
-A fonte operacional de código, agentes, documentação e atualizações desta edição é:
+A fonte operacional pretendida de código, agentes, documentação e atualizações desta edição é:
 
-- `https://github.com/MarceloClaro/reversa`
+- `https://github.com/MarceloClaro/reversaFeynman`
 
-O branch `main` deste repositório é a referência para evolução da edição MarceloClaro.
+O branch `main` deste repositório é a referência para evolução da edição ReversaFeynman.
+
+> Enquanto o rename administrativo do GitHub não for concluído, a árvore pode continuar fisicamente acessível pelo slug anterior `MarceloClaro/reversa`. O código e a documentação já adotam `MarceloClaro/reversaFeynman` como identidade canônica.
 
 ## Sem sincronização automática com upstream
 
@@ -26,18 +28,18 @@ O script `scripts/verify-no-upstream-sync.py` atua como guard estrutural e deve 
 
 ## Atualização da CLI
 
-O comando `reversa update` usa exclusivamente os arquivos presentes na distribuição MarceloClaro que está executando a CLI. Ele não consulta o pacote `reversa` no npm para decidir versão e não busca código de `sandeco/reversa`.
+O comando `reversa update` usa exclusivamente os arquivos presentes na distribuição ReversaFeynman que está executando a CLI. Ele não consulta o pacote `reversa` no npm para decidir versão e não busca código de `sandeco/reversa`.
 
-A forma recomendada de executar esta edição diretamente do GitHub é:
+A forma canônica de executar esta edição diretamente do GitHub é:
 
 ```bash
-npm exec --yes --package=github:MarceloClaro/reversa -- reversa install
+npm exec --yes --package=github:MarceloClaro/reversaFeynman -- reversa install
 ```
 
 Para atualizar uma instalação usando esta mesma distribuição:
 
 ```bash
-npm exec --yes --package=github:MarceloClaro/reversa -- reversa update
+npm exec --yes --package=github:MarceloClaro/reversaFeynman -- reversa update
 ```
 
 ## Publicação npm
@@ -50,4 +52,4 @@ A independência de desenvolvimento não apaga a proveniência histórica. Este 
 
 ## Regra para incorporar ideias externas
 
-Mudanças externas, inclusive alterações futuras de `sandeco/reversa`, só podem entrar nesta edição por decisão explícita, revisão própria e commit específico no repositório `MarceloClaro/reversa`. Não existe atualização automática de upstream.
+Mudanças externas, inclusive alterações futuras de `sandeco/reversa`, só podem entrar nesta edição por decisão explícita, revisão própria e commit específico no repositório `MarceloClaro/reversaFeynman`. Não existe atualização automática de upstream.
