@@ -1,6 +1,6 @@
 # SPEC — Software Engineering Intelligence v5
 
-Status: implementing
+Status: implemented
 
 ## Objetivo
 
