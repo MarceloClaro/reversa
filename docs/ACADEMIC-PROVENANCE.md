@@ -61,7 +61,8 @@ Esses elementos constituem a base histórica e arquitetural sobre a qual a linha
 - separação `decide → observe`;
 - Offline Policy Evaluation v3;
 - holdout temporal, Brier Score, ECE, reward/regret e IC95% bootstrap;
-- Adaptive Governance Report.
+- Adaptive Governance Report;
+- Hermes Bridge v1: contratos, Memory Firewall, Skill Mutation Gate, trajetória e adaptador de evidência.
 
 A tabela acima é uma delimitação de proveniência de engenharia. Ela não pretende reescrever a história de commits do projeto original nem atribuir ao ReversaFeynman contribuições anteriores à sua linha independente.
 
@@ -114,3 +115,44 @@ Exemplo textual:
 ## 7. Princípio de atribuição
 
 Nenhuma extensão desta linha deve ser descrita de forma que obscureça a origem do framework Reversa ou atribua ao ReversaFeynman a autoria de conceitos, agentes, pipelines ou mecanismos já presentes no projeto original. Sempre que a distinção for material, a documentação deve usar explicitamente as expressões **“Reversa original”**, **“derivado de sandeco/reversa”** e **“extensão ReversaFeynman”**.
+
+## 8. Integração externa — Hermes Agent / Nous Research
+
+A **Hermes Bridge v1** do ReversaFeynman foi inspirada pelas capacidades publicamente documentadas do **Hermes Agent**, projeto externo da **Nous Research**, incluindo memória persistente, sistema de skills/procedural memory, melhoria de skills a partir de experiência, subagentes, ferramentas e geração de trajetórias.
+
+Projeto original Hermes Agent:
+
+- `https://github.com/NousResearch/hermes-agent`
+- mantenedor/origem: **Nous Research**
+- licença indicada no repositório: MIT
+
+Fork utilizado para estudo no ecossistema MarceloClaro:
+
+- `https://github.com/MarceloClaro/hermes-agent`
+
+O repositório `MarceloClaro/hermes-agent` é um fork do projeto `NousResearch/hermes-agent`. A existência desse fork não transfere autoria do Hermes Agent para o mantenedor do ReversaFeynman.
+
+### Delimitação específica
+
+Pertencem ao projeto Hermes/Nous Research, enquanto conceitos e capacidades externas estudadas:
+
+- Hermes Agent como agente autoaperfeiçoável;
+- memória persistente/cross-session;
+- procedural memory e sistema de skills;
+- criação/melhoria de skills baseada em experiência;
+- ferramentas, subagentes e backends de execução;
+- geração e compressão de trajetórias.
+
+Pertencem à linha ReversaFeynman, como implementação de interoperabilidade e governança:
+
+- `reversa.hermes.memory/v1`;
+- `reversa.hermes.skill.proposal/v1`;
+- `reversa.hermes.trajectory/v1`;
+- `reversa.hermes.execution.result/v1`;
+- Memory Firewall que impede memória de produzir `OBSERVED`;
+- Skill Mutation Gate que mantém propostas em shadow e exige review/testes/Feynman;
+- extração conservadora de sinais de trajetória;
+- adaptador que só encaminha evidência direta, rastreável e explicitamente mapeada ao Evidence Guard existente;
+- transport bridge opcional e sem dependência de runtime do Hermes.
+
+Portanto, a formulação correta é **“Hermes Bridge v1 do ReversaFeynman, interoperando com conceitos/capacidades do Hermes Agent da Nous Research”**, e não “Hermes Agent desenvolvido pelo ReversaFeynman”.
