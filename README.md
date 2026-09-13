@@ -23,6 +23,7 @@ Documentação principal:
 
 - [`INDEPENDENCE.md`](INDEPENDENCE.md)
 - [`docs/ACADEMIC-PROVENANCE.md`](docs/ACADEMIC-PROVENANCE.md)
+- [`docs/REVERSA-ORIGINAL-VS-FEYNMAN.md`](docs/REVERSA-ORIGINAL-VS-FEYNMAN.md) — comparação técnica completa entre o original e esta linha
 - [`docs/HERMES-BRIDGE.md`](docs/HERMES-BRIDGE.md)
 - [`docs/HERMES-EVIDENCE-GOVERNOR.md`](docs/HERMES-EVIDENCE-GOVERNOR.md)
 - [`CITATION.cff`](CITATION.cff)
@@ -84,6 +85,197 @@ DOI: `10.48550/arXiv.2605.18684`
 | Hermes Agent: memória, skills, subagentes e trajetórias | **Nous Research** |
 | Hermes Bridge / Memory Firewall / Skill Mutation Gate | **extensão ReversaFeynman** |
 | Hermes Evidence Governor v2 | **extensão ReversaFeynman** |
+
+---
+
+# Reversa original × ReversaFeynman — o que cada um faz
+
+O Reversa original foi concebido como um framework de **specification reverse-engineering**: instala-se dentro de um projeto legado, coordena agentes especializados, extrai regras de negócio, arquitetura, contratos e fluxos implícitos e converte esse conhecimento em especificações operacionais rastreáveis para agentes de IA.
+
+O ReversaFeynman **não elimina essa função**. Ele a usa como fundação e acrescenta uma segunda camada de problema: como permitir que agentes raciocinem, validem, lembrem e aprendam sem confundir inferência, memória, confiança ou desempenho histórico com evidência direta.
+
+A comparação completa, com fluxos, artefatos, segurança, trade-offs e matriz item a item, está em [`docs/REVERSA-ORIGINAL-VS-FEYNMAN.md`](docs/REVERSA-ORIGINAL-VS-FEYNMAN.md).
+
+## Síntese funcional
+
+```text
+Reversa original
+    = legado → análise multiagente → conhecimento implícito
+      → especificações operacionais → evolução/migração/documentação
+
+ReversaFeynman
+    = Reversa original preservado
+      + Feynman/FEG
+      + estados epistemológicos
+      + Teach-back
+      + governança de invocação
+      + MCI/ACME
+      + shadow policy / drift / ledger
+      + Offline Policy Evaluation
+      + Hermes memory/skills/trajectories
+      + Hermes Evidence Governor
+```
+
+## Comparação minuciosa — matriz executiva
+
+Legenda: **PRESERVADO** = comportamento herdado continua; **ESTENDIDO** = mantém a capacidade e acrescenta controles; **NOVO** = não fazia parte do núcleo original comparado; **SUBSTITUÍDO** = implementação interna foi trocada mantendo migração/compatibilidade.
+
+| Dimensão | Reversa original (`sandeco/reversa`) | ReversaFeynman atual | Situação |
+|---|---|---|---|
+| Missão | Converter sistemas legados em especificações operacionais para agentes | Mantém essa missão e acrescenta validação epistemológica e aprendizagem governada | **ESTENDIDO** |
+| Discovery | Scout → Archaeologist → Detective/Architect → Writer → Reviewer | Mesmo pipeline herdado | **PRESERVADO** |
+| Reconnaissance | Mapeia estrutura, linguagens, frameworks, dependências e entry points | Igual | **PRESERVADO** |
+| Excavation | Analisa módulos, algoritmos, control flow e data structures | Igual | **PRESERVADO** |
+| Interpretation | Extrai regras implícitas, ADRs, state machines, permissões e arquitetura | Igual + FEG pode auditar inferências | **ESTENDIDO** |
+| Generation | Writer gera operational contracts rastreáveis ao código | Igual | **PRESERVADO** |
+| Review | Reviewer encontra inconsistências/gaps e valida com usuário | Reviewer + Feynman/Teach-back quando necessário | **ESTENDIDO** |
+| Modelo de confiança | 🟢 CONFIRMED / 🟡 INFERRED / 🔴 GAP | `OBSERVED / INFERRED / UNVERIFIED / BLOCKED` | **ESTENDIDO** |
+| Validação humana | Resolve gaps por perguntas/validação | Estados humanos separados: HUMAN-VALIDATED/PARTIAL/CONFLICT | **NOVO** |
+| Falsificabilidade | Implícita em testes/review | FEG-04 exige condição/oracle de refutação quando aplicável | **NOVO** |
+| Anti-cargo-cult | Não era gate transversal | FEG-05 | **NOVO** |
+| Experimento mínimo | Não era gate formal | FEG-06 | **NOVO** |
+| Teach-back | Não havia protocolo epistemológico dedicado | FEG-07 + `/reversa-teachback` | **NOVO** |
+| Forward | requirements → clarify → quality → plan → to-do → audit → coding → sync | Mesmo pipeline | **PRESERVADO** |
+| Stage detection | Detecta fase física da feature pelos artefatos | Mantido + handoff protegido | **ESTENDIDO** |
+| Clarify | Resolve `[DOUBT]` com perguntas direcionadas | Igual + pode acionar fronteira FEG-07 | **ESTENDIDO** |
+| Coding | Executa `actions.md`, registra progresso/impacto/regressão | Preservado | **PRESERVADO** |
+| Add | Emenda curta e limitada à feature ativa | Preservado | **PRESERVADO** |
+| Sync | Produz addendum pós-entrega sem reescrever extração histórica | Preservado | **PRESERVADO** |
+| Ideation | Framer → Explorer → Challenger → Arbiter → Pre-Spec | Preservado | **PRESERVADO** |
+| Greenfield | Ideator → Researcher → Drafter → Spec SDD | Preservado | **PRESERVADO** |
+| Express mode | Pode levar ideia até código em execução unattended | Compatibilidade arquitetural preservada | **PRESERVADO** |
+| Migration | Paradigm Advisor → Curator → Strategist → Designer → Screen Translator → Inspector | Preservado | **PRESERVADO** |
+| Bugs | Memória causal `SPEC ↔ CODE ↔ TEST ↔ BUG` | Preservado | **PRESERVADO** |
+| Refactor | Safety net, characterization tests e diff reversível | Preservado | **PRESERVADO** |
+| Docs | Mini-site HTML, mapas, métricas, timeline, glossário e deck | Preservado como equipe herdada | **PRESERVADO** |
+| Pricing | Estima esforço/tamanho/preço sobre specs | Preservado | **PRESERVADO** |
+| Translator | N8N/artefatos estruturados → SDD | Preservado | **PRESERVADO** |
+| Artefatos Discovery | inventory, dependencies, domain, C4, ERD, gaps, SDD, ADR, flowcharts, sequences, UI, DB, design system etc. | Taxonomia herdada + artefatos epistemológicos/adaptive | **ESTENDIDO** |
+| Checkpoints | `.reversa/state.json` + `CONTINUAR` entre etapas | Preservado | **PRESERVADO** |
+| Invocation | Harness chama skills/agentes | Model-invoked × user-invoked com lockstep e read-and-execute protegido | **NOVO** |
+| Installer | Detecta engines, copia skills, cria `.reversa/`, manifesto SHA-256 | Compatibilidade preservada | **PRESERVADO** |
+| Updater/distribuição | Distribuição do projeto original | Linha independente sem sync automático do upstream | **SUBSTITUÍDO** |
+| Engines | Claude, Codex, Cursor, Gemini, Windsurf, Antigravity, Kiro, Opencode, Hermes, Cline, Roo, Copilot, Aider, Amazon Q | Mantidos | **PRESERVADO** |
+| API keys | Core não solicita/armazena/transmite chaves LLM | Mantido | **PRESERVADO** |
+| Memória longitudinal | Principalmente arquivos/checkpoints do projeto | Hermes Memory Event + Memory Firewall | **NOVO** |
+| Evolução de skills | Manutenção definida no repositório | Hermes Skill Proposal em shadow | **NOVO** |
+| Trajetórias | Logs/progressos específicos de pipelines | Hermes Trajectory Event padronizado | **NOVO** |
+| Governança de evidência | Confidence seals e rastreabilidade do pipeline | Hermes Evidence Governor com regras locais determinísticas | **ESTENDIDO** |
+| MCI | Não fazia parte do original | Routing/trust/confidence/abstention opcionais | **NOVO** |
+| ACME/RL | Não fazia parte do original | Sidecar opcional para aprendizagem de policy | **NOVO** |
+| Reward | Não havia função formal | `heuristic-v1` como utilidade operacional, não verdade | **NOVO** |
+| Audit Ledger | Artefatos/manifestos, sem ledger adaptive | Hash-chain SHA-256 para eventos adaptive | **NOVO** |
+| Drift | Não havia detector formal | Gate de drift para policy/skill | **NOVO** |
+| Shadow mode | Não era mecanismo transversal | Default para policy e skill proposal | **NOVO** |
+| Activation Request | Checkpoints humanos tradicionais | Pedido explícito de ativação para policy | **ESTENDIDO** |
+| Offline evaluation | Não havia OPE formal | Holdout temporal, Brier, ECE, regret, bootstrap IC95% | **NOVO** |
+| Causalidade | Não era camada metodológica do runtime | OPE rotula estimativa observacional como não causal | **NOVO** |
+| SDD interno | Reversa produz SDD para projetos | ReversaFeynman também evolui a si próprio via SPEC/SDD | **ESTENDIDO** |
+| TDD interno | Testes/gates dos pipelines | RED → GREEN → REFACTOR/HARDENING nas novas integrações | **ESTENDIDO** |
+| Proveniência | Paper original + MIT | Paper original + CITATION + original/derivado + Hermes/Nous | **ESTENDIDO** |
+
+## Comparação do modelo de evidência
+
+### Reversa original
+
+```text
+código / artefato
+      ↓
+agente extrai e interpreta
+      ↓
+🟢 CONFIRMED / 🟡 INFERRED / 🔴 GAP
+      ↓
+spec / pergunta humana
+```
+
+### ReversaFeynman
+
+```text
+code / contract / test / execution / log / dataset / artifact
+                ↓
+         Feynman / provenance
+                ↓
+      Hermes Evidence Governor
+                ↓
+OBSERVED / INFERRED / UNVERIFIED / BLOCKED
+                ↓
+MCI / ACME / Hermes memory podem usar o estado
+                ↓
+mas confiança, reward ou memória não podem fabricar OBSERVED
+```
+
+A diferença central é que no original o confidence seal comunica a força da extração; no atual o estado epistemológico também funciona como **mecanismo de governança**, podendo exigir evidência, bloquear promoção ou orientar Clarify/Teach-back.
+
+## Comparação do fluxo Discovery
+
+```text
+ORIGINAL
+Scout
+→ Archaeologist
+→ Detective + Architect
+→ Writer
+→ Reviewer
+→ _reversa_sdd
+
+ATUAL
+Scout
+→ Archaeologist
+→ Detective + Architect
+→ Writer
+→ Reviewer
+→ _reversa_sdd
+→ Feynman audit quando aplicável
+→ estado epistemológico explícito
+→ Hermes Evidence Governor para transições de evidência
+```
+
+## Comparação do fluxo Forward
+
+```text
+ORIGINAL
+requirements
+→ clarify
+→ quality
+→ plan
+→ to-do
+→ audit
+→ coding
+→ sync
+
+ATUAL
+requirements
+→ clarify (+ FEG-07 candidate quando necessário)
+→ quality
+→ plan
+→ to-do
+→ audit (+ Feynman/evidence checks)
+→ coding
+→ sync
+→ outcome/trajectory
+→ offline/adaptive evaluation opcional
+```
+
+## O que não foi substituído
+
+Continuam centrais e herdados do Reversa original:
+
+- Discovery e os agentes Scout, Archaeologist, Detective, Architect, Writer e Reviewer;
+- `_reversa_sdd/` como base de conhecimento/specs;
+- Forward, Migration, Docs, Bugs, Refactor, Pricing, Ideation, New Project e Translators;
+- rastreabilidade code ↔ spec;
+- addenda pós-entrega;
+- checkpoints e retomada;
+- multi-engine installer;
+- safety gates dos workflows que alteram código.
+
+As novas camadas funcionam principalmente **acima e ao redor** dessa fundação.
+
+## O que foi efetivamente substituído nesta linha
+
+1. **Distribuição/updater dependente do upstream** → distribuição independente MarceloClaro, sem sincronização automática com `sandeco/reversa`.
+2. **Evidence Guard interno da linha derivada** → **Hermes Evidence Governor v2**; o arquivo `adaptive/evidence-guard.js` permanece apenas como shim de compatibilidade.
+
+A substituição do Evidence Guard não significa que “memória Hermes decide a verdade”. Hermes assume a fronteira operacional de coleta/governança, enquanto as regras de evidência direta continuam locais, determinísticas e auditáveis.
 
 ---
 
