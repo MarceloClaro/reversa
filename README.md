@@ -8,17 +8,19 @@
 
 ReversaFeynman é uma linha independente mantida por **Marcelo Claro Laranjeira**, derivada historicamente do framework **Reversa** original e licenciada sob MIT.
 
-A edição preserva engenharia reversa, SDD, rastreabilidade, pipelines especializados e compatibilidade multi-engine, acrescentando quatro camadas principais:
+A edição preserva engenharia reversa, SDD, rastreabilidade, pipelines especializados e compatibilidade multi-engine, acrescentando cinco camadas principais:
 
 - **Feynman Evidence & Understanding Layer** — FEG-01..FEG-07, evidência, falsificabilidade e Teach-back;
 - **Invocation Governance** — handoff seguro para skills protegidas;
 - **Adaptive Governance v2** — MCI/ACME bridges, ledger auditável, shadow policy, drift detection e ativação controlada;
-- **Offline Policy Evaluation v3** — `decide → observe`, holdout temporal, Brier/ECE, reward/regret, IC95% bootstrap e Adaptive Governance Report.
+- **Offline Policy Evaluation v3** — `decide → observe`, holdout temporal, Brier/ECE, reward/regret, IC95% bootstrap e Adaptive Governance Report;
+- **Hermes Bridge v1** — memória longitudinal governada, propostas de skill em shadow, trajetórias e resultados de execução sem transferir autoridade epistemológica ao runtime Hermes.
 
 > A linha independente não apaga a proveniência do Reversa original. Licença, referências e atribuição histórica permanecem preservadas.
 
 > Política de independência: [`INDEPENDENCE.md`](INDEPENDENCE.md)  
 > Proveniência acadêmica detalhada: [`docs/ACADEMIC-PROVENANCE.md`](docs/ACADEMIC-PROVENANCE.md)  
+> Hermes Bridge: [`docs/HERMES-BRIDGE.md`](docs/HERMES-BRIDGE.md)  
 > Metadados de citação: [`CITATION.cff`](CITATION.cff)
 
 ---
@@ -98,10 +100,12 @@ Para evitar ambiguidade acadêmica, este repositório usa a seguinte distinção
 | Audit Ledger, shadow policy e drift detection | **extensão ReversaFeynman** |
 | Offline Policy Evaluation v3 | **extensão ReversaFeynman** |
 | Brier/ECE, regret, IC95% e governance report | **extensão ReversaFeynman** |
+| memória persistente, procedural skills, subagentes e trajetórias Hermes | **Hermes Agent — Nous Research** |
+| contratos `reversa.hermes.*`, Memory Firewall e Skill Mutation Gate | **extensão ReversaFeynman** |
 
 A expressão **“Reversa original”** neste README refere-se explicitamente ao projeto `sandeco/reversa` e ao trabalho científico de Macedo e Costa (2026). A expressão **“ReversaFeynman”** refere-se às extensões e à linha independente mantida neste repositório.
 
-> Independência de desenvolvimento não significa independência de proveniência. O ReversaFeynman reconhece explicitamente o Reversa original como sua base histórica, arquitetural e científica.
+> Independência de desenvolvimento não significa independência de proveniência. O ReversaFeynman reconhece explicitamente o Reversa original como sua base histórica, arquitetural e científica. A integração Hermes também preserva a autoria externa da Nous Research.
 
 ---
 
@@ -124,6 +128,8 @@ A expressão **“Reversa original”** neste README refere-se explicitamente ao
 | Auto-ativação | não | não | não | **não** |
 | Dependência RL | nenhuma | nenhuma | sidecar externo opcional | continua opcional |
 | Upstream | projeto original | sem sync automático | sem sync automático | sem sync automático |
+
+A **Hermes Bridge v1** é transversal a essas gerações: adiciona memória/skills/trajetórias como contratos opcionais, mas não muda a autoridade do Evidence Guard nem os gates de ativação existentes.
 
 ---
 
@@ -217,7 +223,6 @@ flowchart TB
         HS --> CR["Clarify / Reviewer"]
         G1 --> REPORT
     end
-
     CR --> ART
 ```
 
@@ -228,6 +233,8 @@ TEACHBACK_GREEN ≠ OBSERVED
 HUMAN-VALIDATED ≠ OBSERVED
 policy confidence ≠ OBSERVED
 reward ≠ OBSERVED
+Hermes memory ≠ OBSERVED
+Hermes skill confidence ≠ OBSERVED
 ```
 
 ---
@@ -514,6 +521,174 @@ O relatório inclui registros treino/holdout, shadow coverage, agreement baselin
 
 ---
 
+# Hermes Bridge v1 — memória, skills e trajetórias
+
+A integração Hermes está em:
+
+```text
+lib/integrations/hermes/
+```
+
+Ela é **opcional** e não adiciona dependência Hermes, Nous ou Python ao core Node.js. O runtime Hermes pode ser conectado futuramente por um callback de transporte, CLI, RPC ou MCP; sem transport configurado, a bridge é inerte.
+
+Origem externa:
+
+- projeto original: `NousResearch/hermes-agent`;
+- fork de estudo: `MarceloClaro/hermes-agent`;
+- autoria/origem do Hermes Agent: **Nous Research**.
+
+A bridge implementada no ReversaFeynman não incorpora nem reivindica autoria do Hermes Agent. Ela define somente a fronteira de interoperabilidade e os gates epistemológicos.
+
+## Contratos Hermes
+
+```text
+reversa.hermes.memory/v1
+reversa.hermes.skill.proposal/v1
+reversa.hermes.trajectory/v1
+reversa.hermes.execution.result/v1
+```
+
+## Arquitetura
+
+```mermaid
+flowchart TB
+    RF["ReversaFeynman"] --> MCI["MCI / routing"]
+    MCI --> HB["Hermes Bridge v1"]
+
+    HB --> MEM["Memory Event"]
+    HB --> SK["Skill Proposal"]
+    HB --> TR["Trajectory Event"]
+    HB --> EX["Execution Result"]
+
+    MEM --> MF["Memory Firewall"]
+    SK --> SG["Skill Mutation Gate"]
+    TR --> LS["Learning Signals"]
+    EX --> EA["Evidence Adapter"]
+
+    LS --> OPE["Offline Evaluation"]
+    EA --> EG["Evidence Guard"]
+    SG --> SH["shadow eligibility only"]
+
+    H["Hermes runtime optional"] -. transport .-> HB
+    ACME["ACME optional"] --> OPE
+```
+
+## Memory Firewall
+
+Memória pode contextualizar, mas não estabelecer uma verdade observada por si mesma.
+
+```text
+Hermes memory      ≠ OBSERVED
+memory confidence  ≠ OBSERVED
+user model         ≠ OBSERVED
+session summary    ≠ OBSERVED
+```
+
+`reversa.hermes.memory/v1` aceita apenas:
+
+```text
+INFERRED
+UNVERIFIED
+BLOCKED
+```
+
+Memórias com `scope=personalization` permanecem explicitamente isoladas de autoridade de evidência.
+
+## Skill Mutation Gate
+
+Toda proposta de skill nasce com:
+
+```text
+mode = shadow
+requires_review = true
+requires_tests = true
+evidence_authority = false
+```
+
+Para ficar elegível, exige:
+
+```text
+reviewApproved
+AND testsPassing
+AND feynmanApproved
+AND no drift
+```
+
+Mesmo elegível:
+
+```text
+executable = false
+file_mutation_performed = false
+```
+
+Ou seja, a Hermes Bridge nunca aplica a mudança automaticamente; a alteração real continua pertencendo ao workflow normal do repositório.
+
+## Trajetórias
+
+`reversa.hermes.trajectory/v1` produz sinais operacionais conservadores:
+
+- número de steps;
+- failures;
+- tool calls;
+- duração conhecida;
+- ações repetidas/retry-like;
+- estado terminal.
+
+Trajetória é dado de execução/avaliação, não prova de uma afirmação de domínio.
+
+## Execution Result → Evidence Guard
+
+Execução bem-sucedida não basta para produzir `OBSERVED`.
+
+```text
+Execution Result
+      ↓
+direct_evidence[]
+      ↓
+kind reconhecido + ref rastreável
+      ↓
+claim_id explícito
+      ↓
+Evidence Proposal
+      ↓
+Evidence Guard existente
+      ↓
+OBSERVED somente se aceito
+```
+
+Assim, Hermes não recebe uma segunda autoridade epistemológica paralela.
+
+## SDD + TDD
+
+A implementação foi especificada primeiro em:
+
+```text
+specs/SPEC-HERMES-BRIDGE-V1.md
+```
+
+A sequência registrada no branch é:
+
+```text
+SPEC
+  ↓
+RED: teste criado antes da API existir
+  ↓
+GREEN: contratos/gates/adapters implementados
+  ↓
+REFACTOR: opcionalidade, CI, docs e proveniência
+```
+
+Testes:
+
+```text
+scripts/test-hermes-bridge.mjs
+scripts/test-hermes-optionality.mjs
+```
+
+Documentação detalhada: [`docs/HERMES-BRIDGE.md`](docs/HERMES-BRIDGE.md).
+
+---
+
 # Evidence Guard
 
 Somente evidência direta rastreável pode produzir `OBSERVED`.
@@ -633,7 +808,7 @@ Drift detectado bloqueia readiness e active mode.
 
 ---
 
-# Módulos adaptativos
+# Módulos adaptativos e integrações
 
 ```text
 lib/integrations/adaptive/
@@ -652,6 +827,17 @@ lib/integrations/adaptive/
 ├── acme-bridge.js
 ├── runtime.js
 └── index.js
+
+lib/integrations/hermes/
+├── constants.js
+├── schema.js
+├── contracts.js
+├── memory-firewall.js
+├── skill-governance.js
+├── trajectory.js
+├── evidence-adapter.js
+├── bridge.js
+└── index.js
 ```
 
 Especificações:
@@ -660,6 +846,7 @@ Especificações:
 specs/SPEC-ADAPTIVE-MCI-ACME-BRIDGE.md
 specs/SPEC-ADAPTIVE-GOVERNANCE-V2.md
 specs/SPEC-ADAPTIVE-OFFLINE-EVALUATION-V3.md
+specs/SPEC-HERMES-BRIDGE-V1.md
 ```
 
 Testes:
@@ -667,6 +854,8 @@ Testes:
 ```text
 scripts/test-adaptive-bridges.mjs
 scripts/test-offline-policy-evaluation.mjs
+scripts/test-hermes-bridge.mjs
+scripts/test-hermes-optionality.mjs
 ```
 
 ---
@@ -755,6 +944,16 @@ Esse número não é apresentado como benchmark global do ReversaFeynman.
 - gera report auditável;
 - readiness não autoativa.
 
+## Hermes Bridge v1
+
+- adiciona memória longitudinal como contexto sem promovê-la a evidência;
+- formaliza propostas de skill sempre em shadow;
+- exige Reviewer + testes + Feynman + estabilidade de drift para elegibilidade;
+- extrai sinais operacionais de trajetórias;
+- exige claim mapping e evidência direta para qualquer proposta `OBSERVED`;
+- mantém o Evidence Guard como autoridade final;
+- mantém Hermes, Nous e Python fora das dependências do core.
+
 ## Trade-offs
 
 - mais eventos e artefatos aumentam complexidade;
@@ -763,6 +962,7 @@ Esse número não é apresentado como benchmark global do ReversaFeynman.
 - matched-only calibration pode ter baixa cobertura;
 - estimativas observacionais não substituem experimentos causais;
 - sidecar ACME real adiciona stack Python/RL externamente;
+- Hermes real adiciona runtime externo e memória que precisa permanecer sob firewall epistemológico;
 - linha independente não recebe mudanças upstream automaticamente.
 
 ---
@@ -785,6 +985,7 @@ A taxonomia funcional preserva os grupos herdados:
 | Refactor | melhoria interna preservando comportamento |
 | ReversaFeynman | auditoria epistemológica e Teach-back |
 | Adaptive Layer | MCI/ACME, drift, policy, offline evaluation e report |
+| Hermes Integration | memória, skill proposals, trajetórias e execution results governados |
 
 Discovery Core inclui Reversa, Autonomous, Scout, Archaeologist, Detective, Architect, Writer, Reviewer, Visor, Data Master, Design System, Agents Help e Reconstructor.
 
@@ -907,7 +1108,7 @@ Requisitos do core:
 - Node.js `>=18.20.2`;
 - pelo menos um harness/agente compatível.
 
-OpenCode MCI, ACME, JAX e TensorFlow continuam opcionais.
+OpenCode MCI, ACME, Hermes Agent, JAX, TensorFlow e stacks Python continuam opcionais.
 
 ---
 
@@ -934,7 +1135,7 @@ OpenCode MCI, ACME, JAX e TensorFlow continuam opcionais.
 | Teach-back | `/reversa-teachback` |
 | Ajuda | `/reversa-agents-help` |
 
-A camada adaptativa é API interna/integração; ela não adiciona novos slash commands nesta versão.
+As camadas Adaptive e Hermes Bridge são APIs internas/integrações; elas não adicionam novos slash commands nesta versão.
 
 ---
 
@@ -956,6 +1157,8 @@ A camada adaptativa é API interna/integração; ela não adiciona novos slash c
 | GitHub Copilot | `.github/copilot-instructions.md` | `.agents/skills/` |
 | Aider | `CONVENTIONS.md` | `.agents/skills/` |
 | Amazon Q Developer | `.amazonq/rules/reversa.md` | `.agents/skills/` |
+
+> A linha **Hermes** desta tabela significa compatibilidade do installer com o harness/engine. A **Hermes Bridge v1** é outra camada: um contrato explícito de interoperabilidade para memória, skills, trajetórias e execution results.
 
 ---
 
@@ -986,7 +1189,7 @@ openai.yaml: policy.allow_implicit_invocation: false
 
 # Independência de upstream
 
-ReversaFeynman pode estudar e incorporar ideias externas, inclusive do Reversa original, OpenCode Ecosystem Core e ACME. Isso não significa sincronização automática nem dependência de runtime.
+ReversaFeynman pode estudar e incorporar ideias externas, inclusive do Reversa original, OpenCode Ecosystem Core, ACME e Hermes Agent. Isso não significa sincronização automática nem dependência de runtime.
 
 O guard estrutural rejeita padrões como:
 
@@ -1001,7 +1204,7 @@ git merge upstream/...
 
 `package.json` permanece `private: true`.
 
-A independência operacional não altera a obrigação de atribuir academicamente o Reversa original e seus autores. A política de proveniência está documentada em [`docs/ACADEMIC-PROVENANCE.md`](docs/ACADEMIC-PROVENANCE.md).
+A independência operacional não altera a obrigação de atribuir academicamente o Reversa original e as integrações externas. A política de proveniência está documentada em [`docs/ACADEMIC-PROVENANCE.md`](docs/ACADEMIC-PROVENANCE.md).
 
 ---
 
@@ -1020,6 +1223,8 @@ scripts/verify-feynman-layer.py
 scripts/test-installer-transport.mjs
 scripts/test-adaptive-bridges.mjs
 scripts/test-offline-policy-evaluation.mjs
+scripts/test-hermes-bridge.mjs
+scripts/test-hermes-optionality.mjs
 ```
 
 A v3 verifica, entre outros:
@@ -1036,6 +1241,18 @@ A v3 verifica, entre outros:
 - report Markdown;
 - persistência opt-in;
 - proteção contra path traversal.
+
+A Hermes Bridge verifica:
+
+- memória não pode declarar `OBSERVED`;
+- personalização permanece não evidentiária;
+- skill proposal começa em shadow;
+- review/test/Feynman/drift gates;
+- ordenação e sinais de trajetória;
+- execução sem evidência direta não promove claims;
+- evidência direta mapeada continua subordinada ao Evidence Guard;
+- dispatch sem transport é inerte;
+- Hermes/Nous/Python não entram nas dependências do pacote.
 
 > Falha de provisionamento de runner não deve ser apresentada como falha nem como aprovação dos testes quando nenhum step tiver executado.
 
@@ -1058,7 +1275,8 @@ lib/
 ├── commands/
 ├── installer/
 ├── integrations/
-│   └── adaptive/
+│   ├── adaptive/
+│   └── hermes/
 └── utils/
 
 scripts/
@@ -1072,10 +1290,12 @@ INDEPENDENCE.md
 
 # Referências de integração
 
-A camada adaptativa foi desenhada para interoperar com:
+A arquitetura foi desenhada para interoperar com:
 
 - `MarceloClaro/opencode-ecosystem-core` — MCI, MetaBus, Blackboard, Trust/Confidence e coordenação multiagente;
-- `MarceloClaro/acme` — framework de reinforcement learning com conceitos Actor/Learner e execução distribuída.
+- `MarceloClaro/acme` — fork de estudo do framework ACME para Actor/Learner e aprendizagem de políticas;
+- `NousResearch/hermes-agent` — projeto original Hermes Agent, com memória, skills, subagentes, ferramentas e trajetórias;
+- `MarceloClaro/hermes-agent` — fork utilizado no ecossistema MarceloClaro para estudo/interoperabilidade.
 
 Esses projetos permanecem externos e opcionais. O ReversaFeynman implementa contratos de fronteira e governança própria; não incorpora esses repositórios como runtime obrigatório.
 
@@ -1094,6 +1314,10 @@ Repositório original:
 > SANDECO. **Reversa**. GitHub, 2026. Disponível em: https://github.com/sandeco/reversa. Acesso em: 13 set. 2026.
 
 A prioridade intelectual do conceito-base, da arquitetura original e dos mecanismos já existentes em `sandeco/reversa` permanece atribuída ao projeto e aos autores originais.
+
+## Integração Hermes
+
+Hermes Agent é um projeto externo da **Nous Research**. O repositório `MarceloClaro/hermes-agent` é um fork de `NousResearch/hermes-agent`. A Hermes Bridge v1 desta linha atribui à Nous Research as capacidades/conceitos Hermes estudados e atribui ao ReversaFeynman apenas seus próprios contratos e gates de interoperabilidade.
 
 ## Extensões desta linha
 
@@ -1121,9 +1345,17 @@ Extensões desenvolvidas na linha ReversaFeynman incluem:
 - Brier/ECE;
 - regret observacional;
 - IC95% bootstrap;
-- separação `decide → observe`.
+- separação `decide → observe`;
+- Hermes Memory Event v1;
+- Hermes Skill Proposal v1;
+- Hermes Trajectory v1;
+- Hermes Execution Result v1;
+- Memory Firewall;
+- Skill Mutation Gate;
+- Hermes trajectory signals;
+- Hermes Evidence Adapter.
 
-Para trabalhos acadêmicos, recomenda-se citar **o paper original do Reversa** e, separadamente, identificar a versão/commit/tag do ReversaFeynman utilizado no experimento.
+Para trabalhos acadêmicos, recomenda-se citar **o paper original do Reversa** e, separadamente, identificar a versão/commit/tag do ReversaFeynman utilizado no experimento. Quando a integração Hermes for material ao método, deve-se também atribuir o Hermes Agent à Nous Research.
 
 Licença do software: **MIT** — consulte [`LICENSE`](LICENSE).
 
@@ -1176,6 +1408,18 @@ Offline Policy Evaluation v3
     ├── promotion readiness
     ├── governance report
     └── auto_activate = false
+
+            +
+
+Hermes Bridge v1
+    │
+    ├── memory firewall
+    ├── skill proposals in shadow
+    ├── review + tests + Feynman gates
+    ├── trajectory signals
+    ├── execution result contracts
+    ├── evidence adapter
+    └── optional transport / no runtime dependency
 ```
 
 O ciclo passa de:
@@ -1190,17 +1434,19 @@ para:
 extrair
   → compreender
   → especificar
+  → recuperar memória sob firewall
   → decidir em shadow
-  → executar baseline
+  → executar baseline/subagentes
+  → registrar trajetória
   → observar outcome
-  → verificar
+  → verificar evidência
   → calibrar
   → avaliar offline
   → detectar drift
-  → gerar report
-  → solicitar ativação
-  → governar ativação
+  → propor skill em shadow
+  → revisar + testar + auditar Feynman
+  → solicitar ativação/mudança pelo workflow normal
   → reavaliar
 ```
 
-sem permitir que aprendizagem probabilística, confiança estatística ou métricas offline substituam evidência verificável, e preservando explicitamente a autoria e a prioridade acadêmica do Reversa original.
+sem permitir que aprendizagem probabilística, confiança estatística, memória de agente, user modeling, skill confidence ou métricas offline substituam evidência verificável, e preservando explicitamente a autoria e a prioridade acadêmica do Reversa original e das integrações externas.
