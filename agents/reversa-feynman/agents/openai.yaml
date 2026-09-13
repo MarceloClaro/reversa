@@ -1,0 +1,5 @@
+interface:
+  display_name: "Reversa Feynman"
+  short_description: "Auditoria de evidência, entendimento e falsificabilidade"
+policy:
+  allow_implicit_invocation: false
