@@ -73,6 +73,18 @@ assert.equal(skillProposal.requires_tests, true);
 assert.equal(skillProposal.evidence_authority, false);
 assert.equal(validateHermesSkillProposal(skillProposal).valid, true);
 
+assert.throws(() => buildHermesSkillProposal({
+  skillId: '../reversa-clarify',
+  changeSummary: 'Identificador inseguro não deve passar.',
+  proposal: 'n/a',
+}), /skill_id|skill/i);
+assert.throws(() => buildHermesSkillProposal({
+  skillId: 'reversa-clarify',
+  changeSummary: 'Métrica numérica em string não deve passar.',
+  proposal: 'n/a',
+  successes: '17',
+}), /successes|integer/i);
+
 const blockedSkill = governHermesSkillProposal(skillProposal);
 assert.equal(blockedSkill.eligible, false);
 assert.ok(blockedSkill.reasons.includes('review-required'));
