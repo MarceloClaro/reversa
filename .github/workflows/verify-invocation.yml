@@ -1,9 +1,7 @@
 name: Verify invocation axis
 
-# Gates executáveis de independência, invocação, rigor Feynman e camadas adaptativas.
-# Garante que a edição MarceloClaro não sincronize com upstream,
-# preserva lockstep user/model-invoked, metadados OpenAI, transporte pelo installer
-# e invariantes das bridges MCI/ACME + Adaptive Governance + Offline Policy Evaluation + Hermes.
+# Gates executáveis de independência, invocação, rigor Feynman, camadas adaptativas,
+# Hermes Evidence Governance e Software Engineering Intelligence v5.
 
 on:
   push:
@@ -11,18 +9,16 @@ on:
       - 'agents/**'
       - 'lib/integrations/adaptive/**'
       - 'lib/integrations/hermes/**'
+      - 'lib/integrations/software-engineering/**'
+      - 'schemas/**'
       - 'specs/SPEC-FEYNMAN-EVIDENCE-UNDERSTANDING-LAYER.md'
       - 'specs/SPEC-ADAPTIVE-*.md'
       - 'specs/SPEC-HERMES-*.md'
+      - 'specs/SPEC-SOFTWARE-ENGINEERING-INTELLIGENCE-V5.md'
       - 'scripts/verify-no-upstream-sync.py'
       - 'scripts/verify-invocation.py'
       - 'scripts/verify-feynman-layer.py'
-      - 'scripts/test-installer-transport.mjs'
-      - 'scripts/test-adaptive-bridges.mjs'
-      - 'scripts/test-offline-policy-evaluation.mjs'
-      - 'scripts/test-hermes-bridge.mjs'
-      - 'scripts/test-hermes-optionality.mjs'
-      - 'scripts/test-hermes-evidence-governor.mjs'
+      - 'scripts/test-*.mjs'
       - 'lib/commands/update.js'
       - 'package.json'
       - 'INDEPENDENCE.md'
@@ -32,18 +28,16 @@ on:
       - 'agents/**'
       - 'lib/integrations/adaptive/**'
       - 'lib/integrations/hermes/**'
+      - 'lib/integrations/software-engineering/**'
+      - 'schemas/**'
       - 'specs/SPEC-FEYNMAN-EVIDENCE-UNDERSTANDING-LAYER.md'
       - 'specs/SPEC-ADAPTIVE-*.md'
       - 'specs/SPEC-HERMES-*.md'
+      - 'specs/SPEC-SOFTWARE-ENGINEERING-INTELLIGENCE-V5.md'
       - 'scripts/verify-no-upstream-sync.py'
       - 'scripts/verify-invocation.py'
       - 'scripts/verify-feynman-layer.py'
-      - 'scripts/test-installer-transport.mjs'
-      - 'scripts/test-adaptive-bridges.mjs'
-      - 'scripts/test-offline-policy-evaluation.mjs'
-      - 'scripts/test-hermes-bridge.mjs'
-      - 'scripts/test-hermes-optionality.mjs'
-      - 'scripts/test-hermes-evidence-governor.mjs'
+      - 'scripts/test-*.mjs'
       - 'lib/commands/update.js'
       - 'package.json'
       - 'INDEPENDENCE.md'
@@ -79,3 +73,5 @@ jobs:
         run: node scripts/test-hermes-optionality.mjs
       - name: Verificar Hermes Evidence Governor v2
         run: node scripts/test-hermes-evidence-governor.mjs
+      - name: Verificar Software Engineering Intelligence v5
+        run: node scripts/test-software-engineering-intelligence-v5.mjs

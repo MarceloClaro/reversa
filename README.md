@@ -1080,3 +1080,120 @@ extrair
 ```
 
 sem permitir que memória, confiança, recompensa, aprendizado probabilístico ou um runtime remoto substituam evidência direta verificável.
+
+---
+
+# Software Engineering Intelligence v5
+
+A v5 transforma o ReversaFeynman de um sistema que principalmente entende, especifica, governa e aprende em um sistema que também **localiza, executa, tenta múltiplas soluções, valida, mede e otimiza reparos de software**.
+
+Documentação detalhada: [`docs/SOFTWARE-ENGINEERING-INTELLIGENCE-V5.md`](docs/SOFTWARE-ENGINEERING-INTELLIGENCE-V5.md).
+
+## Sequência implementada
+
+| Fase | Capacidade | Adapters/projetos de referência |
+|---|---|---|
+| v5.1 | Strict Contract Layer | JSON Schema 2020-12 / Ajv strict opcional |
+| v5.2 | Code Intelligence Graph | Aider repo-map, Tree-sitter, ast-grep, Semgrep |
+| v5.3 | Execution Fabric | SWE-ReX, OpenHands, Docker/Podman |
+| v5.4 | Repair Laboratory | Agentless, mini-SWE-agent |
+| v5.5 | Quality/Falsifiability Gates | Semgrep, ast-grep rules, StrykerJS |
+| v5.6 | Observability | OpenTelemetry / Arize Phoenix |
+| v5.7 | ReversaBench | SWE-bench / SWE-smith |
+| v5.8 | MCP-ready Gateway | MCP TypeScript SDK |
+| v5.9 | Durable Workflow | LangGraph.js / Temporal / DBOS |
+| v5.10 | Offline Optimizer | DSPy / GEPA |
+
+## Nova arquitetura operacional
+
+```text
+Legacy / feature / issue
+        ↓
+Reversa Discovery + SDD
+        ↓
+Feynman + Hermes Evidence Governance
+        ↓
+Code Intelligence Graph
+        ↓
+localization
+        ↓
+Repair Laboratory
+   ├── patch A
+   ├── patch B
+   └── patch N
+        ↓
+Execution Fabric
+        ↓
+Quality Gates
+   ├── tests
+   ├── static analysis
+   └── mutation testing
+        ↓
+Hermes Evidence Governor
+        ↓
+Trace + ReversaBench
+        ↓
+MCI / OPE / Adaptive Governance
+        ↓
+Offline Optimizer em shadow
+```
+
+## Invariantes v5
+
+```text
+repo-map rank       ≠ OBSERVED
+patch rank          ≠ OBSERVED
+mutation score      ≠ OBSERVED
+benchmark score     ≠ OBSERVED
+trace               ≠ OBSERVED
+optimizer score     ≠ OBSERVED
+```
+
+As novas camadas podem produzir candidatos de evidência rastreável, mas a transição epistemológica continua sob o **Hermes Evidence Governor**.
+
+As integrações externas permanecem opcionais: OpenHands, SWE-ReX, ast-grep, Semgrep, Stryker, Phoenix, LangGraph, MCP SDK e DSPy não são dependências obrigatórias do core.
+
+Implementação:
+
+```text
+lib/integrations/software-engineering/
+├── strict-contracts.js
+├── code-intelligence.js
+├── execution-fabric.js
+├── repair-laboratory.js
+├── quality-gates.js
+├── observability.js
+├── benchmark.js
+├── mcp-gateway.js
+├── durable-workflow.js
+├── offline-optimizer.js
+└── index.js
+```
+
+SDD/TDD:
+
+```text
+specs/SPEC-SOFTWARE-ENGINEERING-INTELLIGENCE-V5.md
+scripts/test-software-engineering-intelligence-v5.mjs
+schemas/software-engineering-v5.schema.json
+```
+
+O ciclo completo passa a ser:
+
+```text
+extrair
+→ compreender
+→ especificar
+→ localizar estruturalmente
+→ gerar candidatos
+→ executar isoladamente
+→ testar
+→ analisar estaticamente
+→ tentar refutar por mutation testing
+→ governar evidência
+→ observar
+→ comparar em benchmark
+→ calibrar
+→ otimizar em shadow
+→ reavaliar
+```
