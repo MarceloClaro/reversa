@@ -59,7 +59,7 @@ npm exec --yes --package=github:MarceloClaro/reversa -- reversa update
 
 The updater uses the files bundled with the running `MarceloClaro/reversa` distribution. It does not query the npm `reversa` package and does not fetch or merge `sandeco/reversa`.
 
-See [`INDEPENDENCE.md`](../INDEPENDENCE.md) in the repository for the complete policy.
+See [INDEPENDENCE.md](https://github.com/MarceloClaro/reversa/blob/main/INDEPENDENCE.md) in the repository for the complete policy.
 
 ---
 
