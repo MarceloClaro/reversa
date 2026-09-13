@@ -1,23 +1,27 @@
 name: Verify invocation axis
 
-# Gates executáveis de independência, invocação, rigor Feynman e camada adaptativa.
+# Gates executáveis de independência, invocação, rigor Feynman e camadas adaptativas.
 # Garante que a edição MarceloClaro não sincronize com upstream,
 # preserva lockstep user/model-invoked, metadados OpenAI, transporte pelo installer
-# e invariantes das bridges MCI/ACME + Adaptive Governance + Offline Policy Evaluation.
+# e invariantes das bridges MCI/ACME + Adaptive Governance + Offline Policy Evaluation + Hermes Bridge.
 
 on:
   push:
     paths:
       - 'agents/**'
       - 'lib/integrations/adaptive/**'
+      - 'lib/integrations/hermes/**'
       - 'specs/SPEC-FEYNMAN-EVIDENCE-UNDERSTANDING-LAYER.md'
       - 'specs/SPEC-ADAPTIVE-*.md'
+      - 'specs/SPEC-HERMES-BRIDGE-V1.md'
       - 'scripts/verify-no-upstream-sync.py'
       - 'scripts/verify-invocation.py'
       - 'scripts/verify-feynman-layer.py'
       - 'scripts/test-installer-transport.mjs'
       - 'scripts/test-adaptive-bridges.mjs'
       - 'scripts/test-offline-policy-evaluation.mjs'
+      - 'scripts/test-hermes-bridge.mjs'
+      - 'scripts/test-hermes-optionality.mjs'
       - 'lib/commands/update.js'
       - 'package.json'
       - 'INDEPENDENCE.md'
@@ -26,14 +30,18 @@ on:
     paths:
       - 'agents/**'
       - 'lib/integrations/adaptive/**'
+      - 'lib/integrations/hermes/**'
       - 'specs/SPEC-FEYNMAN-EVIDENCE-UNDERSTANDING-LAYER.md'
       - 'specs/SPEC-ADAPTIVE-*.md'
+      - 'specs/SPEC-HERMES-BRIDGE-V1.md'
       - 'scripts/verify-no-upstream-sync.py'
       - 'scripts/verify-invocation.py'
       - 'scripts/verify-feynman-layer.py'
       - 'scripts/test-installer-transport.mjs'
       - 'scripts/test-adaptive-bridges.mjs'
       - 'scripts/test-offline-policy-evaluation.mjs'
+      - 'scripts/test-hermes-bridge.mjs'
+      - 'scripts/test-hermes-optionality.mjs'
       - 'lib/commands/update.js'
       - 'package.json'
       - 'INDEPENDENCE.md'
@@ -63,3 +71,7 @@ jobs:
         run: node scripts/test-adaptive-bridges.mjs
       - name: Verificar Offline Policy Evaluation v3
         run: node scripts/test-offline-policy-evaluation.mjs
+      - name: Verificar Hermes Bridge v1
+        run: node scripts/test-hermes-bridge.mjs
+      - name: Verificar opcionalidade Hermes
+        run: node scripts/test-hermes-optionality.mjs
