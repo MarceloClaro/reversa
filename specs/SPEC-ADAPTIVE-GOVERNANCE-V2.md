@@ -14,7 +14,7 @@ A v2 acrescenta cinco capacidades:
 2. ledger em hash-chain para replay/auditoria;
 3. contextual shadow policy;
 4. detecção de drift;
-5. runtime coordenador com promoção explícita para modo ativo.
+5. runtime coordenador com promoção explícita e rastreável para modo ativo.
 
 ## Invariantes
 
@@ -30,15 +30,28 @@ Uma lista de candidatos externa é sempre intersectada com a allowlist global do
 
 A policy baseline `contextual-shadow-v1` apenas ranqueia/projeta uma ação. Ela não é executável por padrão.
 
-### AGV2-04 — Ativação é decisão separada
+### AGV2-04 — Ativação é uma decisão explícita, separada e auditável
 
-Para uma proposal tornar-se executável, `governAdaptiveProposal()` exige simultaneamente:
+Uma proposal não se torna ativa por simples alteração do campo `mode`.
+
+A transição deve ocorrer por `requestPolicyActivation()`, que exige:
+
+- proposal originalmente em `shadow`;
+- `requestedBy` não vazio;
+- `reason` não vazio;
+- timestamp válido.
+
+A função produz `activation_request` com solicitante, motivo e timestamp.
+
+Depois disso, `governAdaptiveProposal()` ainda exige simultaneamente:
 
 - ação allowlisted;
 - ausência de drift detectado;
 - histórico mínimo;
 - confiança mínima da policy;
 - `activeMode=true`;
+- `proposal.mode='active'`;
+- `activation_request` presente;
 - aprovação explícita quando a ação for mutante.
 
 ### AGV2-05 — Drift força contenção
@@ -78,7 +91,9 @@ flowchart TB
     MCI --> GOV
 
     GOV --> SHADOW["Shadow / observe only"]
-    GOV --> ACTIVE{"Eligible for active mode?"}
+    SHADOW --> REQ["requestPolicyActivation"]
+    REQ --> AR["Activation Request: requester + reason + timestamp"]
+    AR --> ACTIVE{"Eligible for active mode?"}
     ACTIVE -->|"não"| ABSTAIN["Abstain / human or deterministic routing"]
     ACTIVE -->|"sim"| APPROVAL{"Mutating action?"}
     APPROVAL -->|"sim"| HUMAN["Explicit workflow approval"]
@@ -197,6 +212,8 @@ approval-required
 shadow-mode
 ```
 
+`shadow-mode` inclui ausência de `activation_request` válido, ausência de `activeMode=true` ou proposal ainda em modo shadow.
+
 Ações mutantes permanecem sujeitas ao workflow humano/determinístico. `route:coding` continua como baseline mutante.
 
 ## Adaptive Runtime
@@ -205,6 +222,7 @@ Ações mutantes permanecem sujeitas ao workflow humano/determinístico. `route:
 
 ```text
 event
+  → schema validation
   → ledger
   → MCI envelope
   → ACME experience
@@ -216,10 +234,12 @@ event
 
 Por padrão:
 
+- valida `candidateActions` antes do primeiro ingest;
 - não despacha para transports externos;
 - não executa action proposal;
 - mantém a policy em shadow mode;
-- expõe método separado para avaliar ativação.
+- expõe `requestActivation()` para produzir um activation request explícito;
+- expõe `evaluateActivation()` para aplicar os gates finais.
 
 ## Critérios de aceitação
 
@@ -227,21 +247,23 @@ Por padrão:
 - CA2: confidence/trust fora de `[0,1]` é rejeitado.
 - CA3: ledger detecta evento duplicado.
 - CA4: ledger verifica a própria hash-chain.
-- CA5: candidate action fora da allowlist não entra no ranking.
+- CA5: candidate action fora da allowlist não entra no ranking nem no runtime.
 - CA6: shadow proposal nunca é executável por padrão.
-- CA7: modo ativo exige histórico e confiança mínimos.
-- CA8: drift bloqueia promoção da policy.
-- CA9: ação mutante exige aprovação explícita.
-- CA10: policy/reward/trust continuam sem autoridade para criar `OBSERVED`.
-- CA11: runtime integra ledger, MCI, ACME, drift e governance sem ação automática.
-- CA12: `scripts/test-adaptive-bridges.mjs` cobre os invariantes acima.
+- CA7: simples alteração manual de `mode` sem `activation_request` não basta para execução.
+- CA8: `requestPolicyActivation()` exige solicitante, motivo e timestamp válido.
+- CA9: modo ativo exige histórico e confiança mínimos.
+- CA10: drift bloqueia promoção da policy.
+- CA11: ação mutante exige aprovação explícita.
+- CA12: policy/reward/trust continuam sem autoridade para criar `OBSERVED`.
+- CA13: runtime integra ledger, MCI, ACME, drift e governance sem ação automática.
+- CA14: `scripts/test-adaptive-bridges.mjs` cobre os invariantes acima.
 
 ## Estratégia recomendada de maturação
 
 1. **Shadow:** coletar dados e comparar decisões sem alterar roteamento real.
 2. **Offline evaluation:** medir estabilidade, reward e calibração por action/stage.
 3. **Canary:** habilitar apenas ações não mutantes e baixo risco.
-4. **Guarded active:** permitir subset de rotas sob drift/approval gates.
+4. **Guarded active:** permitir subset de rotas sob drift/activation/approval gates.
 5. **External learner:** somente depois, conectar ACME real ou outro learner com dados suficientes.
 
 RL profundo de horizonte longo não é requisito nem recomendação inicial.
