@@ -1,0 +1,31 @@
+{
+  "schema": "reversa.bench.manifest/v1",
+  "purpose": "engineering smoke validation only",
+  "confirmatory": false,
+  "tasks": [
+    {
+      "task_id": "smoke-repair-001",
+      "suite": "smoke",
+      "repository_url": "https://github.com/example/reversabench-smoke-js",
+      "commit_sha": "1111111111111111111111111111111111111111",
+      "kind": "repair",
+      "smoke": true,
+      "metadata": {
+        "language": "javascript",
+        "description": "synthetic repair fixture used only to verify the benchmark pipeline"
+      }
+    },
+    {
+      "task_id": "smoke-spec-001",
+      "suite": "smoke",
+      "repository_url": "https://github.com/example/reversabench-smoke-spec",
+      "commit_sha": "2222222222222222222222222222222222222222",
+      "kind": "specification",
+      "smoke": true,
+      "metadata": {
+        "language": "javascript",
+        "description": "synthetic specification fixture used only to verify aggregation and provenance"
+      }
+    }
+  ]
+}

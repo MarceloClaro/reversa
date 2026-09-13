@@ -20,16 +20,21 @@ This file links manuscript claims to concrete implementation artifacts.
 | Repair Laboratory | `lib/integrations/software-engineering/repair-laboratory.js` |
 | Quality / mutation gates | `lib/integrations/software-engineering/quality-gates.js` |
 | Observability | `lib/integrations/software-engineering/observability.js` |
-| ReversaBench | `lib/integrations/software-engineering/benchmark.js` |
+| ReversaBench basic aggregation | `lib/integrations/software-engineering/benchmark.js` |
+| ReversaBench Experimental Harness | `specs/SPEC-REVERSABENCH-EXPERIMENTAL-HARNESS-V1.md`, `lib/integrations/software-engineering/experimental-harness.js` |
+| ReversaBench TDD | `scripts/test-reversabench-experimental-harness.mjs` |
+| Smoke pipeline | `benchmarks/reversabench/manifest.smoke.json`, `scripts/run-reversabench-smoke.mjs` |
+| Paper table renderer | `scripts/render-reversabench-report.mjs`, `paper/sections/06a-experimental-status.tex` |
 | MCP-ready gateway | `lib/integrations/software-engineering/mcp-gateway.js` |
 | Durable workflow | `lib/integrations/software-engineering/durable-workflow.js` |
 | Offline optimizer | `lib/integrations/software-engineering/offline-optimizer.js` |
 | v5 TDD acceptance suite | `scripts/test-software-engineering-intelligence-v5.mjs` |
 | Global verification suite | `npm run verify`, `.github/workflows/verify-invocation.yml` |
+| ReversaBench CI | `.github/workflows/reversabench.yml` |
 
 ## Experimental artifact requirements
 
-Any future empirical paper revision should archive, for every reported run:
+Every reported confirmatory run must archive:
 
 1. immutable repository commit;
 2. task identifier and benchmark version;
@@ -42,4 +47,14 @@ Any future empirical paper revision should archive, for every reported run:
 9. statistical-analysis scripts;
 10. exact ReversaFeynman commit/tag.
 
-The manuscript deliberately separates **implemented capability** from **empirically demonstrated benefit**. This artifact map supports independent verification of the former and preparation of experiments for the latter.
+## Result gate
+
+The paper distinguishes three states:
+
+- **implemented capability** — code/SPEC/test exists;
+- **engineering smoke validation** — synthetic fixtures verify the evaluation machinery;
+- **confirmatory empirical result** — non-smoke paired runs over real immutable tasks are available.
+
+The ReversaBench harness enforces part of this distinction mechanically: a confirmatory report requires non-smoke data, at least two variants, and at least one paired task×seed cell. Smoke output is therefore not a substitute for comparative evidence.
+
+The manuscript deliberately separates **implemented capability** from **empirically demonstrated benefit**. This artifact map supports independent verification of the former and controlled experiments for the latter.

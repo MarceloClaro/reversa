@@ -1,7 +1,7 @@
 name: Verify invocation axis
 
 # Gates executáveis de independência, invocação, rigor Feynman, camadas adaptativas,
-# Hermes Evidence Governance e Software Engineering Intelligence v5.
+# Hermes Evidence Governance, Software Engineering Intelligence v5 e ReversaBench.
 
 on:
   push:
@@ -10,11 +10,13 @@ on:
       - 'lib/integrations/adaptive/**'
       - 'lib/integrations/hermes/**'
       - 'lib/integrations/software-engineering/**'
+      - 'benchmarks/reversabench/**'
       - 'schemas/**'
       - 'specs/SPEC-FEYNMAN-EVIDENCE-UNDERSTANDING-LAYER.md'
       - 'specs/SPEC-ADAPTIVE-*.md'
       - 'specs/SPEC-HERMES-*.md'
       - 'specs/SPEC-SOFTWARE-ENGINEERING-INTELLIGENCE-V5.md'
+      - 'specs/SPEC-REVERSABENCH-*.md'
       - 'scripts/verify-no-upstream-sync.py'
       - 'scripts/verify-invocation.py'
       - 'scripts/verify-feynman-layer.py'
@@ -29,11 +31,13 @@ on:
       - 'lib/integrations/adaptive/**'
       - 'lib/integrations/hermes/**'
       - 'lib/integrations/software-engineering/**'
+      - 'benchmarks/reversabench/**'
       - 'schemas/**'
       - 'specs/SPEC-FEYNMAN-EVIDENCE-UNDERSTANDING-LAYER.md'
       - 'specs/SPEC-ADAPTIVE-*.md'
       - 'specs/SPEC-HERMES-*.md'
       - 'specs/SPEC-SOFTWARE-ENGINEERING-INTELLIGENCE-V5.md'
+      - 'specs/SPEC-REVERSABENCH-*.md'
       - 'scripts/verify-no-upstream-sync.py'
       - 'scripts/verify-invocation.py'
       - 'scripts/verify-feynman-layer.py'
@@ -75,3 +79,5 @@ jobs:
         run: node scripts/test-hermes-evidence-governor.mjs
       - name: Verificar Software Engineering Intelligence v5
         run: node scripts/test-software-engineering-intelligence-v5.mjs
+      - name: Verificar ReversaBench Experimental Harness v1
+        run: node scripts/test-reversabench-experimental-harness.mjs
