@@ -21,6 +21,7 @@ on:
       - 'scripts/test-adaptive-bridges.mjs'
       - 'scripts/test-offline-policy-evaluation.mjs'
       - 'scripts/test-hermes-bridge.mjs'
+      - 'scripts/test-hermes-optionality.mjs'
       - 'lib/commands/update.js'
       - 'package.json'
       - 'INDEPENDENCE.md'
@@ -40,6 +41,7 @@ on:
       - 'scripts/test-adaptive-bridges.mjs'
       - 'scripts/test-offline-policy-evaluation.mjs'
       - 'scripts/test-hermes-bridge.mjs'
+      - 'scripts/test-hermes-optionality.mjs'
       - 'lib/commands/update.js'
       - 'package.json'
       - 'INDEPENDENCE.md'
@@ -71,3 +73,5 @@ jobs:
         run: node scripts/test-offline-policy-evaluation.mjs
       - name: Verificar Hermes Bridge v1
         run: node scripts/test-hermes-bridge.mjs
+      - name: Verificar opcionalidade Hermes
+        run: node scripts/test-hermes-optionality.mjs
