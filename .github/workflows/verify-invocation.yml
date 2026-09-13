@@ -1,27 +1,34 @@
 name: Verify invocation axis
 
-# Gates executáveis de invocação e rigor Feynman.
-# Garante lockstep user/model-invoked, metadados OpenAI, transporte pelo installer
-# e presença dos Feynman Evidence & Understanding Gates nos agentes críticos.
+# Gates executáveis de independência, invocação e rigor Feynman.
+# Garante que a edição MarceloClaro não sincronize com upstream,
+# preserva lockstep user/model-invoked, metadados OpenAI e transporte pelo installer.
 
 on:
   push:
     paths:
       - 'agents/**'
       - 'specs/SPEC-FEYNMAN-EVIDENCE-UNDERSTANDING-LAYER.md'
+      - 'scripts/verify-no-upstream-sync.py'
       - 'scripts/verify-invocation.py'
       - 'scripts/verify-feynman-layer.py'
       - 'scripts/test-installer-transport.mjs'
+      - 'lib/commands/update.js'
       - 'package.json'
-      - '.github/workflows/verify-invocation.yml'
+      - 'INDEPENDENCE.md'
+      - '.github/workflows/**'
   pull_request:
     paths:
       - 'agents/**'
       - 'specs/SPEC-FEYNMAN-EVIDENCE-UNDERSTANDING-LAYER.md'
+      - 'scripts/verify-no-upstream-sync.py'
       - 'scripts/verify-invocation.py'
       - 'scripts/verify-feynman-layer.py'
       - 'scripts/test-installer-transport.mjs'
+      - 'lib/commands/update.js'
       - 'package.json'
+      - 'INDEPENDENCE.md'
+      - '.github/workflows/**'
   workflow_dispatch:
 
 jobs:
@@ -35,6 +42,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Verificar independência de upstream
+        run: python3 scripts/verify-no-upstream-sync.py
       - name: Verificar eixo de invocação
         run: python3 scripts/verify-invocation.py
       - name: Verificar Feynman Evidence & Understanding Layer
