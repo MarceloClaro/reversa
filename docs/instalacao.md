@@ -8,14 +8,14 @@ If you don't have Node.js, install it at [nodejs.org](https://nodejs.org) and co
 
 ---
 
-## MarceloClaro independent edition
+## ReversaFeynman — MarceloClaro independent edition
 
-This repository is maintained independently at `MarceloClaro/reversa` and does not automatically synchronize with `sandeco/reversa`.
+This repository is maintained independently under the canonical identity `MarceloClaro/reversaFeynman` and does not automatically synchronize with `sandeco/reversa`.
 
 In the root of the legacy project you want to analyze, install directly from this GitHub repository:
 
 ```bash
-npm exec --yes --package=github:MarceloClaro/reversa -- reversa install
+npm exec --yes --package=github:MarceloClaro/reversaFeynman -- reversa install
 ```
 
 The installer does all of this for you:
@@ -28,60 +28,54 @@ The installer does all of this for you:
 6. Creates the `.reversa/` structure with state, configuration, and plan
 7. Generates the SHA-256 manifest for safe future updates
 
-It's like `npm install`, but for your reverse engineering agent team.
-
 ---
 
 ## What gets created in the project
 
-```
+```text
 legacy-project/
 ├── .reversa/               ← analysis state, config, and context
 ├── .agents/skills/         ← universal agents (all engines)
 ├── .claude/skills/         ← mirror for Claude Code
 ├── CLAUDE.md               ← entry point for Claude Code (if detected)
 ├── AGENTS.md               ← entry point for Codex (if detected)
-└── _reversa_sdd/           ← where specs will be generated (empty initially)
+└── _reversa_sdd/           ← where specs will be generated
 ```
 
 !!! success "Your files stay intact"
-    The installer **only creates new files**. It never modifies or deletes any existing file in your project.
+    The installer preserves the legacy by default and uses the Reversa policy gates for controlled writes.
 
 ---
 
 ## Updating this edition
 
-Run the update from the same MarceloClaro distribution:
+Run the update from the same ReversaFeynman distribution:
 
 ```bash
-npm exec --yes --package=github:MarceloClaro/reversa -- reversa update
+npm exec --yes --package=github:MarceloClaro/reversaFeynman -- reversa update
 ```
 
-The updater uses the files bundled with the running `MarceloClaro/reversa` distribution. It does not query the npm `reversa` package and does not fetch or merge `sandeco/reversa`.
+The updater uses the files bundled with the running `MarceloClaro/reversaFeynman` distribution. It does not query the npm `reversa` package and does not fetch or merge `sandeco/reversa`.
 
-See [INDEPENDENCE.md](https://github.com/MarceloClaro/reversa/blob/main/INDEPENDENCE.md) in the repository for the complete policy.
+See [INDEPENDENCE.md](https://github.com/MarceloClaro/reversaFeynman/blob/main/INDEPENDENCE.md) for the complete policy.
 
 ---
 
 ## Backup before starting
 
 !!! warning "Strong recommendation: make a backup"
-    Although Reversa is designed to preserve your files, AI agents can make mistakes. Before starting the analysis:
+    Before starting the analysis:
 
     1. Make sure all files are committed in Git
     2. Have the repository on GitHub, GitLab, or Bitbucket
-    3. Make a local copy of the folder as extra safety: `cp -r my-project my-project-backup`
-
-    If something unexpected happens, `git restore .` fixes it.
+    3. Make a local copy of the folder as extra safety
 
 ---
 
 ## Adding another engine later
 
-If you want to add support for another engine later:
-
 ```bash
-npm exec --yes --package=github:MarceloClaro/reversa -- reversa add-engine
+npm exec --yes --package=github:MarceloClaro/reversaFeynman -- reversa add-engine
 ```
 
 The installer detects what already exists and adds only what's missing.

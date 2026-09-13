@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Guard estrutural da linha independente MarceloClaro/reversa.
+"""Guard estrutural da linha independente MarceloClaro/reversaFeynman.
 
 Este teste não proíbe atribuição histórica ao projeto original. Ele proíbe
 mecanismos automáticos de sincronização e metadados operacionais que apontem
-a distribuição para sandeco/reversa.
+a distribuição para sandeco/reversa ou para o slug independente anterior.
 """
 from __future__ import annotations
 
@@ -14,6 +14,7 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 WORKFLOWS = ROOT / ".github" / "workflows"
+CANONICAL_REPO = "marceloclaro/reversafeynman"
 
 
 def read(rel: str) -> str:
@@ -34,8 +35,8 @@ def main() -> int:
     homepage = (package.get("homepage") or "").lower()
     bugs_url = ((package.get("bugs") or {}).get("url") or "").lower()
     for label, value in (("repository.url", repo_url), ("homepage", homepage), ("bugs.url", bugs_url)):
-        if "marceloclaro/reversa" not in value:
-            errors.append(f"package.json: {label} deve apontar para MarceloClaro/reversa")
+        if CANONICAL_REPO not in value:
+            errors.append(f"package.json: {label} deve apontar para MarceloClaro/reversaFeynman")
 
     update_js = read("lib/commands/update.js")
     forbidden_update = (
@@ -47,8 +48,8 @@ def main() -> int:
     for needle in forbidden_update:
         if needle in update_js:
             errors.append(f"lib/commands/update.js: referência operacional proibida {needle!r}")
-    if "SOURCE_VERSION" not in update_js or "MarceloClaro/reversa" not in update_js:
-        errors.append("lib/commands/update.js: fonte local MarceloClaro não está explicitamente definida")
+    if "SOURCE_VERSION" not in update_js or "MarceloClaro/reversaFeynman" not in update_js:
+        errors.append("lib/commands/update.js: fonte local ReversaFeynman não está explicitamente definida")
 
     workflow_patterns = {
         r"sandeco/reversa": "workflow referencia diretamente sandeco/reversa",
@@ -70,19 +71,24 @@ def main() -> int:
         errors.append("verify-invocation.yml: guard de independência não está conectado ao CI")
 
     policy = read("INDEPENDENCE.md")
-    for marker in ("MarceloClaro/reversa", "não sincroniza", "sandeco/reversa"):
+    for marker in ("MarceloClaro/reversaFeynman", "não sincroniza", "sandeco/reversa"):
         if marker not in policy:
             errors.append(f"INDEPENDENCE.md: falta marcador {marker!r}")
 
+    for rel in ("README.md", "bin/reversa.js", "docs/instalacao.md", "docs/cli.md", "docs/index.md", "docs/contribuindo.md"):
+        text = read(rel)
+        if "MarceloClaro/reversaFeynman" not in text:
+            errors.append(f"{rel}: identidade canônica MarceloClaro/reversaFeynman ausente")
+
     if errors:
-        print(f"✗ Independent line: {len(errors)} violação(ões)")
+        print(f"✗ ReversaFeynman independent line: {len(errors)} violação(ões)")
         for error in errors:
             print(f"  - {error}")
         return 1
 
-    print("✓ MarceloClaro/reversa opera como linha independente")
+    print("✓ MarceloClaro/reversaFeynman opera como linha independente")
     print("  upstream sync: blocked")
-    print("  package source: MarceloClaro/reversa")
+    print("  package source: MarceloClaro/reversaFeynman")
     print("  npm publication: disabled (private=true)")
     return 0
 
