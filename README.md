@@ -83,19 +83,19 @@ A arquitetura-base herdada do Reversa é centrada em **orquestradores especializ
 
 ```mermaid
 flowchart LR
-    U[Usuário] --> R[Reversa Orchestrator]
-    R --> S[Scout]
-    S --> A[Archaeologist]
-    A --> D[Detective]
-    A --> AR[Architect]
-    D --> W[Writer]
+    U["Usuário"] --> R["Reversa Orchestrator"]
+    R --> S["Scout"]
+    S --> A["Archaeologist"]
+    A --> D["Detective"]
+    A --> AR["Architect"]
+    D --> W["Writer"]
     AR --> W
-    W --> RV[Reviewer]
-    RV --> SDD[_reversa_sdd]
+    W --> RV["Reviewer"]
+    RV --> SDD["_reversa_sdd"]
 
-    SDD --> F[/reversa-forward]
-    SDD --> M[/reversa-migrate]
-    SDD --> DOC[/reversa-docs]
+    SDD --> F["/reversa-forward"]
+    SDD --> M["/reversa-migrate"]
+    SDD --> DOC["/reversa-docs"]
 ```
 
 A sequência conceitual é:
@@ -112,15 +112,15 @@ Agentes independentes podem aprofundar áreas específicas, como interface, banc
 
 ```mermaid
 flowchart LR
-    IDEA[Feature / mudança] --> REQ[Requirements]
-    REQ --> CL[Clarify]
-    CL --> Q[Quality]
-    Q --> P[Plan]
-    P --> TD[To-Do]
-    TD --> AU[Audit]
-    AU --> C[Coding]
-    C --> SY[Sync]
-    SY --> ADD[_reversa_sdd/addenda]
+    IDEA["Feature / mudança"] --> REQ["Requirements"]
+    REQ --> CL["Clarify"]
+    CL --> Q["Quality"]
+    Q --> P["Plan"]
+    P --> TD["To-Do"]
+    TD --> AU["Audit"]
+    AU --> C["Coding"]
+    C --> SY["Sync"]
+    SY --> ADD["_reversa_sdd/addenda"]
 ```
 
 O `/reversa-forward` observa os artefatos físicos da feature e sugere a próxima fase.
@@ -151,39 +151,39 @@ A nova arquitetura não substitui os pipelines; ela acrescenta **camadas transve
 
 ```mermaid
 flowchart TB
-    U[Usuário] --> E[Pontos de entrada / orquestradores]
+    U["Usuário"] --> E["Pontos de entrada / orquestradores"]
 
-    subgraph INV[Invocation Governance]
-        E --> POL[Invocation Policy]
-        POL --> META{Skill protegida?}
-        META -->|não| NATIVE[Invocação nativa permitida]
-        META -->|sim| READ[Read SKILL.md + execute no contexto atual]
+    subgraph INV["Invocation Governance"]
+        E --> POL["Invocation Policy"]
+        POL --> META{"Skill protegida?"}
+        META -->|não| NATIVE["Invocação nativa permitida"]
+        META -->|sim| READ["Read SKILL.md + execute no contexto atual"]
     end
 
-    NATIVE --> PIPE[Pipelines Reversa]
+    NATIVE --> PIPE["Pipelines Reversa"]
     READ --> PIPE
 
-    subgraph CORE[Pipelines herdados]
-        PIPE --> DISC[Discovery]
-        PIPE --> NEW[Greenfield]
-        PIPE --> FWD[Forward]
-        PIPE --> MIG[Migration]
-        PIPE --> BUG[Bugs]
-        PIPE --> REF[Refactor]
-        PIPE --> DOC[Docs]
-        PIPE --> PRICE[Pricing]
+    subgraph CORE["Pipelines herdados"]
+        PIPE --> DISC["Discovery"]
+        PIPE --> NEW["Greenfield"]
+        PIPE --> FWD["Forward"]
+        PIPE --> MIG["Migration"]
+        PIPE --> BUG["Bugs"]
+        PIPE --> REF["Refactor"]
+        PIPE --> DOC["Docs"]
+        PIPE --> PRICE["Pricing"]
     end
 
-    CORE --> ART[Artefatos / Specs / Código / Auditorias]
+    CORE --> ART["Artefatos / Specs / Código / Auditorias"]
 
-    subgraph FE[Evidence & Understanding Layer]
-        ART --> FY[/reversa-feynman]
-        FY --> G1[FEG-01..06]
-        FY --> G7{FEG-07 candidate?}
-        G7 -->|não| REPORT[feynman-audit.md]
-        G7 -->|sim| TB[/reversa-teachback]
-        TB --> HS[HUMAN-VALIDATED / PARTIAL / CONFLICT]
-        HS --> CR[Clarify / Reviewer]
+    subgraph FE["Evidence & Understanding Layer"]
+        ART --> FY["/reversa-feynman"]
+        FY --> G1["FEG-01..06"]
+        FY --> G7{"FEG-07 candidate?"}
+        G7 -->|não| REPORT["feynman-audit.md"]
+        G7 -->|sim| TB["/reversa-teachback"]
+        TB --> HS["HUMAN-VALIDATED / PARTIAL / CONFLICT"]
+        HS --> CR["Clarify / Reviewer"]
         G1 --> REPORT
     end
 
@@ -451,15 +451,15 @@ No Forward, o handoff segue esta lógica:
 
 ```mermaid
 flowchart TD
-    C[Usuário: CONTINUAR] --> R[Reavaliar estágio físico]
-    R --> S[Resolver próxima skill]
-    S --> M[Ler SKILL.md + openai.yaml]
-    M --> P{Invocação implícita proibida?}
-    P -->|sim| X[Read-and-execute no contexto atual]
-    P -->|não| N[Invocação nativa / fallback compatível]
-    X --> D[Executar fase]
+    C["Usuário: CONTINUAR"] --> R["Reavaliar estágio físico"]
+    R --> S["Resolver próxima skill"]
+    S --> M["Ler SKILL.md + openai.yaml"]
+    M --> P{"Invocação implícita proibida?"}
+    P -->|sim| X["Read-and-execute no contexto atual"]
+    P -->|não| N["Invocação nativa / fallback compatível"]
+    X --> D["Executar fase"]
     N --> D
-    D --> R2[Reavaliar estágio]
+    D --> R2["Reavaliar estágio"]
 ```
 
 Essa regra corrige a classe de erro em que uma skill com `disable-model-invocation` era chamada pelo mecanismo de Skill tool.
