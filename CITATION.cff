@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+message: >-
+  If you use ReversaFeynman, cite this software and also acknowledge the
+  original Reversa framework and paper by Sanderson Oliveira de Macedo and
+  Ronaldo Martins da Costa, as documented in docs/ACADEMIC-PROVENANCE.md.
+title: ReversaFeynman
+type: software
+authors:
+  - family-names: Laranjeira
+    given-names: Marcelo Claro
+repository-code: https://github.com/MarceloClaro/reversa
+license: MIT
+version: 1.3.3
+date-released: 2026-09-13
+keywords:
+  - reverse engineering
+  - software specification
+  - AI agents
+  - Feynman
+  - metacognition
+  - offline policy evaluation
+references:
+  - type: article
+    title: "Reversa: A Reverse Documentation Engineering Framework for Converting Legacy Software into Operational Specifications for AI Agents"
+    authors:
+      - family-names: de Macedo
+        given-names: Sanderson Oliveira
+      - family-names: da Costa
+        given-names: Ronaldo Martins
+    year: 2026
+    doi: 10.48550/arXiv.2605.18684
+    url: https://arxiv.org/abs/2605.18684
+    notes: "arXiv:2605.18684; primary class cs.SE"
+  - type: software
+    title: Reversa
+    authors:
+      - name: sandeco
+    repository-code: https://github.com/sandeco/reversa
+    license: MIT
