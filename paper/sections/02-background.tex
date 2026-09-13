@@ -1,0 +1,41 @@
+\section{Background and Problem Formulation}
+
+\subsection{Reverse documentation engineering}
+
+The original Reversa framework addresses a practical mismatch between agentic software maintenance and legacy codebases: coding agents need explicit behavioral contracts, while mature systems often encode critical rules only implicitly. Reversa structures discovery as a sequence of specialized roles that map project structure, excavate implementation details, infer domain and architecture, synthesize specifications, and review unresolved gaps \cite{macedo2026reversa}. Confidence is represented explicitly so that uncertain extractions are not silently treated as confirmed facts.
+
+ReversaFeynman preserves this foundation. The extension does not redefine reverse documentation engineering; it adds a governance layer for what happens after claims, specifications, candidate repairs, trajectories, and learned policies begin to interact.
+
+\subsection{Epistemic failure modes in agentic software engineering}
+
+Repository-scale agents can fail even when individual model outputs appear plausible. We focus on six recurrent failure modes:
+
+\begin{enumerate}
+  \item \textbf{label substitution}: a named pattern or architecture is repeated without a causal explanation;
+  \item \textbf{provenance loss}: a strong claim is detached from the code, test, execution, log, dataset, or artifact that supports it;
+  \item \textbf{observation--inference collapse}: an interpretation is represented as if it had been directly observed;
+  \item \textbf{non-falsifiable validation}: a test suite passes, but no meaningful oracle exists that could reveal a relevant behavioral error;
+  \item \textbf{cargo-cult repair}: an established pattern is copied despite insufficient evidence that it addresses the local requirement;
+  \item \textbf{confidence substitution}: memory, model confidence, human fluency, reward, or benchmark score is treated as equivalent to truth.
+\end{enumerate}
+
+The design of ReversaFeynman follows a Popperian intuition: strong engineering claims should expose conditions under which they could be shown false \cite{popper1959logic}. This does not turn software development into scientific experimentation in a strict philosophical sense; rather, it motivates operational gates that demand provenance, counterexamples, and executable checks when available.
+
+\subsection{Epistemic states}
+
+The framework uses four system-level states:
+
+\begin{center}
+\begin{tabular}{p{3.0cm}p{10.5cm}}
+\toprule
+\textbf{State} & \textbf{Meaning} \\
+\midrule
+\texttt{OBSERVED} & Supported by direct, traceable evidence accepted by the evidence governor. \\
+\texttt{INFERRED} & Reasoned from available evidence but not directly established. \\
+\texttt{UNVERIFIED} & Plausible or proposed, but not yet verified. \\
+\texttt{BLOCKED} & Verification cannot proceed because required evidence, access, or a decision is missing. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Human source quality is modeled separately from system evidence. A domain specialist may be classified as \texttt{HUMAN-VALIDATED}, \texttt{HUMAN-PARTIAL}, or \texttt{HUMAN-CONFLICT}; none of these labels is automatically equivalent to \texttt{OBSERVED}. This separation is essential when human explanation is the best available source but still requires traceability or executable corroboration.

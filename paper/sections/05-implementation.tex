@@ -1,0 +1,43 @@
+\section{Implementation}
+
+The reference implementation is maintained in the same repository as the paper. The core is a Node.js package with versioned agent skills, installer support for multiple coding-agent harnesses, adaptive integration modules, Hermes integration modules, and the Software Engineering Intelligence v5 layer.
+
+\subsection{Software Engineering Intelligence v5}
+
+Version 5 is implemented as ten incremental capabilities:
+
+\begin{enumerate}
+  \item \textbf{Strict Contract Layer}: versioned contracts use JSON Schema 2020-12 semantics and reject silent numeric coercion. An optional Ajv adapter can compile strict schemas when Ajv is installed.
+  \item \textbf{Code Intelligence Graph}: normalizes symbols, relations, and a deterministic relevance ranking; structural extraction is delegated to optional providers.
+  \item \textbf{Execution Fabric}: normalizes execution outcomes while keeping Docker, SWE-ReX, OpenHands, local shells, and remote runtimes outside the mandatory core.
+  \item \textbf{Repair Laboratory}: requires a traceable localization before candidate creation and supports ranking of multiple repairs.
+  \item \textbf{Quality/Falsifiability Gates}: combines tests, static-analysis findings, mutation-testing results, and regression penalties.
+  \item \textbf{Observability}: records non-authoritative execution traces and spans.
+  \item \textbf{ReversaBench}: stores comparable variant records and reports engineering metrics with an explicit \texttt{causal\_claim=false} default.
+  \item \textbf{MCP-ready Gateway}: dispatches only registered/allowlisted tools and is compatible with an external MCP transport layer.
+  \item \textbf{Durable Workflow Adapter}: persists step completion through injected load/save functions and avoids re-executing completed steps after resume.
+  \item \textbf{Offline Prompt/Skill Optimizer}: produces shadow proposals with \texttt{auto\_apply=false}, offline-evaluation requirements, and no evidence authority.
+\end{enumerate}
+
+\subsection{Optional dependency boundary}
+
+A deliberate implementation choice is that external frameworks remain optional. OpenHands, SWE-ReX, Semgrep, StrykerJS, Phoenix, LangGraph, MCP SDKs, DSPy, and related systems are integrated through adapters, transports, or executable providers rather than mandatory runtime dependencies. This keeps the ReversaFeynman package small and makes it possible to compare providers experimentally.
+
+\subsection{Internal safety contracts}
+
+The following invariants are enforced by tests:
+
+\begin{itemize}
+  \item numeric strings are rejected where a numeric contract is required;
+  \item unknown execution providers and non-allowlisted tool calls fail closed;
+  \item repair candidates require repository localization metadata;
+  \item benchmark, mutation, rank, trace, and optimization results carry \texttt{evidence\_authority=false};
+  \item the optimizer is shadow-first and cannot auto-apply changes;
+  \item completed durable-workflow steps are not executed twice after checkpoint restore;
+  \item external frameworks do not become mandatory package dependencies;
+  \item evidence transitions remain delegated to the Hermes Evidence Governor.
+\end{itemize}
+
+\subsection{Provenance and compatibility}
+
+The implementation explicitly distinguishes inherited capabilities from derived extensions. Discovery, reverse documentation engineering, operational specifications, and the foundational multi-agent pipeline are attributed to the original Reversa work \cite{macedo2026reversa}. Feynman gates, adaptive governance, offline policy evaluation, Hermes bridges/governance, and Software Engineering Intelligence v5 are extensions in the ReversaFeynman line. The repository preserves compatibility shims where an internal component has been replaced, reducing migration risk for existing consumers.

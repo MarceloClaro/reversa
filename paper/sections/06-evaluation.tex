@@ -1,0 +1,82 @@
+\section{Evaluation Protocol}
+
+This version of the paper reports an implemented framework and a pre-specified evaluation protocol rather than completed comparative benchmark results. The purpose of this section is to make future superiority claims falsifiable and reproducible.
+
+\subsection{Research questions}
+
+\begin{description}
+  \item[RQ1 -- Specification quality.] Does ReversaFeynman preserve or improve the coverage, traceability, and correctness of operational specifications relative to the original Reversa pipeline?
+  \item[RQ2 -- Repair effectiveness.] Does structural localization plus multi-candidate repair and independent validation improve issue-resolution success and reduce regressions relative to simpler repair baselines?
+  \item[RQ3 -- Epistemic reliability.] Does explicit evidence governance reduce the rate at which inferred or unsupported claims are represented as directly observed?
+  \item[RQ4 -- Calibration.] Are route and success-confidence estimates better calibrated after offline adaptive evaluation?
+  \item[RQ5 -- Efficiency.] What are the latency, token, execution, and monetary cost trade-offs introduced by the additional governance and validation layers?
+  \item[RQ6 -- Optimization safety.] Can shadow-first prompt/skill optimization improve measured task outcomes without increasing regression or epistemic-error rates?
+\end{description}
+
+\subsection{Systems under comparison}
+
+A controlled evaluation should compare at least four variants:
+
+\begin{enumerate}
+  \item \textbf{Reversa-original}: the original reverse documentation workflow as the provenance baseline;
+  \item \textbf{ReversaFeynman-core}: Reversa plus epistemic governance, without the v5 repair intelligence;
+  \item \textbf{Minimal-repair baseline}: a simple localization/repair/validation loop inspired by the minimal-agent and Agentless literature \cite{xia2024agentless};
+  \item \textbf{ReversaFeynman-v5}: the complete evidence-governed software engineering pipeline.
+\end{enumerate}
+
+All variants should use the same underlying model, temperature, repository snapshot, task statement, tool budget, timeout, and retry policy within each paired comparison.
+
+\subsection{Task suites}
+
+The evaluation should combine three task families:
+
+\begin{itemize}
+  \item \textbf{Real-world issue repair}: public benchmark instances from SWE-bench-style repositories \cite{jimenez2024swebench};
+  \item \textbf{Generated repository tasks}: reproducible tasks generated with SWE-smith-style environment construction and test-breaking procedures \cite{yang2025swesmith};
+  \item \textbf{Legacy specification tasks}: repositories selected for rule recovery, architecture reconstruction, specification generation, and migration planning, including cases where the original Reversa pipeline can be reproduced.
+\end{itemize}
+
+Repository-level splits must prevent the same repository from leaking across development/tuning and final evaluation when learned policies or prompt optimizers are involved.
+
+\subsection{Primary metrics}
+
+\paragraph{Specification metrics.}
+We propose claim coverage, traceability coverage, human-adjudicated claim precision, unresolved-gap preservation, and contradiction rate. A separate \emph{false-observed rate} measures the fraction of claims labeled \texttt{OBSERVED} that lack sufficient direct evidence under independent review.
+
+\paragraph{Repair metrics.}
+Primary measures are issue resolution rate, pass@1, pass@k for candidate patches, regression rate, test-suite delta, mutation score, and the proportion of repairs for which localization metadata is traceable to the final patch.
+
+\paragraph{Calibration metrics.}
+When a system emits a probability of task success, calibration is evaluated using Brier score \cite{brier1950verification}, Expected Calibration Error (ECE), reliability diagrams, and coverage conditional on confidence bins. Calibration is computed only where a binary ground-truth outcome exists.
+
+\paragraph{Efficiency metrics.}
+We measure end-to-end latency, model tokens, tool calls, execution count, candidate patches evaluated, estimated monetary cost, and human interventions.
+
+\paragraph{Governance metrics.}
+We measure abstention precision, drift-trigger frequency, blocked-state resolution rate, evidence-promotion rejection rate, and the number of policy/skill proposals that remain shadow versus become eligible for activation.
+
+\subsection{Experimental design and statistics}
+
+For issue-repair tasks, systems should be evaluated in a paired design over the same task instances. When stochasticity is material, each system-task pair should be repeated with multiple independent seeds. Repository should be treated as a clustering unit rather than assuming all tasks are independent.
+
+We recommend reporting effect sizes with 95\% confidence intervals using a repository-aware or hierarchical bootstrap. Paired binary outcomes can additionally be examined with McNemar's test; continuous paired metrics may use permutation tests or Wilcoxon signed-rank tests when parametric assumptions are not justified. When many hypotheses are tested, family-wise error or false-discovery control should be pre-specified.
+
+For adaptive-policy evaluation, chronological or repository-separated holdouts must be maintained. Offline policy metrics should not be interpreted as causal effects unless propensities, overlap assumptions, and an appropriate off-policy estimator are available. A promotion-readiness decision is therefore an engineering gate, not a scientific claim of causal superiority.
+
+\subsection{Reproducibility package}
+
+Each reported experiment should preserve:
+
+\begin{itemize}
+  \item repository URL and immutable commit SHA;
+  \item task identifier and test harness version;
+  \item model/provider/version and decoding parameters;
+  \item ReversaFeynman commit/tag;
+  \item configuration of adapters and quality thresholds;
+  \item random seeds;
+  \item execution traces and normalized results;
+  \item ReversaBench records and analysis scripts;
+  \item environment/container identifiers when applicable.
+\end{itemize}
+
+This package is necessary to convert architectural claims into independently testable empirical claims.

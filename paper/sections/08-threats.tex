@@ -1,0 +1,22 @@
+\section{Threats to Validity}
+
+\paragraph{Construct validity.}
+Terms such as \emph{understanding}, \emph{evidence}, and \emph{epistemic error} can be interpreted differently across studies. We mitigate this by operationalizing states and gates in versioned contracts, but the mapping between these engineering constructs and broader philosophical notions remains limited. Likewise, mutation score measures test sensitivity to selected mutation operators rather than complete behavioral correctness.
+
+\paragraph{Internal validity.}
+If future experiments compare systems using different models, tool budgets, temperatures, retries, or repository snapshots, observed differences may be attributable to those factors rather than to the ReversaFeynman architecture. Paired task execution with controlled configurations and repeated seeds is therefore necessary. Adaptive components also create temporal leakage risks; the explicit \texttt{decide()}--\texttt{observe()} separation and holdout requirements are intended to reduce this risk but do not eliminate all forms of contamination.
+
+\paragraph{External validity.}
+SWE-bench-style issue repair does not represent all maintenance work, and generated SWE-smith-style tasks may differ from naturally occurring defects. Legacy business systems can contain domain constraints that are absent from public open-source repositories. Evaluation should therefore span issue repair, specification recovery, migration planning, and multiple languages/domains before broad generalization.
+
+\paragraph{Conclusion validity.}
+Agent outcomes can be highly stochastic and clustered by repository. Treating all issue instances as independent can produce overly narrow confidence intervals. We therefore recommend repository-aware resampling, paired comparisons, multiple seeds, effect sizes, and pre-specified statistical tests. Offline policy comparisons should not be interpreted causally without suitable logging and identification assumptions.
+
+\paragraph{Implementation validity.}
+Several external capabilities are represented through adapters rather than embedded dependencies. The quality of a Tree-sitter extractor, execution provider, static analyzer, mutation framework, or observability backend can materially affect results. Experiments must record provider versions and configurations. A provider failure should remain distinguishable from a framework-level failure.
+
+\paragraph{Evolution bias.}
+ReversaFeynman was designed by iteratively studying weaknesses in earlier versions and patterns from related tools. This creates a risk of overfitting the architecture to known benchmark styles or favored engineering assumptions. The inclusion of minimal baselines, unseen repositories, and ablation studies is essential to determine which layers provide measurable value and which merely add complexity.
+
+\paragraph{Current empirical status.}
+The present manuscript describes an implemented architecture and evaluation protocol. It does not yet provide a controlled benchmark demonstrating superiority over the original Reversa or other software engineering agents. Any stronger claim would exceed the available evidence.

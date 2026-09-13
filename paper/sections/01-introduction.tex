@@ -1,0 +1,23 @@
+\section{Introduction}
+
+Software engineering agents based on large language models (LLMs) are moving from isolated code generation toward repository-scale activities such as maintenance, repair, migration, testing, and documentation. This transition increases the importance of reliable context and explicit correctness criteria. Legacy repositories are especially difficult because business rules, architectural decisions, operational exceptions, and hidden contracts are often distributed across code, configuration, data, tests, and maintenance practices.
+
+Reversa was proposed as a reverse documentation engineering framework that converts legacy software into traceable operational specifications for AI agents through a multi-agent pipeline and explicit confidence marking \cite{macedo2026reversa}. Its central contribution is not autonomous coding itself, but the construction of a specification layer that makes implicit system knowledge more explicit and traceable.
+
+The present work starts from a complementary problem. Once specifications are available, an agentic system still needs to answer questions such as: Which claims were directly observed? Which were inferred? What evidence could refute a claim? Can memory or a learned policy be trusted as evidence? How should the system select between several candidate patches? How can a repair be evaluated without conflating benchmark performance with truth?
+
+We introduce \emph{ReversaFeynman}, an evidence-governed extension of Reversa. The framework retains the original reverse documentation pipeline and adds five classes of capability: (i) epistemic governance through explicit evidence states and Feynman-inspired gates; (ii) governed memory, skill evolution, and evidence collection through a Hermes integration; (iii) adaptive routing and offline policy evaluation; (iv) operational software engineering intelligence for code localization, isolated execution, multi-candidate repair, static analysis, mutation testing, observability, and benchmarking; and (v) reproducible development of the framework itself through SDD and TDD.
+
+The core design principle is simple but strict: \emph{learned confidence is not direct evidence}. In ReversaFeynman, policy confidence, memory, reward, benchmark score, mutation score, static-analysis rank, and human confidence may guide action selection, but they do not independently promote a claim to the strongest epistemic state. Promotion requires direct, traceable evidence governed by deterministic local rules.
+
+This paper makes the following contributions:
+
+\begin{enumerate}
+  \item an evidence-governed architecture that extends reverse documentation engineering with explicit epistemic states and falsifiability-oriented gates;
+  \item a software engineering intelligence layer that separates localization, candidate generation, execution, independent validation, and ranking;
+  \item an adapter-oriented design that keeps execution runtimes, scanners, observability systems, orchestration frameworks, and optimizers optional;
+  \item a reproducible evaluation protocol for comparing the original Reversa, minimal repair baselines, and ReversaFeynman on both engineering and epistemic metrics;
+  \item an implementation discipline in which the framework's own evolution is specified and tested through SDD/TDD artifacts committed with the code.
+\end{enumerate}
+
+We do not claim that ReversaFeynman is empirically superior to Reversa or to state-of-the-art coding agents in this manuscript. Instead, we distinguish architectural capability from empirical superiority and define the experiments required to evaluate the latter.

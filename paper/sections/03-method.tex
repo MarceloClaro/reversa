@@ -1,0 +1,43 @@
+\section{Method}
+
+\subsection{Specification-driven and test-driven evolution}
+
+The framework is developed using a combined specification-driven development (SDD) and test-driven development (TDD) process. Each architectural evolution is first expressed as a versioned specification containing invariants and acceptance criteria. Tests are then added before or together with the implementation so that the contract is executable. The implementation is subsequently hardened against boundary cases, compatibility regressions, and accidental privilege escalation.
+
+For the Software Engineering Intelligence v5 evolution, the specification defines twelve invariants, including optional external integrations, prohibition of evidence promotion from learned scores, localization-before-editing, support for multiple repair candidates, execution-provider decoupling, falsifiability-oriented quality gates, observational benchmarking, shadow-first optimization, durable checkpoints, and strict schemas without numeric coercion.
+
+The development cycle is:
+
+\begin{center}
+\texttt{SPEC $\rightarrow$ RED $\rightarrow$ GREEN $\rightarrow$ REFACTOR/HARDEN $\rightarrow$ PR/CI}
+\end{center}
+
+This process is itself part of the research artifact. Architectural claims about safety boundaries are therefore represented both in prose specifications and in executable regression tests.
+
+\subsection{Feynman-inspired evidence gates}
+
+The evidence and understanding layer defines seven gates:
+
+\begin{enumerate}
+  \item \textbf{FEG-01: Name is not understanding.} The mechanism should be explainable beyond merely naming a pattern or component.
+  \item \textbf{FEG-02: Evidence and provenance.} Strong claims require a traceable supporting source.
+  \item \textbf{FEG-03: Observation is not inference.} Direct observations and interpretations must remain distinguishable.
+  \item \textbf{FEG-04: Falsifiability.} When applicable, the system should identify an executable test, oracle, counterexample, or observation that could refute the claim.
+  \item \textbf{FEG-05: Anti-cargo-cult.} A proposed technique must address a demonstrated local need rather than merely imitate common practice.
+  \item \textbf{FEG-06: Minimum uncertainty-reducing experiment.} The system identifies the smallest additional check that materially reduces uncertainty.
+  \item \textbf{FEG-07: Teach-back boundary.} When repository evidence is insufficient and a human expert is required, the protocol tests causal explanation and transfer to a variant scenario rather than verbal fluency.
+\end{enumerate}
+
+The first six gates form the base engineering audit. The seventh is conditional and applies when domain knowledge materially affects a requirement, risk, rule, or legacy interpretation.
+
+\subsection{Evidence governance}
+
+The Hermes Evidence Governor replaces an earlier standalone Evidence Guard as the active operational boundary for evidence transitions. Hermes may collect candidate evidence, but a remote runtime, memory item, user model, skill proposal, learned policy, or trust score cannot independently establish \texttt{OBSERVED}. The local governor accepts promotion only when direct evidence has a recognized kind and a non-empty traceable reference.
+
+Accepted baseline evidence kinds include code, contracts, tests, execution results, logs, datasets, and artifacts. This makes the evidence boundary deterministic even when the surrounding orchestration is adaptive.
+
+\subsection{Adaptive evaluation without epistemic privilege}
+
+The adaptive layer records learning events, computes operational reward, detects drift, and evaluates shadow policies offline. Policy confidence is interpreted as an estimated probability of success rather than as evidence about a program claim. Calibration can therefore be assessed using proper scoring rules such as the Brier score \cite{brier1950verification}, while the evidence governor remains independent of those calibration results.
+
+The runtime separates \texttt{decide()} from \texttt{observe()} to reduce look-ahead leakage: a recommendation is made using only prior history, the baseline workflow executes, and only then is the outcome recorded for future learning.
