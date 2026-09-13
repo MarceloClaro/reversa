@@ -16,16 +16,20 @@ Reversa is a specification reverse-engineering framework. You install it inside 
 
 ## Quick start
 
-In the root of the legacy project:
+In the root of your project:
 
 ```bash
 npx reversa install
 ```
 
-Then open the project in your favorite AI agent and type:
+Then open the project in your favorite AI agent and choose the workflow:
 
 ```
-/reversa
+/reversa              # discover and specify an existing system
+/reversa-autonomous   # same discovery, end to end, with no intermediate stops
+/reversa-new          # turn a new product idea into PRD and SDD specs
+/reversa-forward      # evolve the system from specs to code, one feature at a time
+/reversa-debugger     # register and trace a defect back to the specs
 ```
 
 That's it. Reversa takes the wheel and guides you to the end.
@@ -56,9 +60,15 @@ That's it. Reversa takes the wheel and guides you to the end.
 
 - **Agents**
 
-    Meet the team: 14 specialists, each with their own role.
+    9 specialized Teams: Core, New Project, Code Forward, Migration, Code Quality, Documentation, Pricing, Bug Agents and Translators.
 
     [:octicons-arrow-right-24: See agents](agentes/index.md)
+
+- **Start a new project**
+
+    Go from a one-line idea to personas, PRD and scored SDD specs.
+
+    [:octicons-arrow-right-24: Use /reversa-new](newproject/index.md)
 
 </div>
 
@@ -79,4 +89,4 @@ That's it. Reversa takes the wheel and guides you to the end.
     Agents write **only** to `.reversa/` and `_reversa_sdd/`. No file in your project is modified, deleted, or overwritten. Ever.
 
 !!! info "No API keys"
-    Reversa does not request, store, or transmit API keys from any service. The intelligence comes from the agent you already use in your environment.
+    Reversa does not request, store, or transmit API keys from any service. The intelligence comes from the agent you already use in your environment, like Claude Code, Codex, Gemini CLI etc.

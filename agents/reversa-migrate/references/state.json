@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "startedAt": null,
   "lastCheckpoint": null,
   "completedAgents": [],
@@ -8,9 +8,16 @@
     "curator",
     "strategist",
     "designer",
+    "screen_translator",
     "inspector"
   ],
-  "currentAgent": null,
+  "currentAgent": {
+    "agent": null,
+    "phase": null,
+    "status": null,
+    "topologyApproved": false,
+    "screenModeApproved": false
+  },
   "pendingDecisions": [],
   "artifacts": {},
   "auto": false,

@@ -3,14 +3,35 @@
 Not sure which agent to call? Activate the guide:
 
 ```
-/agents_help
+/reversa-agents-help
 ```
 
 It explains each agent with a real-world analogy. But since you're already here, here's the full rundown:
 
 ---
 
-## The full team with analogies
+## Main menu
+
+| Goal | Command | Team |
+|---|---|---|
+| Discover and document a legacy system | `/reversa` | Reversa Agents Core |
+| Create a new project from an idea | `/reversa-new` | Code New Project Agents |
+| Implement or evolve code from specs | `/reversa-forward` | Code Forward Agents |
+| Plan a legacy migration | `/reversa-migrate` | Migration Agents |
+| Generate a visual documentation mini-site | `/reversa-docs` | Documentation Agents |
+| Choose the right agent | `/reversa-agents-help` | Agent guide |
+
+Pricing and Translators use specialized commands: `/reversa-pricing-profile`, `/reversa-pricing-size`, `/reversa-pricing-estimate` and `/reversa-n8n`.
+
+---
+
+## Orchestrators and core agents
+
+### 🆕 Reversa New: the product founder
+
+The founder starts with a rough idea, investigates the problem, identifies the audience, consolidates a PRD and turns it into implementation-ready specifications.
+
+> Use `/reversa-new` for greenfield projects. It drives `Ideator → Researcher → Drafter → Spec SDD` and hands the result to `/reversa-forward`.
 
 ### 🎼 Reversa: the orchestra conductor
 
@@ -95,11 +116,13 @@ The stylist catalogs the wardrobe: color palette, typography, spacing, design to
 ## Recommended sequence
 
 ```
-/reversa → orchestrates everything automatically
+Legacy project: /reversa → discovery and specifications
+New project:    /reversa-new → PRD and specs → /reversa-forward
+Migration:      /reversa → /reversa-migrate → /reversa-forward
 
-Or manually:
+Manual legacy pipeline:
 Scout → Archaeologist (N sessions) → Detective → Architect → Writer → Reviewer
 
 Optional at any phase:
-Visor · Data Master · Design System
+Visor · Data Master · Design System · Reversa Docs
 ```

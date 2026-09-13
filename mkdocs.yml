@@ -25,7 +25,6 @@ theme:
         name: Mudar para modo escuro
   features:
     - navigation.sections
-    - navigation.expand
     - navigation.top
     - search.suggest
     - search.highlight
@@ -89,6 +88,9 @@ plugins:
             Overview: Visão geral
             Guide with analogies: Guia com analogias
             Reversa (Orchestrator): Reversa (Orquestrador)
+            Soul Extractor: Extrator de Alma
+            Translators: Tradutores
+            N8N Translator: N8N Translator
             Generated outputs: Saídas geradas
             Developing from specs: Desenvolvendo com as specs
             Migration: Migração
@@ -97,6 +99,39 @@ plugins:
             Strategies: Estratégias
             Brief schema: Schema do brief
             Contributing: Contribuindo
+            Code New Project Agents: Code New Project Agents
+            The greenfield agents: Os agentes do greenfield
+            Code Forward Agents: Code Forward Agents
+            The Forward agents: Os agentes do Forward
+            Migration Agents: Agentes de Migração
+            Pricing and Size Agents: Pricing and Size Agents
+            Translators N8N->Specs->Python: Tradutores N8N->Specs->Python
+            Documentation Team: Time de Documentação
+            The 4 visual agents: Os 4 agentes visuais
+            Bug Agents: Agentes de Bugs
+            Code Quality Agents: Agentes de Qualidade de Código
+            Forward orchestrator: Orquestrador Forward
+            Requirements: Requirements
+            Clarify: Clarify
+            Quality: Quality
+            Plan: Plan
+            To-Do: To-Do
+            Audit: Audit
+            Coding: Coding
+            Principles: Principles
+            Resume: Resume
+            Ideator: Ideator
+            Researcher: Researcher
+            Drafter: Drafter
+            Spec SDD: Spec SDD
+            Mapper: Mapper
+            Analyst: Analyst
+            Storyteller: Storyteller
+            Publisher: Publisher
+            Reversa Docs: Reversa Docs
+            Reversa New: Reversa New
+            Reversa Forward: Reversa Forward
+            Reconstructor: Reconstructor
         - locale: es
           name: Español
           build: true
@@ -114,6 +149,9 @@ plugins:
             Overview: Visión general
             Guide with analogies: Guía con analogías
             Reversa (Orchestrator): Reversa (Orquestador)
+            Soul Extractor: Extractor de Alma
+            Translators: Traductores
+            N8N Translator: N8N Translator
             Generated outputs: Salidas generadas
             Developing from specs: Desarrollando con las specs
             Migration: Migración
@@ -122,6 +160,39 @@ plugins:
             Strategies: Estrategias
             Brief schema: Schema del brief
             Contributing: Contribuir
+            Code New Project Agents: Code New Project Agents
+            The greenfield agents: Los agentes del greenfield
+            Code Forward Agents: Code Forward Agents
+            The Forward agents: Los agentes del Forward
+            Migration Agents: Agentes de Migración
+            Pricing and Size Agents: Pricing and Size Agents
+            Translators N8N->Specs->Python: Traductores N8N->Specs->Python
+            Documentation Team: Equipo de Documentación
+            The 4 visual agents: Los 4 agentes visuales
+            Bug Agents: Agentes de Bugs
+            Code Quality Agents: Agentes de Calidad de Código
+            Forward orchestrator: Orquestador Forward
+            Requirements: Requirements
+            Clarify: Clarify
+            Quality: Quality
+            Plan: Plan
+            To-Do: To-Do
+            Audit: Audit
+            Coding: Coding
+            Principles: Principles
+            Resume: Resume
+            Ideator: Ideator
+            Researcher: Researcher
+            Drafter: Drafter
+            Spec SDD: Spec SDD
+            Mapper: Mapper
+            Analyst: Analyst
+            Storyteller: Storyteller
+            Publisher: Publisher
+            Reversa Docs: Reversa Docs
+            Reversa New: Reversa New
+            Reversa Forward: Reversa Forward
+            Reconstructor: Reconstructor
 
 nav:
   - Home: index.md
@@ -135,23 +206,43 @@ nav:
   - Confidence scale: escala-confianca.md
   - Agents:
     - Overview: agentes/index.md
-    - Guide with analogies: agentes/agents-help.md
-    - Reversa (Orchestrator): agentes/reversa.md
-    - Scout: agentes/scout.md
-    - Archaeologist: agentes/arqueologo.md
-    - Detective: agentes/detetive.md
-    - Architect: agentes/arquiteto.md
-    - Writer: agentes/redator.md
-    - Reviewer: agentes/revisor.md
-    - Visor: agentes/visor.md
-    - Data Master: agentes/data-master.md
-    - Design System: agentes/design-system.md
+    - Reversa Agents Core:
+      - Reversa (Orchestrator): agentes/reversa.md
+      - Guide with analogies: agentes/agents-help.md
+      - Scout: agentes/scout.md
+      - Soul Extractor: agentes/extract-soul.md
+      - Archaeologist: agentes/arqueologo.md
+      - Detective: agentes/detetive.md
+      - Architect: agentes/arquiteto.md
+      - Writer: agentes/redator.md
+      - Reviewer: agentes/revisor.md
+      - Visor: agentes/visor.md
+      - Data Master: agentes/data-master.md
+      - Design System: agentes/design-system.md
+      - Reconstructor: agentes/reconstructor.md
+    - Code New Project Agents:
+      - Overview: newproject/index.md
+      - The greenfield agents: newproject/agentes.md
+    - Code Forward Agents:
+      - Overview: forward/index.md
+      - The Forward agents: forward/agentes.md
+    - Migration Agents:
+      - Overview: migracao/index.md
+      - The 5 agents: migracao/agentes.md
+      - Paradigm shift: migracao/paradigma.md
+      - Strategies: migracao/estrategias.md
+      - Brief schema: migracao/brief.md
+    - Pricing and Size Agents:
+      - Overview: pricing/index.md
+    - Documentation Team:
+      - Overview: documentation/index.md
+      - The 4 visual agents: documentation/agentes.md
+    - Bug Agents:
+      - Overview: bugs/index.md
+    - Code Quality Agents:
+      - Overview: refactor/index.md
+    - Translators N8N->Specs->Python:
+      - N8N Translator: agentes/n8n.md
   - Generated outputs: saidas/index.md
   - Developing from specs: desenvolvendo-com-specs.md
-  - Migration:
-    - Overview: migracao/index.md
-    - The 5 agents: migracao/agentes.md
-    - Paradigm shift: migracao/paradigma.md
-    - Strategies: migracao/estrategias.md
-    - Brief schema: migracao/brief.md
   - Contributing: contribuindo.md

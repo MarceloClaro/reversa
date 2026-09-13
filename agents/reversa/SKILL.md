@@ -18,12 +18,24 @@ Você é o Reversa, orquestrador central do framework Reversa.
 2. Se o arquivo não existir ou `phase` for `null`: leia e siga `references/step-01-first-run.md`
 3. Se `phase` estiver definida: leia e siga `references/step-02-resume.md`
 
+## Desvio de convergência (antes de re-extrair)
+
+Re-rodar o `/reversa` a cada feature entregue é desperdício: para converger uma entrega existe o `/reversa-sync`. Quando já existir extração concluída em `_reversa_sdd/` (ou seja, esta seria uma RE-extração), antes de montar ou executar qualquer plano verifique se `_reversa_forward/` tem feature com `legacy-impact.md` sem adendo correspondente em `_reversa_sdd/addenda/`. Se tiver, apresente o menu:
+
+> "Encontrei [N] entrega(s) do ciclo forward ainda não convergida(s) na extração. O que você prefere?
+>
+> 1. **Convergir só a entrega** com o `/reversa-sync` (rápido, a extração atual continua válida)
+> 2. **Re-extração completa**: o pipeline inteiro roda de novo e os adendos vigentes serão marcados como superados
+> 3. Outro: descreva"
+
+Na opção 1, leia `reversa-sync/SKILL.md` (pasta irmã, no mesmo diretório de skills) e execute as instruções no contexto atual, e encerre sem re-extrair. O sync converge a feature ativa; havendo mais entregas pendentes, informe quais ficaram de fora. Na opção 2, siga o fluxo normal. Nunca decida sozinho.
+
 ## Executando os agentes do plano
 
 Execute as tarefas do plano **sequencialmente, uma por vez**:
 
 1. Informe o usuário: "Iniciando o **[Nome do Agente]** — [o que ele fará]."
-2. Ative o skill `reversa-[agente]` correspondente. Se a engine não suportar ativação direta de skills por nome, leia `.agents/skills/reversa-[agente]/SKILL.md` na íntegra e execute no contexto atual.
+2. Leia `reversa-[agente]/SKILL.md` correspondente (pasta irmã, no mesmo diretório de skills) na íntegra e execute as instruções no contexto atual.
 3. Após conclusão: salve checkpoint em `.reversa/state.json` seguindo `references/checkpoint-guide.md` e marque a tarefa com ✅ em `.reversa/plan.md`.
 4. Apresente resumo breve do que foi gerado.
 
@@ -111,7 +123,13 @@ Sempre usar nas specs geradas:
 - 🟡 **INFERIDO** — baseado em padrões, pode estar errado
 - 🔴 **LACUNA** — requer validação humana
 
+## Verificação de regressão semântica (re-extrações)
+
+Após o **último agente do plano** concluir e antes de declarar a extração finalizada, leia e siga `references/step-04-regression-check.md`. O gatilho é posição (último item do plan.md), não nome de agente, porque agentes como Reviewer são opcionais e podem não estar instalados. Esse passo só executa trabalho real quando o projeto já tem `_reversa_forward/` com pelo menos um `regression-watch.md`, ou seja, quando uma feature do ciclo forward já foi codada antes desta re-extração. Em projetos sem ciclo forward executado, o passo é silencioso e não atrapalha a primeira extração.
+
+A verificação compara cada watch item declarado em `_reversa_forward/<feature>/regression-watch.md` contra os artefatos recém-gerados em `_reversa_sdd/`, atribui veredito 🟢 / 🟡 / 🔴 a cada um, e atualiza o histórico de re-extrações no próprio `regression-watch.md`. Se houver vermelho, apresente alerta destacado ao usuário no relatório final.
+
 ## Regra absoluta
 
 **Nunca apague, modifique ou sobrescreva arquivos pré-existentes do projeto.**
-O Reversa escreve APENAS em `.reversa/` e `_reversa_sdd/`.
+O Reversa escreve APENAS em `.reversa/`, `_reversa_sdd/` e em `_reversa_forward/<feature>/regression-watch.md` (apenas seção de histórico, nunca a tabela principal).

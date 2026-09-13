@@ -16,16 +16,20 @@ O Reversa é um framework de engenharia reversa de especificações. Você o ins
 
 ## Começo rápido
 
-Na raiz do projeto legado:
+Na raiz do seu projeto:
 
 ```bash
 npx reversa install
 ```
 
-Depois, abra o projeto no seu agente de IA favorito e digite:
+Depois, abra o projeto no seu agente de IA favorito e escolha o fluxo:
 
 ```
-/reversa
+/reversa              # descobrir e especificar um sistema existente
+/reversa-autonomous   # a mesma descoberta, de ponta a ponta, sem paradas intermediárias
+/reversa-new          # transformar uma ideia nova em PRD e specs SDD
+/reversa-forward      # evoluir o sistema da spec ao código, uma feature por vez
+/reversa-debugger     # registrar e rastrear um defeito até as specs
 ```
 
 Pronto. O Reversa assume o volante e guia você até o fim.
@@ -56,9 +60,15 @@ Pronto. O Reversa assume o volante e guia você até o fim.
 
 - **Agentes**
 
-    Conheça o time: 14 especialistas, cada um com sua função.
+    9 Teams especializados: Core, New Project, Code Forward, Migration, Code Quality, Documentation, Pricing, Bug Agents e Translators.
 
     [:octicons-arrow-right-24: Ver agentes](agentes/index.md)
+
+- **Começar um projeto novo**
+
+    Vá de uma ideia em uma linha até personas, PRD e specs SDD avaliadas.
+
+    [:octicons-arrow-right-24: Usar /reversa-new](newproject/index.md)
 
 </div>
 
@@ -79,4 +89,4 @@ Pronto. O Reversa assume o volante e guia você até o fim.
     Os agentes escrevem **apenas** em `.reversa/` e `_reversa_sdd/`. Nenhum arquivo do seu projeto é modificado, apagado ou sobrescrito. Nunca.
 
 !!! info "Sem chaves de API"
-    O Reversa não solicita, não armazena e não transmite chaves de API de nenhum serviço. A inteligência vem do agente que você já usa no ambiente.
+    O Reversa não solicita, não armazena e não transmite chaves de API de nenhum serviço. A inteligência vem do agente que você já usa no ambiente como Claude Code, Codex, Gemini Cli e etc.

@@ -3,14 +3,35 @@
 Não sabe qual agente chamar? Ativa o guia:
 
 ```
-/agents_help
+/reversa-agents-help
 ```
 
 Ele explica cada agente com uma analogia do mundo real. Mas já que você está aqui, aqui vai o resumo completo:
 
 ---
 
-## O time completo com analogias
+## Menu principal
+
+| O que você quer fazer? | Comando | Time |
+|---|---|---|
+| Descobrir e documentar um sistema legado | `/reversa` | Reversa Agents Core |
+| Criar um projeto novo a partir de uma ideia | `/reversa-new` | Code New Project Agents |
+| Implementar ou evoluir código a partir das specs | `/reversa-forward` | Code Forward Agents |
+| Planejar a migração de um legado | `/reversa-migrate` | Migration Agents |
+| Gerar um mini-site visual da documentação | `/reversa-docs` | Documentation Agents |
+| Entender qual agente usar | `/reversa-agents-help` | Guia de agentes |
+
+Os times de Pricing e Translators usam comandos especializados: `/reversa-pricing-profile`, `/reversa-pricing-size`, `/reversa-pricing-estimate` e `/reversa-n8n`.
+
+---
+
+## Orquestradores e agentes do Core
+
+### 🆕 Reversa New: o fundador de produto
+
+O fundador começa com uma ideia ainda bruta, investiga o problema, entende para quem o produto existe, consolida um PRD e transforma tudo em especificações prontas para implementação.
+
+> Use `/reversa-new` para projetos greenfield. Ele conduz `Ideator → Researcher → Drafter → Spec SDD` e entrega o resultado ao `/reversa-forward`.
 
 ### 🎼 Reversa: o regente de orquestra
 
@@ -95,11 +116,13 @@ O estilista cataloga o guarda-roupa: paleta de cores, tipografia, espaçamentos,
 ## Sequência recomendada
 
 ```
-/reversa → orquestra tudo automaticamente
+Projeto legado: /reversa → descoberta e especificações
+Projeto novo:   /reversa-new → PRD e specs → /reversa-forward
+Migração:       /reversa → /reversa-migrate → /reversa-forward
 
-Ou manualmente:
+Pipeline legado manual:
 Scout → Archaeologist (N sessões) → Detective → Architect → Writer → Reviewer
 
 Opcionais em qualquer fase:
-Visor · Data Master · Design System
+Visor · Data Master · Design System · Reversa Docs
 ```

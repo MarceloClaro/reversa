@@ -3,12 +3,33 @@
 ¿No sabes qué agente llamar? Activa la guía:
 
 ```
-/agents_help
+/reversa-agents-help
 ```
 
 ---
 
-## El equipo completo con analogías
+## Menú principal
+
+| ¿Qué quieres hacer? | Comando | Equipo |
+|---|---|---|
+| Descubrir y documentar un sistema heredado | `/reversa` | Reversa Agents Core |
+| Crear un proyecto nuevo desde una idea | `/reversa-new` | Code New Project Agents |
+| Implementar o evolucionar código desde las specs | `/reversa-forward` | Code Forward Agents |
+| Planificar la migración de un legado | `/reversa-migrate` | Migration Agents |
+| Generar un mini-sitio visual de documentación | `/reversa-docs` | Documentation Agents |
+| Elegir el agente adecuado | `/reversa-agents-help` | Guía de agentes |
+
+Pricing y Translators usan comandos especializados: `/reversa-pricing-profile`, `/reversa-pricing-size`, `/reversa-pricing-estimate` y `/reversa-n8n`.
+
+---
+
+## Orquestadores y agentes del Core
+
+### 🆕 Reversa New: el fundador de producto
+
+El fundador empieza con una idea todavía preliminar, investiga el problema, entiende para quién existe el producto, consolida un PRD y lo transforma en especificaciones listas para implementar.
+
+> Usa `/reversa-new` para proyectos greenfield. Conduce `Ideator → Researcher → Drafter → Spec SDD` y entrega el resultado a `/reversa-forward`.
 
 ### 🎼 Reversa: el director de orquesta
 
@@ -93,11 +114,13 @@ El estilista cataloga el guardarropa: paleta de colores, tipografía, espaciados
 ## Secuencia recomendada
 
 ```
-/reversa → orquesta todo automáticamente
+Proyecto heredado: /reversa → descubrimiento y especificaciones
+Proyecto nuevo:    /reversa-new → PRD y specs → /reversa-forward
+Migración:         /reversa → /reversa-migrate → /reversa-forward
 
-O manualmente:
+Pipeline heredado manual:
 Scout → Archaeologist (N sesiones) → Detective → Architect → Writer → Reviewer
 
 Opcionales en cualquier fase:
-Visor · Data Master · Design System
+Visor · Data Master · Design System · Reversa Docs
 ```
