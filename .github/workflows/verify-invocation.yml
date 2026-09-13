@@ -3,7 +3,7 @@ name: Verify invocation axis
 # Gates executáveis de independência, invocação, rigor Feynman e camada adaptativa.
 # Garante que a edição MarceloClaro não sincronize com upstream,
 # preserva lockstep user/model-invoked, metadados OpenAI, transporte pelo installer
-# e invariantes das bridges MCI/ACME + Adaptive Governance.
+# e invariantes das bridges MCI/ACME + Adaptive Governance + Offline Policy Evaluation.
 
 on:
   push:
@@ -17,6 +17,7 @@ on:
       - 'scripts/verify-feynman-layer.py'
       - 'scripts/test-installer-transport.mjs'
       - 'scripts/test-adaptive-bridges.mjs'
+      - 'scripts/test-offline-policy-evaluation.mjs'
       - 'lib/commands/update.js'
       - 'package.json'
       - 'INDEPENDENCE.md'
@@ -32,6 +33,7 @@ on:
       - 'scripts/verify-feynman-layer.py'
       - 'scripts/test-installer-transport.mjs'
       - 'scripts/test-adaptive-bridges.mjs'
+      - 'scripts/test-offline-policy-evaluation.mjs'
       - 'lib/commands/update.js'
       - 'package.json'
       - 'INDEPENDENCE.md'
@@ -59,3 +61,5 @@ jobs:
         run: node scripts/test-installer-transport.mjs
       - name: Verificar Adaptive MCI/ACME Governance v2
         run: node scripts/test-adaptive-bridges.mjs
+      - name: Verificar Offline Policy Evaluation v3
+        run: node scripts/test-offline-policy-evaluation.mjs
